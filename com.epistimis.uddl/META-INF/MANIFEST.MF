@@ -8,5 +8,23 @@ Bundle-SymbolicName: com.epistimis.uddl; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,
- org.eclipse.equinox.common;bundle-version="3.5.0"
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: com.epistimis.uddl.parser.antlr,
+ com.epistimis.uddl.services,
+ com.epistimis.uddl.validation,
+ com.epistimis.uddl.parser.antlr.internal,
+ com.epistimis.uddl.generator,
+ com.epistimis.uddl.scoping,
+ com.epistimis.uddl.formatting2,
+ com.epistimis.uddl.uddl.util,
+ com.epistimis.uddl.uddl.impl,
+ com.epistimis.uddl.uddl,
+ com.epistimis.uddl,
+ com.epistimis.uddl.serializer
+Import-Package: org.apache.log4j
