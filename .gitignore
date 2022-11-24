@@ -1,0 +1,9 @@
+# General rules for what to ignore go here
+#
+*.java_trace
+*.bin
+*.g
+*.zip
+**/xtend-gen/*
+**/target/*
+

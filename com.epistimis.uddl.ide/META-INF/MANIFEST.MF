@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: com.epistimis.uddl.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: com.epistimis.uddl.ide
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.epistimis.uddl.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.epistimis.uddl,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-11
