@@ -4,6 +4,7 @@
 *.bin
 *.g
 *.zip
+*.prefs
 **/xtend-gen/*
 **/target/*
 
