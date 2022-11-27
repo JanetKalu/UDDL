@@ -55,6 +55,12 @@ Workflow {
 				junitVersion = "5"
 				
 			}
+			fileWizard = {
+				generate = true
+			}
+			projectWizard = {
+				generate = true
+			}
 		}
 	}
 }
