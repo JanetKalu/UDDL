@@ -6,7 +6,8 @@
 *.zip
 *.prefs
 *.jar
+*.class
 **/xtend-gen/*
 **/target/*
 **/model/generated/*
-
+**/bin/*
