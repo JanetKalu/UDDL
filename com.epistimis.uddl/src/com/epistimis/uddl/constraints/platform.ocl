@@ -116,8 +116,7 @@ package uddl
     inv participantsConsistentWithRealization:
       self.participant
           ->collect(realizes)
-          ->forAll(ae | self.realizes.oclAsType(face::datamodel::logical
-                                                               ::PlatformAssociation)
+          ->forAll(ae | self.realizes.oclAsType(LogicalAssociation)
                             .participant
                             ->exists(ae2 | ae = ae2))
                             
@@ -237,11 +236,11 @@ package uddl
       endif
       
     /*
-     * A PlatformComposition whose type is an IDLNumber has
+     * A PlatformComposition whose type is an PlatformNumber has
      * its precision greater than zero.
      */
     inv composedIDLNumberHasPrecisionSet:
-      self.type.oclIsKindOf(IDLNumber)
+      self.type.oclIsKindOf(PlatformNumber)
         implies
       self.precision > 0
 
@@ -413,7 +412,7 @@ package uddl
         self.composition->forAll(c | c.realizes = null)
       else
         self.composition->forAll(c |
-            self.realizes.composition->exists(c2 | c.realizes = c2)
+            self.realizes.oclAsType(LogicalCompositeQuery).composition->exists(c2 | c.realizes = c2)
         )
       endif
       
@@ -422,7 +421,7 @@ package uddl
      * as the CompositeQuery it realizes.
      */
     inv realizationUnionConsistent:
-      self.realizes->forAll(realized | self.isUnion = realized.isUnion)
+      self.realizes->forAll(realized | self.isUnion = realized.oclAsType(LogicalCompositeQuery).isUnion)
       
     /*
      * A PlatformCompositeQuery does not contain two TemplateCompositions 
@@ -456,12 +455,15 @@ package uddl
       self.realizes <> null implies
       if self.type.oclIsTypeOf(PlatformCompositeQuery) then
         self.type.oclAsType(PlatformCompositeQuery).realizes
-          = self.realizes.type
+          = self.realizes.type         
       else
+      /* UDDL doesn't have Template
         self.type.oclAsType(Template).effectiveQuery <> null
           implies
-        self.type.oclAsType(Template).effectiveQuery.realizes
+      */
+        self.type.oclAsType(PlatformQuery).realizes
           = self.realizes.type
+
       endif
         
   context PlatformPathNode
@@ -558,16 +560,16 @@ package uddl
      * A ValueTypeUnit is realized by an PlatformPrimitive.
      */    
     inv vtuRealizedByIDLPrimitive:
-      self.realizes.oclIsTypeOf(face::datamodel::logical::ValueTypeUnit)
+      self.realizes.oclIsTypeOf(LogicalValueTypeUnit)
         implies
       self.oclIsKindOf(PlatformPrimitive)
     
     /*
-     * An IDLArray or IDLSequence realizes a
+     * An PlatformArray or PlatformSequence realizes a
      * Measurement based on a StandardMeasurementSystem.
      */
     inv idlCollectionRealizesStandardMeasurement:
-      self.oclIsTypeOf(IDLSequence) or self.oclIsTypeOf(IDLArray)
+      self.oclIsTypeOf(PlatformSequence) or self.oclIsTypeOf(PlatformArray)
         implies
       self.realizesMeasurement() and
       self.realizedMeasurement().isStandardMeasurement()
@@ -590,11 +592,11 @@ package uddl
       else
         self.oclIsTypeOf(PlatformStruct) and
         self.realizedMeasurementAxis().getValueTypeUnits()
-          = self.oclAsType(PlatformStruct).composition
+          = self.oclAsType(PlatformStruct).member
                                      ->collect(type.realizes)
                                      ->asSet() and
         self.realizedMeasurementAxis().getValueTypeUnits()->size()
-          = self.oclAsType(PlatformStruct).composition
+          = self.oclAsType(PlatformStruct).member
                                      ->collect(type.realizes)
                                      ->size()               
       endif
@@ -629,19 +631,19 @@ package uddl
         self.oclIsTypeOf(PlatformStruct)
           and
         realizedAxes->collect(getValueTypeUnits())
-          = self.oclAsType(PlatformStruct).composition->select(realizes = null)
+          = self.oclAsType(PlatformStruct).member->select(realizes = null)
                                                  ->collect(type.realizes)
                                                  ->asBag()
       else
         self.oclIsTypeOf(PlatformStruct)
           and
         realizedAxes
-          = self.oclAsType(PlatformStruct).composition->select(realizes = null)
+          = self.oclAsType(PlatformStruct).member->select(realizes = null)
                                                  ->collect(type.realizes)
                                                  ->asSet()
           and
         realizedAxes->size()
-          = self.oclAsType(PlatformStruct).composition->select(realizes = null)
+          = self.oclAsType(PlatformStruct).member->select(realizes = null)
                                                  ->collect(type.realizes)
                                                  ->size()
       endif
@@ -660,7 +662,7 @@ package uddl
         implies
         
         --TODO CHECK IF NECESSARY
-      self.composition->collect(realizes)->reject(oclIsUndefined())->asSet()
+      self.member->collect(realizes)->reject(oclIsUndefined())->asSet()
        = self.realizedMeasurement().attribute
       
   context PlatformStructMember
@@ -673,11 +675,11 @@ package uddl
       self.type.oclAsType(PlatformDataType).realizes = self.realizes.type
   
     /*
-     * An PlatformStructMember whose type is an IDLNumber has
+     * An PlatformStructMember whose type is an PlatformNumber has
      * a precision greater than zero.
      */
     inv composedIDLNumberHasPrecisionSet:
-      self.type <> null and self.type.oclIsKindOf(IDLNumber)
+      self.type <> null and self.type.oclIsKindOf(PlatformNumber)
         implies
       self.precision > 0
       
