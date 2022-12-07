@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: com.epistimis.uddl
 Bundle-ManifestVersion: 2
 Bundle-Name: com.epistimis.uddl
-Bundle-Vendor: My Company
+Bundle-Vendor: Epistimis
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: com.epistimis.uddl; singleton:=true
 Bundle-ActivationPolicy: lazy
@@ -13,7 +13,12 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
  org.eclipse.xtext.util,
  org.eclipse.emf.common,
- org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ org.eclipse.ocl.pivot;bundle-version="1.17.0",
+ org.eclipse.ocl.xtext.completeocl;bundle-version="1.17.0",
+ org.eclipse.ocl;bundle-version="3.17.0",
+ org.eclipse.ocl.xtext.oclstdlib;bundle-version="1.17.0",
+ org.eclipse.emf.validation;bundle-version="1.8.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: com.epistimis.uddl.parser.antlr,
  com.epistimis.uddl.services,

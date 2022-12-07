@@ -1,0 +1,609 @@
+--import datamodel : 'http://www.opengroup.us/face/datamodel/3.0#/'
+import  '../../../../../model/generated/Uddl.ecore'
+include 'helpers.ocl'
+
+package uddl
+
+  context ConceptualElement
+    /*
+     * Every Conceptual ConceptualElement has a unique name.
+     */
+    inv hasUniqueName:
+      not ConceptualElement.allInstances()->excluding(self)
+                                ->collect(name.toLowerCase())
+                                ->includes(self.name.toLowerCase())
+      
+  context ConceptualComposableElement
+    /* 
+     * Helper method that determines if a ConceptualComposableElement is a
+     * specialization of another ConceptualComposableElement.
+     */
+    def: isSpecializationOf(ce : ConceptualComposableElement) : Boolean = 
+      self.oclIsKindOf(ConceptualEntity) and
+      ce.oclIsKindOf(ConceptualEntity) and
+      self.oclAsType(ConceptualEntity)->closure(specializes)->includes(ce)
+
+  context ConceptualEntity
+    /*
+     * Helper method that gets the Characteristics contained in an ConceptualEntity.
+     */
+    def: getLocalCharacteristics() : Set(ConceptualCharacteristic) =
+      if self.oclIsTypeOf(ConceptualAssociation) then
+        let compositions : Set(ConceptualCharacteristic) =
+          self.composition in
+        
+        let participants : Set(ConceptualCharacteristic) =
+          self.oclAsType(ConceptualAssociation).participant in
+                                     
+        compositions->union(participants)
+      else
+        self.composition
+      endif
+      
+    /*
+     * Helper method that gets the Characteristics of an ConceptualEntity,
+     * including those from specialized Entities.
+     */
+    def: getAllCharacteristics() : Set(ConceptualCharacteristic) =
+      let allCharacteristics : Set(ConceptualCharacteristic) =
+        self->closure(specializes)
+          ->including(self)
+          ->collect(getLocalCharacteristics()) in
+        
+        allCharacteristics  
+          ->reject(c1 |
+                   allCharacteristics->exists(c2 |
+                                              c2.specializes = c1))
+
+    /*
+     * Helper method that gets the identity of a conceptual ConceptualEntity.
+     */
+    def: getEntityIdentity() : Bag(OclAny) =
+      self.getAllCharacteristics()
+        ->collectNested(getIdentityContribution())
+        ->oclAsType(Bag(OclAny))
+        ->union(self.getBasisEntities())
+
+    /*
+     * Helper method to retrieve the BasisEntities of an ConceptualEntity,
+     * including those from specialized Entities.
+     */
+    def: getBasisEntities() : Bag(ConceptualBasisEntity) =
+      self->union(self->closure(specializes))
+          ->collect(basisEntity)
+    
+    /*
+     * Helper method that determines whether or not
+     * an ConceptualEntity is part of a specialization cycle.
+     */
+    def: isPartOfSpecializationCycle() : Boolean =
+      self->closure(specializes)->includes(self)
+
+    /*
+     * A ConceptualCharacteristic's rolename is unique within an ConceptualEntity.
+     */
+    inv characteristicsHaveUniqueRolenames:
+      self.getAllCharacteristics()->isUnique(rolename)
+
+    /*
+     * A Conceptual ConceptualEntity contains a ConceptualComposition whose type
+     * is an ConceptualObservable named 'Identifier'.
+	 *
+	 * NOTE: CR 362 changed ConceptualObservable name from 'UniqueIdentifier' to 'Identifier'
+     */
+    inv hasUniqueID:
+      self.getAllCharacteristics()
+          ->selectByType(ConceptualComposition)
+          ->collect(type)
+          ->selectByType(ConceptualObservable)
+          ->exists(a | a.name = 'Identifier')
+      
+    /* 
+     * If ConceptualEntity A' specializes ConceptualEntity A, all characteristics
+     * in A' specialize nothing, specialize characteristics from A,
+     * or specialize characteristics from an ConceptualEntity that is a generalization of
+     * A. (If A' does not specialize, none of its characteristics specialize.)
+     */
+    inv specializingCharacteristicsConsistent:
+      if self.specializes = null then
+        self.getLocalCharacteristics()
+            ->select(specializes <> null)
+            ->isEmpty()
+      else
+        self.getLocalCharacteristics()
+            ->select(specializes <> null)
+            ->forAll(c | self->closure(specializes)
+                             ->collect(getLocalCharacteristics())
+                             ->exists(sc | c.specializes = sc))
+       endif
+    
+    /*
+     * An ConceptualEntity is not a specialization of itself.
+     */
+    inv noCyclesInSpecialization:
+      not isPartOfSpecializationCycle()
+          
+    /*
+     * An ConceptualEntity has at least one ConceptualCharacteristic defined
+     * locally (not through generalization).
+     */
+    inv hasAtLeastOneLocalCharacteristic:
+      self.getLocalCharacteristics()->size() >= 1
+
+    /*
+     * An ConceptualEntity does not compose the same ConceptualObservable more than once.
+     */
+    inv observableComposedOnce:
+      self.getAllCharacteristics()
+          ->selectByKind(ConceptualComposition)
+          ->collect(getType())
+          ->select(oclIsTypeOf(ConceptualObservable))
+          ->isUnique(obs | obs)
+
+  context ConceptualAssociation
+    /*
+     * An ConceptualAssociation has at least two Participants.
+     */
+     inv hasAtLeastTwoParticipants:
+       self.getAllCharacteristics()
+           ->selectByKind(ConceptualParticipant)
+           ->size() >= 2
+  
+  context ConceptualCharacteristic      
+    /*
+     * Helper method that gets the rolename of a ConceptualCharacteristic.
+     */
+    def: getRolename() : String =
+      if self.oclIsKindOf(ConceptualComposition) then
+        self.oclAsType(ConceptualComposition).rolename
+      else
+        self.oclAsType(ConceptualParticipant).getRolename()
+      endif
+      
+    /*
+     * Helper method that gets the type of a ConceptualCharacteristic.
+     */
+    def: getType() : ConceptualComposableElement =
+      if self.oclIsTypeOf(ConceptualComposition) then
+        self.oclAsType(ConceptualComposition).type
+      else
+        self.oclAsType(ConceptualParticipant).getResolvedType()
+      endif
+
+    /* 
+     * Helper method that gets the contribution a ConceptualCharacteristic makes
+     * to an ConceptualEntity's uniqueness.
+     */ 
+    def: getIdentityContribution() : Sequence(OclAny) =
+      if self.oclIsTypeOf(ConceptualComposition) then
+        self.oclAsType(ConceptualComposition).getIdentityContribution()
+      else
+        self.oclAsType(ConceptualParticipant).getIdentityContribution()
+      endif
+      
+    /* 
+     * Helper method that determines if a ConceptualCharacteristic is a
+     * specialization of another ConceptualCharacteristic.
+     */
+    def: isSpecializationOf(cp : ConceptualCharacteristic) : Boolean =
+      self->closure(specializes)->includes(cp)
+
+    /*
+     * The rolename of a ConceptualCharacteristic is a valid identifier.
+     */
+    inv rolenameIsValidIdentifier:
+      self.getRolename() <> null implies
+      Element::isValidIdentifier(self.getRolename())
+
+    /*
+     * A ConceptualCharacteristic's lowerBound is less than or equal to its upperBound,
+     * unless its upperBound is -1.
+     */
+    inv lowerBound_LTE_UpperBound:
+      self.upperBound <> -1 implies self.lowerBound <= self.upperBound
+
+    /*
+     * A ConceptualCharacteristic's upperBound is equal to -1 or greater than 1.
+     */
+    inv upperBoundValid:
+      self.upperBound = -1 or self.upperBound >= 1
+
+    /*
+     * A ConceptualCharacteristic's lowerBound is greater than or equal to zero.
+     */
+    inv lowerBoundValid:
+      self.lowerBound  >= 0
+      
+    /*
+     * A ConceptualCharacteristic is specialized once in a generalization hierarchy.
+     */
+    inv specializeCharacteristicOnce:
+      self.specializes <> null implies
+      
+      (let containingEntity
+         = ConceptualEntity.allInstances()->any(e | e.getLocalCharacteristics()
+                                           ->includes(self)) in
+                                        
+       containingEntity.specializes <> null implies
+       containingEntity.getAllCharacteristics()
+                       ->reject(c | c = self)
+                       ->forAll(c | c.specializes <> self.specializes)
+      )
+      
+  context ConceptualComposition
+    /* 
+     * Helper method that gets the contribution a ConceptualComposition makes
+     * to an ConceptualEntity's uniqueness (type and multiplicity).
+     */ 
+     def: getIdentityContribution() : Sequence(OclAny) = 
+       Sequence{self.type,
+                self.lowerBound,
+                self.upperBound}
+
+    /*
+     * If a ConceptualComposition specializes, its multiplicity is
+     * at least as restrictive as the ConceptualComposition it specializes.
+     */
+    inv multiplicityConsistentWithSpecialization:
+      self.specializes <> null implies
+      self.lowerBound >= self.specializes.lowerBound and
+      if self.specializes.upperBound = -1 then
+        self.upperBound >= self.specializes.upperBound
+      else
+        self.upperBound <= self.specializes.upperBound
+      endif
+
+    /*
+     * If a ConceptualComposition specializes, it specializes a ConceptualComposition.
+     * If ConceptualComposition "A" specializes ConceptualComposition "B",
+     * then A's type is B's type or a specialization of B's type.
+     */
+    inv typeConsistentWithSpecialization:
+      self.specializes <> null implies
+      self.specializes.oclIsTypeOf(ConceptualComposition) and
+      (self.type = self.specializes.oclAsType(ConceptualComposition).type or
+       self.type
+           .isSpecializationOf(self.specializes.oclAsType(ConceptualComposition).type))
+          
+     /*
+      * If a ConceptualComposition specializes, its type or multiplicity is
+      * different from the ConceptualComposition it specializes.
+      */
+     inv specializationDistinct:
+       self.specializes <> null and
+       self.specializes.oclIsTypeOf(ConceptualComposition) implies
+       self.type <> self.specializes.getType() or
+       self.lowerBound <> self.specializes.lowerBound or
+       self.upperBound <> self.specializes.upperBound
+
+  context ConceptualParticipant
+    /*
+     * Helper method that gets a ConceptualParticipant's ConceptualPathNode sequence.
+     */    
+    def: getPathSequence() : OrderedSet(ConceptualPathNode) =
+      self.path->asOrderedSet()
+               ->closure(pn : ConceptualPathNode |
+                         let projectedParticipantPath =
+                           if pn.projectsParticipant() then
+                              pn.projectedParticipant().path
+                           else
+                             null
+                           endif in
+                     
+                         OrderedSet{projectedParticipantPath,
+                                    pn.node}
+                           ->reject(oclIsUndefined()))
+                ->prepend(self.path)
+                ->reject(oclIsUndefined())
+      
+    /*
+     * Helper method that determines if a ConceptualParticipant's
+     * path sequence contains a cycle.
+     */
+    def: hasCycleInPath() : Boolean =
+      self.getPathSequence()
+          ->collect(getProjectedCharacteristic())
+          ->includes(self)
+
+    /*
+     * Helper method that gets the element projected by a ConceptualParticipant.
+     * Returns a ConceptualComposableElement.
+     */
+    def: getResolvedType() : ConceptualComposableElement =
+      if self.hasCycleInPath() then
+        null
+      else if self.path = null then
+        self.type
+      else
+        self.getPathSequence()->last().getNodeType()
+      endif
+      endif
+
+    /*
+     * Helper method that gets the rolename of a ConceptualParticipant.
+     * (A ConceptualParticipant's rolename is either projected from a
+     * characteristic or defined directly on the ConceptualParticipant.)
+     */
+    def: getRolename() : String =
+      if self.rolename.size() > 0 then
+        self.rolename
+      else if self.path <> null and
+              self.getPathSequence()->last()
+                  .oclIsTypeOf(ConceptualCharacteristicPathNode) then
+        self.getPathSequence()->last()
+            .oclAsType(ConceptualCharacteristicPathNode)
+            .projectedCharacteristic.getRolename()
+      else
+        null
+      endif
+      endif
+      
+    /* 
+     * Helper method that gets the contribution a ConceptualParticipant makes
+     * to an ConceptualEntity's uniqueness (type, path sequence, and multiplicity).
+     */ 
+     def: getIdentityContribution() : Sequence(OclAny) = 
+       Sequence{self.type,
+                self.getPathSequence()->collect(getProjectedCharacteristic()),
+                self.lowerBound,
+                self.upperBound}
+
+    /*
+     * Helper method that determines if a ConceptualParticipant's path sequence
+     * is "equal" to another path sequence.
+     * (A ConceptualPathNode sequence "A" is "equal" a sequence "B" if
+     * the projected element of each ConceptualPathNode in A is the same
+     * projected element of the corresponding ConceptualPathNode in B.)
+     */
+    def: pathIsEqualTo(otherPath : OrderedSet(ConceptualPathNode))
+           : Boolean =
+      let path = self.getPathSequence() in
+      
+      path->size() = otherPath->size() and
+      Sequence{1..path->size()}->forAll(index : Integer | 
+        let pathNode = path->at(index) in
+        let specializedPathNode = otherPath->at(index) in
+        pathNode.getProjectedCharacteristic()
+          = specializedPathNode.getProjectedCharacteristic())
+    
+    /*
+     * Helper method that determines if a ConceptualParticipant's path sequence
+     * correctly "specializes" another path sequence.
+     * (A ConceptualPathNode sequence "A" "specializes" a sequence "B" if
+     * the projected element of each ConceptualPathNode in A specializes the
+     * projected element of the corresponding ConceptualPathNode in B.)
+     */
+    def: pathIsSpecializationOf(specializedPath : OrderedSet(ConceptualPathNode))
+           : Boolean =
+      let path = self.getPathSequence() in
+      
+      path->size() > 0 and
+      path->size() = specializedPath->size() and
+      Sequence{1..path->size()}->forAll(index : Integer | 
+        let pathNode = path->at(index) in
+        let specializedPathNode = specializedPath->at(index) in
+        pathNode.getProjectedCharacteristic()
+                .isSpecializationOf(specializedPathNode
+                                      .getProjectedCharacteristic()))
+      
+    /*
+     * A ConceptualParticipant has a rolename, either projected from a
+     * characteristic or defined directly on the ConceptualParticipant.
+     */
+    inv rolenameDefined:
+      self.getRolename() <> null
+      
+    /*
+     * If a ConceptualParticipant has a path sequence, the first ConceptualPathNode in the sequence
+     * is resolvable from the type of the ConceptualParticipant.
+     */
+    inv pathNodeResolvable:
+      self.path <> null implies
+      self.path.isResolvableFromEntity(self.type)
+
+    /*
+     * If a ConceptualParticipant specializes, its multiplicity is
+     * at least as restrictive as the ConceptualParticipant it specializes. 
+     */
+    inv multiplicityConsistentWithSpecialization:
+      (self.specializes <> null and
+       self.specializes.oclIsTypeOf(ConceptualParticipant))
+         implies
+      let specializedParticipant = self.specializes.oclAsType(ConceptualParticipant) in
+    
+      self.lowerBound >= specializedParticipant.lowerBound and
+      if specializedParticipant.upperBound = -1 then
+        self.upperBound >= specializedParticipant.upperBound
+      else
+        self.upperBound <= specializedParticipant.upperBound
+      endif
+      
+      and
+      
+      self.sourceLowerBound >= specializedParticipant.sourceLowerBound and
+      if specializedParticipant.sourceUpperBound = -1 then
+        self.sourceUpperBound >= specializedParticipant.sourceUpperBound
+      else
+        self.sourceUpperBound <= specializedParticipant.sourceUpperBound
+      endif
+
+    /*
+     * If a ConceptualParticipant specializes, it specializes a ConceptualParticipant.
+     * If ConceptualParticipant "A" specializes ConceptualParticipant "B",
+     * then A's type is the same or a specialization of B's type,
+     * and A's ConceptualPathNode sequence is "equal to" or "specializes" B's
+     * ConceptualPathNode sequence (see "pathIsEqual" and
+     * "pathIsSpecializationOf" helper methods).
+     */
+    inv typeConsistentWithSpecialization:
+      self.specializes <> null and
+      self.specializes.oclIsTypeOf(ConceptualParticipant) implies
+      let specializedParticipant = self.specializes.oclAsType(ConceptualParticipant) in
+      
+      self.specializes.oclIsTypeOf(ConceptualParticipant)
+        and
+      (self.type = specializedParticipant.type or
+       self.type.isSpecializationOf(specializedParticipant.type))
+        and
+      (self.pathIsEqualTo(specializedParticipant.getPathSequence()) or
+       self.pathIsSpecializationOf(specializedParticipant.getPathSequence()))
+          
+     /*
+      * If a ConceptualParticipant specializes, its type, ConceptualPathNode sequence,
+      * or multiplicity is different from the ConceptualParticipant it specializes.
+      */
+     inv specializationDistinct:
+       self.specializes <> null and
+       self.specializes.oclIsTypeOf(ConceptualParticipant)
+         implies
+       let specializedParticipant = self.specializes.oclAsType(ConceptualParticipant) in
+       self.type <> self.specializes.getType() or
+       self.pathIsSpecializationOf(specializedParticipant.getPathSequence()) or
+       self.lowerBound <> self.specializes.lowerBound or
+       self.upperBound <> self.specializes.upperBound or
+       self.sourceLowerBound <> specializedParticipant.oclAsType(ConceptualParticipant)
+                                                      .sourceLowerBound or
+       self.sourceUpperBound <> specializedParticipant.oclAsType(ConceptualParticipant)
+                                                      .sourceUpperBound
+
+  context ConceptualCompositeQuery
+    /*
+     * A ConceptualQueryComposition's rolename is unique within a ConceptualCompositeQuery.
+     */
+    inv compositionsHaveUniqueRolenames:
+      self.composition->collect(rolename)
+                      ->isUnique(rn | rn)
+      
+    /*
+     * A ConceptualCompositeQuery does not compose itself.
+     */
+    inv noCyclesInConstruction:
+      let composedQueries = self->closure(composition
+                                          ->collect(type)
+                                          ->selectByKind(ConceptualCompositeQuery)) in
+                                 
+      not composedQueries->includes(self)
+    
+    /*
+     * A ConceptualCompositeQuery does not compose the same View more than once.
+     */
+    inv viewComposedOnce:
+      self.composition->collect(type)->isUnique(view | view)
+
+  context ConceptualQueryComposition
+    /*
+     * The rolename of a ConceptualQueryComposition is a valid identifier.
+     */
+    inv rolenameIsValidIdentifier:
+      Element::isValidIdentifier(self.rolename)
+
+  context ConceptualPathNode
+    /*
+     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     */
+    def: getProjectedCharacteristic() : ConceptualCharacteristic =
+      if self.oclIsTypeOf(ConceptualCharacteristicPathNode) then
+        self.oclAsType(ConceptualCharacteristicPathNode).projectedCharacteristic
+      else -- ConceptualParticipantPathNode
+        self.oclAsType(ConceptualParticipantPathNode).projectedParticipant
+      endif
+    
+    /*
+     * Helper method that determines if a ConceptualPathNode projects a ConceptualParticipant.
+     */  
+    def: projectsParticipant() : Boolean =
+      self.oclIsTypeOf(ConceptualCharacteristicPathNode) and
+      self.oclAsType(ConceptualCharacteristicPathNode)
+          .projectedCharacteristic
+          .oclIsTypeOf(ConceptualParticipant)
+          
+    /*
+     * Helper method that gets the ConceptualParticipant projected by a ConceptualPathNode.
+     * Returns null if no ConceptualParticipant is projected.
+     */  
+    def: projectedParticipant() : ConceptualParticipant =
+      let pp = self.oclAsType(ConceptualCharacteristicPathNode)
+                   .projectedCharacteristic
+                   .oclAsType(ConceptualParticipant) in
+      if not pp.oclIsInvalid() then
+        pp
+      else
+        null
+      endif
+      
+    /*
+     * Helper method that gets the "node type" of a ConceptualPathNode. For a
+     * ConceptualCharacteristicPathNode, the node type is the type of the projected
+     * characteristic. For a ConceptualParticipantPathNode, the node type is the
+     * ConceptualAssociation containing the projected ConceptualParticipant.
+     * Returns a ConceptualComposableElement.
+     */
+    def: getNodeType() : ConceptualComposableElement =
+      if self.oclIsTypeOf(ConceptualCharacteristicPathNode) then
+        self.oclAsType(ConceptualCharacteristicPathNode)
+            .projectedCharacteristic
+            .getType()
+      else
+        -- get ConceptualAssociation that contains projectedCharacteristic
+        ConceptualAssociation.allInstances()
+          ->select(participant->includes(self.oclAsType(ConceptualParticipantPathNode)
+                                             .projectedParticipant))
+          ->any(true)
+      endif
+      
+    /*
+     * Helper method that determines if a ConceptualPathNode is resolvable from a
+     * given ConceptualEntity.
+     */
+    def: isResolvableFromEntity(entity : ConceptualEntity) : Boolean =
+      if self.oclIsTypeOf(ConceptualCharacteristicPathNode) then
+        entity.getAllCharacteristics()
+              ->includes(self.oclAsType(ConceptualCharacteristicPathNode)
+                             .projectedCharacteristic)
+      else
+        entity = self.oclAsType(ConceptualParticipantPathNode)
+                     .projectedParticipant
+                     .type
+      endif
+
+    /*
+     * Helper method that determines if the resolved characteristic has a
+     * multiplicity with upper bound greater than 1.
+     */
+    def: projectsAcrossCollection() : Boolean =
+      if self.oclIsTypeOf(ConceptualCharacteristicPathNode) then
+        let projectedCharacteristic = self.oclAsType(ConceptualCharacteristicPathNode)
+                                          .projectedCharacteristic in
+        projectedCharacteristic.oclIsKindOf(ConceptualCharacteristic) and
+        projectedCharacteristic.oclAsType(ConceptualCharacteristic).upperBound <> 1
+      else -- ConceptualParticipantPathNode
+        let projectedParticipant = self.oclAsType(ConceptualParticipantPathNode)
+                                       .projectedParticipant in
+        projectedParticipant.sourceLowerBound <> 1 or
+        projectedParticipant.sourceUpperBound <> 1
+      endif
+
+    /*
+     * If a ConceptualCharacteristicPathNode projects a ConceptualCharacteristic with upper or
+     * lower bounds not equal to 1, then it is the end of a ConceptualPathNode sequence.
+     * If a ConceptualParticipantPathNode projects a ConceptualParticipant with source lower or
+     * upper bounds not equal to 1, then it is the end of a ConceptualPathNode sequence.
+     */
+    inv noProjectionAcrossCollection:
+      self.projectsAcrossCollection() implies
+      self.node = null
+
+    /*
+     * If a ConceptualPathNode "A" is not the last in a path sequence, the next ConceptualPathNode
+     * in the sequence is resolvable from the "node type" of A.
+     */
+    inv pathNodeResolvable:
+      self.node <> null implies
+      if self.getNodeType() = null then
+        false
+      else
+        self.getNodeType().oclIsKindOf(ConceptualEntity) and
+        self.node.isResolvableFromEntity(self.getNodeType().oclAsType(ConceptualEntity))
+      endif
+
+endpackage

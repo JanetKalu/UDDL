@@ -1,0 +1,26 @@
+
+import  '../../../../../model/generated/Uddl.ecore'
+
+include 'conceptual.ocl'
+
+package uddl
+
+  context ConceptualEntity    
+    /*
+     * An Entity is unique in a Conceptual Data Model.
+     * (An Entity is unique if the set of its Characteristics
+     * is different from other Entities' in terms of
+     * type, lowerBound, upperBound, and path (for Participants).
+     * 
+     * NOTE: If an Entity is part of a specialization cycle, its uniqueness
+     * is undefined. So, if an Entity is part of a specialization cycle,
+     * it will not fail entityIsUnique, but will fail noCyclesInSpecialization.
+     */
+    inv entityIsUnique:
+      not self.isPartOfSpecializationCycle() implies
+      not ConceptualEntity.allInstances()
+                ->excluding(self)
+                ->collectNested(getEntityIdentity())
+                ->includes(self.getEntityIdentity())
+
+endpackage

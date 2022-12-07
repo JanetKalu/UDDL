@@ -1,0 +1,96 @@
+--import face : 'http://www.opengroup.us/face/3.0#/'
+import  '../../../../../model/generated/Uddl.ecore'
+
+
+package uddl
+
+  context Element
+    /*
+     * Helper method that determines if a string is a valid identifier.
+     * An identifier is valid if it consists of alphanumeric characters.
+     */
+    static def: isValidIdentifier(str : String) : Boolean =
+      str.size() > 0 and
+      str.replaceAll('[a-zA-Z][_a-zA-Z0-9]*', '').size() = 0
+
+    /*
+     * Helper method that determines if a string is an IDL 4.1 keyword.
+     */
+    static def: isReservedWord(str : String) : Boolean =
+      let strLower: String = str.toLowerCase() in
+        strLower = 'abstract' or
+        strLower = 'alias' or
+        strLower = 'any' or
+        strLower = 'attribute' or
+        strLower = 'bitfield' or
+        strLower = 'bitmask' or
+        strLower = 'bitset' or
+        strLower = 'boolean' or
+        strLower = 'case' or
+        strLower = 'char' or
+        strLower = 'component' or
+        strLower = 'connector' or
+        strLower = 'const' or
+        strLower = 'consumes' or
+        strLower = 'context' or
+        strLower = 'custom' or
+        strLower = 'default' or
+        strLower = 'double' or
+        strLower = 'emits' or
+        strLower = 'enum' or
+        strLower = 'eventtype' or
+        strLower = 'exception' or
+        strLower = 'factory' or
+        strLower = 'false' or
+        strLower = 'finder' or
+        strLower = 'fixed' or
+        strLower = 'float' or
+        strLower = 'getraises' or
+        strLower = 'home' or
+        strLower = 'import' or
+        strLower = 'in' or
+        strLower = 'inout' or
+        strLower = 'interface' or
+        strLower = 'local' or
+        strLower = 'long' or
+        strLower = 'manages' or
+        strLower = 'map' or
+        strLower = 'mirrorport' or
+        strLower = 'module' or
+        strLower = 'multiple' or
+        strLower = 'native' or
+        strLower = 'object' or
+        strLower = 'octet' or
+        strLower = 'oneway' or
+        strLower = 'out' or
+        strLower = 'port' or
+        strLower = 'porttype' or
+        strLower = 'primarykey' or
+        strLower = 'private' or
+        strLower = 'provides' or
+        strLower = 'public' or
+        strLower = 'publishes' or
+        strLower = 'raises' or
+        strLower = 'readonly' or
+        strLower = 'sequence' or
+        strLower = 'setraises' or
+        strLower = 'short' or
+        strLower = 'string' or
+        strLower = 'struct' or
+        strLower = 'supports' or
+        strLower = 'switch' or
+        strLower = 'true' or
+        strLower = 'truncatable' or
+        strLower = 'typedef' or
+        strLower = 'typeid' or
+        strLower = 'typename' or
+        strLower = 'typeprefix' or
+        strLower = 'union' or
+        strLower = 'unsigned' or
+        strLower = 'uses' or
+        strLower = 'valuebase' or
+        strLower = 'valuetype' or
+        strLower = 'void' or
+        strLower = 'wchar' or
+        strLower = 'wstring'
+endpackage

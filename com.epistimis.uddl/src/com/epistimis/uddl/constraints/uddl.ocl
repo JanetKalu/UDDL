@@ -1,0 +1,57 @@
+import  '../../../../../model/generated/Uddl.ecore'
+
+include 'helpers.ocl'
+
+
+package uddl 
+
+  context Element                                
+    /*
+     * The name of an Element is a valid identifier.
+     */
+    inv nameIsValidIdentifier:
+      Element::isValidIdentifier(self.name)
+    
+    /*
+     * The following elements have a non-empty description:
+     *   - Observable
+     *   - Unit
+     *   - Landmark
+     *   - ReferencePoint
+     *   - MeasurementSystem
+     *   - MeasurementSystemAxis
+     *   - CoordinateSystem
+     *   - CoordinateSystemAxis
+     *   - MeasurementSystemConversion
+     *   - Boolean
+     *   - Character
+     *   - Numeric
+     *   - Integer
+     *   - Natural
+     *   - NonNegativeReal
+     *   - Real
+     *   - String
+     */
+    inv nonEmptyDescription:      
+      (self.oclIsTypeOf(ConceptualObservable) or
+       self.oclIsTypeOf(LogicalUnit) or
+       self.oclIsTypeOf(LogicalLandmark) or
+       self.oclIsTypeOf(LogicalReferencePoint) or
+       self.oclIsTypeOf(LogicalMeasurementSystem) or
+       self.oclIsTypeOf(LogicalMeasurementSystemAxis) or
+       self.oclIsTypeOf(LogicalCoordinateSystem) or
+       self.oclIsTypeOf(LogicalCoordinateSystemAxis) or
+       self.oclIsTypeOf(LogicalMeasurementSystemConversion) or
+       self.oclIsTypeOf(LogicalBoolean) or
+       self.oclIsTypeOf(LogicalCharacter) or
+       self.oclIsTypeOf(LogicalNumeric) or
+       self.oclIsTypeOf(LogicalInteger) or
+       self.oclIsTypeOf(LogicalNatural) or
+       self.oclIsTypeOf(LogicalNonNegativeReal) or
+       self.oclIsTypeOf(LogicalReal) or
+       self.oclIsTypeOf(LogicalString))
+         implies
+       self.description.size() > 0
+
+
+endpackage

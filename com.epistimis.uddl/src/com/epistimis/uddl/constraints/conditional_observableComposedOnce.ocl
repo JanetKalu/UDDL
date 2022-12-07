@@ -1,0 +1,18 @@
+import  '../../../../../model/generated/Uddl.ecore'
+
+include 'conceptual.ocl'
+
+package uddl
+
+  context ConceptualEntity
+    /*
+     * An Entity does not compose the same Observable more than once.
+     */
+    inv observableComposedOnce:
+      self.getAllCharacteristics()
+          ->selectByKind(ConceptualComposition)
+          ->collect(getType())
+          ->select(oclIsTypeOf(ConceptualObservable))
+          ->isUnique(obs | obs)
+
+endpackage

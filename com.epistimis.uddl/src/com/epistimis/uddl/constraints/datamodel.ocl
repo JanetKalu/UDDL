@@ -1,0 +1,31 @@
+
+import  '../../../../../model/generated/Uddl.ecore'
+include 'helpers.ocl'
+
+package  uddl
+       
+  context DataModel
+    /*
+     * Every Element in an DataModel has a unique name.
+     * 
+	 * Note: This is equivalent constraint to hasUniqueName. 
+	 *		Original constraint modified to work with Kepler
+	 */
+    inv childModelsHaveUniqueNames:
+      let children : Bag(Element)=
+        self.cdm.oclAsType(Element)->union(
+        self.pdm.oclAsType(Element)->union(
+        self.ldm.oclAsType(Element))) in
+        
+      children->isUnique(name.toLowerCase())
+	  
+    /*
+     * A DataModel's name is not an IDL reserved word.
+	 *   CR 242
+     */                        
+    inv nameIsNotReservedWord:
+      not Element::isReservedWord(self.name)
+
+	  
+
+endpackage

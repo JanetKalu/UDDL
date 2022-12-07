@@ -1,0 +1,684 @@
+import  '../../../../../model/generated/Uddl.ecore'
+
+include 'helpers.ocl'
+include 'logical.ocl'
+
+package uddl
+
+  context PlatformElement
+    /*
+     * All Platform Elements have a unique name.
+     */
+    inv hasUniqueName:
+      not PlatformElement.allInstances()->excluding(self)
+                                ->collect(name.toLowerCase())
+                                ->includes(self.name.toLowerCase())
+    
+    /*
+     * A Platform PlatformElement's name is not an IDL reserved word.
+     */                        
+    inv nameIsNotReservedWord:
+      not Element::isReservedWord(self.name)
+
+  context PlatformEntity
+    /*
+     * Helper method that gets the Characteristics contained in an PlatformEntity.
+     * (Platform Characteristics are ordered with Participants first,
+     * then Compositions.)
+     */
+    def: getLocalCharacteristics() : OrderedSet(PlatformCharacteristic) =
+      if self.oclIsTypeOf(PlatformAssociation) then
+        let compositions : Set(PlatformCharacteristic) =
+          self.composition in
+        
+        let participants : Set(PlatformCharacteristic) =
+          self.oclAsType(PlatformAssociation).participant in
+                                     
+        compositions->union(participants)
+      else
+        self.composition
+      endif
+      
+    /*
+     * Helper method that gets the Characteristics of an PlatformEntity,
+     * including those from specialized Entities.
+     * (Platform Characteristics are ordered with the Characteristics 
+     * of the "top-most" PlatformEntity in a generalization hierarchy first,
+     * then the "second-top-most", etc.)
+     */
+    def: getAllCharacteristics() : OrderedSet(PlatformCharacteristic) =
+      let allCharacteristics : OrderedSet(PlatformCharacteristic) =
+        self->closure(specializes)
+            ->including(self)
+            ->collect(getLocalCharacteristics()) in
+        
+        allCharacteristics  
+          ->reject(c1 |
+                   allCharacteristics->exists(c2 |
+                                              c2.specializes = c1))
+
+    /*
+     * A PlatformCharacteristic's rolename is unique within an PlatformEntity.
+     */
+    inv characteristicsHaveUniqueRolenames:
+      self.getAllCharacteristics()->isUnique(rolename)
+
+    /*
+     * Compositions in a platform PlatformEntity realize Compositions in
+     * the logical PlatformEntity that the platform PlatformEntity realizes.
+     */
+    inv compositionsConsistentWithRealization:
+      self.composition
+          ->collect(realizes)
+          ->forAll(c | self.realizes.composition->exists(c2 | c = c2))
+          
+    /*
+     * An PlatformEntity does not contain two Compositions that realize the same
+     * logical PlatformComposition unless their types are different IDLTypes
+     * and their multiplicities are equal.
+     */
+    inv realizedCompositionsHaveDifferentTypes:
+      self.composition->forAll(c1, c2 | c1 <> c2 and
+                                        c1.realizes = c2.realizes
+                                          implies
+                                        c1.type.oclIsKindOf(PlatformDataType) and
+                                        c2.type.oclIsKindOf(PlatformDataType) and
+                                        c1.type <> c2.type and
+                                        c1.lowerBound = c2.lowerBound and
+                                        c1.upperBound = c2.upperBound)
+    
+    /*
+     * If an PlatformEntity specializes, its specialization is
+     * consistent with its realization's specialization.
+     */
+    inv specializationConsistentWithRealization:
+      self.specializes <> null implies
+      self.specializes.realizes = self.realizes.specializes
+           
+    /*
+     * An PlatformEntity has at least one PlatformCharacteristic defined
+     * locally (not through generalization), unless the
+     * PlatformEntity is in the "middle" of a generalization hierarchy.
+     */
+    inv hasAtLeastOneLocalCharacteristic:
+      not (self.specializes <> null
+             or
+           PlatformEntity.allInstances()->collect(specializes)
+                                ->includes(self))
+        implies
+      self.getLocalCharacteristics()->size() >= 1
+
+  context PlatformAssociation    
+    /*
+     * Participants in a logical PlatformAssociation realize Participants in
+     * the conceptual PlatformAssociation that the logical PlatformAssociation realizes.
+     */
+    inv participantsConsistentWithRealization:
+      self.participant
+          ->collect(realizes)
+          ->forAll(ae | self.realizes.oclAsType(face::datamodel::logical
+                                                               ::PlatformAssociation)
+                            .participant
+                            ->exists(ae2 | ae = ae2))
+                            
+    /*
+     * Participants in an PlatformAssociation realize unique Participants.
+     */
+    inv participantsRealizeUniquely:
+      self.participant->forAll(p1, p2 | p1 <> p2 implies
+                                        p1.realizes <> p2.realizes
+      )
+
+  context PlatformCharacteristic
+    /*
+     * Helper method that gets the rolename of a PlatformCharacteristic.
+     */
+    def: getRolename() : String =
+      if self.oclIsKindOf(PlatformComposition) then
+        self.oclAsType(PlatformComposition).rolename
+      else
+        self.oclAsType(PlatformParticipant).getRolename()
+      endif
+      
+    /*
+     * Helper method that gets the type of a PlatformCharacteristic.
+     */
+    def: getType() : PlatformComposableElement =
+      if self.oclIsTypeOf(PlatformComposition) then
+        self.oclAsType(PlatformComposition).type
+      else
+        self.oclAsType(PlatformParticipant).getResolvedType()
+      endif
+
+    /*
+     * Helper method that gets the conceptual PlatformCharacteristic a
+     * logical PlatformCharacteristic realizes.
+     */
+    def: getRealizes() : LogicalCharacteristic =
+      if self.oclIsTypeOf(PlatformComposition) then
+        self.oclAsType(PlatformComposition).realizes
+      else
+        self.oclAsType(PlatformParticipant).realizes
+      endif
+
+    /*
+     * The rolename of a PlatformCharacteristic is a valid identifier.
+     */
+    inv rolenameIsValidIdentifier:
+      self.getRolename() <> null implies
+      Element::isValidIdentifier(self.getRolename())
+      
+    /*
+     * The rolename of a PlatformCharacteristic is not an IDL reserved word.
+     */
+    inv rolenameIsNotReservedWord:
+      self.getRolename() <> null implies
+      (not Element::isReservedWord(self.getRolename()))
+
+    /*
+     * A PlatformCharacteristic's lowerBound is less than or equal to its upperBound,
+     * unless its upperBound is -1.
+     */
+    inv lowerBound_LTE_UpperBound:
+      self.upperBound <> -1 implies self.lowerBound <= self.upperBound
+
+    /*
+     * A PlatformCharacteristic's upperBound is equal to -1 or greater than 1.
+     */
+    inv upperBoundValid:
+      self.upperBound = -1 or self.upperBound >= 1
+    
+    /*
+     * If a PlatformCharacteristic specializes, its specialization is
+     * consistent with its realization's specialization.
+     */
+    inv specializationConsistentWithRealization:
+      self.specializes <> null implies
+      self.specializes.getRealizes() = self.getRealizes().specializes
+
+  context PlatformComposition
+    /*
+     * A PlatformComposition's type is consistent with its realization's type.
+     */
+    inv typeConsistentWithRealization:
+      if self.type.oclIsKindOf(PlatformEntity) then
+        self.type.oclAsType(PlatformEntity).realizes = self.realizes.type
+      else
+      if self.type.oclIsKindOf(PlatformDataType) then
+        self.type.oclAsType(PlatformDataType).realizes = self.realizes.type
+      else
+        false
+      endif
+      endif
+      
+    /*
+     * A PlatformComposition's multiplicity is at least as
+     * restrictive as the PlatformComposition it realizes.
+     */
+    inv multiplicityConsistentWithRealization:
+      self.lowerBound >= self.realizes.lowerBound and
+      if self.realizes.upperBound = -1 then
+        self.upperBound >= self.realizes.upperBound
+      else
+        self.upperBound <= self.realizes.upperBound
+      endif
+      
+    /*
+     * A PlatformComposition's multiplicity is at least as
+     * restrictive as the PlatformComposition it specialization.
+     */
+    inv multiplicityConsistentWithSpecialization:
+      self.specializes <> null implies
+      self.lowerBound >= self.specializes.lowerBound and
+      if self.specializes.upperBound = -1 then
+        self.upperBound >= self.specializes.upperBound
+      else
+        self.upperBound <= self.specializes.upperBound
+      endif
+      
+    /*
+     * A PlatformComposition whose type is an IDLNumber has
+     * its precision greater than zero.
+     */
+    inv composedIDLNumberHasPrecisionSet:
+      self.type.oclIsKindOf(IDLNumber)
+        implies
+      self.precision > 0
+
+  context PlatformParticipant
+    /*
+     * Helper method that gets a PlatformParticipant's PlatformPathNode sequence.
+     */    
+    def: getPathSequence() : OrderedSet(PlatformPathNode) =
+      self.path->asOrderedSet()
+               ->closure(pn : PlatformPathNode |
+                         let projectedParticipantPath =
+                           if pn.projectsParticipant() then
+                              pn.projectedParticipant().path
+                           else
+                             null
+                           endif in
+                     
+                         OrderedSet{projectedParticipantPath,
+                                    pn.node}
+                           ->reject(oclIsUndefined()))
+                ->prepend(self.path)
+                ->reject(oclIsUndefined())
+                        
+    /*
+     * Helper method that determines if a PlatformParticipant's
+     * path sequence contains a cycle.
+     */
+    def: hasCycleInPath() : Boolean =
+      self.getPathSequence()
+          ->collect(getProjectedCharacteristic())
+          ->includes(self)
+      
+    /*
+     * Helper method that gets the element projected by a PlatformParticipant.
+     * Returns a PlatformComposableElement.
+     */
+    def: getResolvedType() : PlatformComposableElement =
+      if self.hasCycleInPath() then
+        null
+      else if self.path = null then
+        self.type
+      else
+        self.getPathSequence()->last().getNodeType()
+      endif
+      endif
+
+    /*
+     * Helper method that gets the rolename of a PlatformParticipant.
+     * (A PlatformParticipant's rolename is either projected from a
+     * characteristic or defined directly on the PlatformParticipant.)
+     */
+    def: getRolename() : String =
+      if self.rolename.size() > 0 then
+        self.rolename
+      else if self.path <> null and
+              self.getPathSequence()->last()
+                  .oclIsTypeOf(PlatformCharacteristicPathNode) then
+        self.getPathSequence()->last()
+            .oclAsType(PlatformCharacteristicPathNode)
+            .projectedCharacteristic.getRolename()
+      else
+        null
+      endif
+      endif
+      
+    /* 
+     * A PlatformParticipant has a rolename, either projected from a
+     * characteristic or defined directly on the PlatformParticipant.
+     */
+    inv rolenameDefined:
+      self.getRolename() <> null
+                        
+    /*
+     * If PlatformParticipant "A" realizes PlatformParticipant "B",
+     * then A's type realizes B's type,
+     * and A's PlatformPathNode sequence "realizes" B's PlatformPathNode sequence.
+     * (A PlatformPathNode sequence "A" "realizes" a sequence "B" if
+     * the projected element of each PlatformPathNode in A realizes the
+     * projected element of the corresponding PlatformPathNode in B.)
+     */
+    inv typeConsistentWithRealization:      
+      self.type.realizes = self.realizes.type
+        and
+      self.getPathSequence()->collect(getProjectedCharacteristic()
+                                       .getRealizes()) =
+      self.realizes.getPathSequence()->collect(getProjectedCharacteristic())
+
+    /*
+     * A PlatformParticipant's multiplicity is at least as
+     * restrictive as the PlatformParticipant it realizes.
+     */
+    inv multiplicityConsistentWithRealization:
+      self.lowerBound >= self.realizes.lowerBound and
+      if self.realizes.upperBound = -1 then
+        self.upperBound >= self.realizes.upperBound
+      else
+        self.upperBound <= self.realizes.upperBound
+      endif
+      
+      and
+      
+      self.sourceLowerBound >= self.realizes.sourceLowerBound and
+      if self.realizes.sourceUpperBound = -1 then
+        self.sourceUpperBound >= self.realizes.sourceUpperBound
+      else
+        self.sourceUpperBound <= self.realizes.sourceUpperBound
+      endif
+
+    /*
+     * A PlatformParticipant's multiplicity is at least as
+     * restrictive as the PlatformParticipant it specializes.
+     */
+    inv multiplicityConsistentWithSpecialization:
+      self.specializes <> null and
+      self.specializes.oclIsTypeOf(PlatformParticipant)
+      
+        implies
+      
+      let specializedParticipant = self.specializes.oclAsType(PlatformParticipant) in
+    
+      self.lowerBound >= specializedParticipant.lowerBound and
+      if specializedParticipant.upperBound = -1 then
+        self.upperBound >= specializedParticipant.upperBound
+      else
+        self.upperBound <= specializedParticipant.upperBound
+      endif
+      
+      and
+      
+      self.sourceLowerBound >= specializedParticipant.sourceLowerBound and
+      if specializedParticipant.sourceUpperBound = -1 then
+        self.sourceUpperBound >= specializedParticipant.sourceUpperBound
+      else
+        self.sourceUpperBound <= specializedParticipant.sourceUpperBound
+      endif
+
+  context PlatformCompositeQuery
+    /*
+     * A PlatformQueryComposition's rolename is unique within a PlatformCompositeQuery.
+     */
+    inv compositionsHaveUniqueRolenames:
+      self.composition->collect(rolename)
+                      ->isUnique(rn | rn)
+      
+    /*
+     * A PlatformCompositeQuery does not compose itself.
+     */
+    inv noCyclesInConstruction:
+      let composedTemplates = self->closure(composition
+                                            ->collect(type)
+                                            ->selectByKind(PlatformCompositeQuery)) in
+                                 
+      not composedTemplates->includes(self)
+    
+    /*
+     * A PlatformCompositeQuery does not compose the same Template more than once.
+     */
+    inv viewComposedOnce:
+      self.composition->collect(type)->isUnique(view | view)
+      
+    /*
+     * TemplateCompositions in a platform PlatformCompositeQuery realize
+     * QueryCompositions in the logical CompositeQuery that the platform
+     * PlatformCompositeQuery realizes.
+     */
+    inv compositionsConsistentWithRealization:
+      if self.realizes = null
+      then
+        self.composition->forAll(c | c.realizes = null)
+      else
+        self.composition->forAll(c |
+            self.realizes.composition->exists(c2 | c.realizes = c2)
+        )
+      endif
+      
+    /*
+     * A PlatformCompositeQuery that realizes has the same "isUnion" property
+     * as the CompositeQuery it realizes.
+     */
+    inv realizationUnionConsistent:
+      self.realizes->forAll(realized | self.isUnion = realized.isUnion)
+      
+    /*
+     * A PlatformCompositeQuery does not contain two TemplateCompositions 
+     * that realize the same QueryComposition.
+     */
+    inv realizedCompositionsHaveDifferentTypes:
+      self.realizes <> null implies
+      self.composition->forAll(c1, c2 | c1 <> c2 implies
+                                        c1.realizes <> c2.realizes)
+
+  context PlatformQueryComposition
+    /*
+     * The rolename of a PlatformQueryComposition is a valid identifier.
+     */
+    inv rolenameIsValidIdentifier:
+      Element::isValidIdentifier(self.rolename)
+      
+    /*
+     * The rolename of a PlatformQueryComposition is not an IDL reserved word.
+     */
+    inv rolenameIsNotReservedWord:
+      not Element::isReservedWord(self.rolename)
+    
+    /*
+     * If PlatformQueryComposition "A" realizes QueryComposition "B", then
+     * if A's type is a PlatformCompositeQuery, then A's type realizes B's type, and
+     * if A's type is a Template and defines an effectiveQuery,
+     * then A's type's effectiveQuery realizes B's type.
+     */
+    inv typeConsistentWithRealization:
+      self.realizes <> null implies
+      if self.type.oclIsTypeOf(PlatformCompositeQuery) then
+        self.type.oclAsType(PlatformCompositeQuery).realizes
+          = self.realizes.type
+      else
+        self.type.oclAsType(Template).effectiveQuery <> null
+          implies
+        self.type.oclAsType(Template).effectiveQuery.realizes
+          = self.realizes.type
+      endif
+        
+  context PlatformPathNode
+    /*
+     * Helper method that gets the PlatformCharacteristic projected by a PlatformPathNode.
+     */
+    def: getProjectedCharacteristic() : PlatformCharacteristic =
+      if self.oclIsTypeOf(PlatformCharacteristicPathNode) then
+        self.oclAsType(PlatformCharacteristicPathNode).projectedCharacteristic
+      else -- PlatformParticipantPathNode
+        self.oclAsType(PlatformParticipantPathNode).projectedParticipant
+      endif
+    
+    /*
+     * Helper method that determines if a PlatformPathNode projects a PlatformParticipant.
+     */  
+    def: projectsParticipant() : Boolean =
+      self.oclIsTypeOf(PlatformCharacteristicPathNode) and
+      self.oclAsType(PlatformCharacteristicPathNode)
+          .projectedCharacteristic
+          .oclIsTypeOf(PlatformParticipant)
+          
+    /*
+     * Helper method that gets the PlatformParticipant projected by a PlatformPathNode.
+     * Returns null if no PlatformParticipant is projected.
+     */  
+    def: projectedParticipant() : PlatformParticipant =
+      let pp = self.oclAsType(PlatformCharacteristicPathNode)
+                   .projectedCharacteristic
+                   .oclAsType(PlatformParticipant) in
+      if not pp.oclIsInvalid() then
+        pp
+      else
+        null
+      endif
+  
+    /*
+     * Helper method that gets the "node type" of a PlatformPathNode. For a
+     * PlatformCharacteristicPathNode, the node type is the type of the projected
+     * characteristic. For a PlatformParticipantPathNode, the node type is the
+     * PlatformAssociation containing the projected PlatformParticipant.
+     * Returns a PlatformComposableElement.
+     */
+    def: getNodeType() : PlatformComposableElement =
+      if self.oclIsTypeOf(PlatformCharacteristicPathNode) then
+        self.oclAsType(PlatformCharacteristicPathNode)
+            .projectedCharacteristic
+            .getType()
+      else
+        -- get PlatformAssociation that contains projectedCharacteristic
+        PlatformAssociation.allInstances()
+          ->select(participant->includes(self.oclAsType(PlatformParticipantPathNode)
+                                             .projectedParticipant))
+          ->any(true)
+      endif
+      
+  context PlatformDataType       
+    /*
+     * Helper method that determines if an PlatformDataType realizes a MeasurementAxis.
+     */
+    def: realizesMeasurementAxis() : Boolean =
+      self.realizes.oclIsTypeOf(LogicalMeasurementAxis)
+
+
+    /*
+     * Helper method that gets the MeasurementAxis realized by an PlatformDataType.
+     * Returns null if the PlatformDataType does not realize a MeasurementAxis.
+     */
+    def: realizedMeasurementAxis() : LogicalMeasurementAxis =
+      if self.realizesMeasurementAxis() then
+        self.realizes.oclAsType(LogicalMeasurementAxis)
+      else
+        null
+      endif
+    
+    /*
+     * Helper method that determines if an PlatformDataType realizes a Measurement.
+     */
+    def: realizesMeasurement() : Boolean =
+      self.realizes.oclIsTypeOf(LogicalMeasurement)
+      
+    /*
+     * Helper method that gets the Measurement realized by an PlatformDataType.
+     * Returns null if the PlatformDataType does not realize a Measurement.
+     */
+    def: realizedMeasurement() : LogicalMeasurement =
+      if self.realizesMeasurement() then
+        self.realizes.oclAsType(LogicalMeasurement)
+      else
+        null
+      endif
+    
+    /*
+     * A ValueTypeUnit is realized by an PlatformPrimitive.
+     */    
+    inv vtuRealizedByIDLPrimitive:
+      self.realizes.oclIsTypeOf(face::datamodel::logical::ValueTypeUnit)
+        implies
+      self.oclIsKindOf(PlatformPrimitive)
+    
+    /*
+     * An IDLArray or IDLSequence realizes a
+     * Measurement based on a StandardMeasurementSystem.
+     */
+    inv idlCollectionRealizesStandardMeasurement:
+      self.oclIsTypeOf(IDLSequence) or self.oclIsTypeOf(IDLArray)
+        implies
+      self.realizesMeasurement() and
+      self.realizedMeasurement().isStandardMeasurement()
+    
+    /*
+     * If a MeasurementAxis has one ValueTypeUnit (VTU), then
+     * it is realized by an PlatformPrimitive; if it has multiple VTUs, then
+     * it is realized by an PlatformStruct with one PlatformStructMember per VTU.
+     * If PlatformStruct "A" realizes MeasurementAxis "B",
+     * then A has the same number of IDLCompositions as B has VTUs,
+     * and every PlatformStructMember in A realizes a unique VTU in V.
+     */
+    inv idlTypeConsistentlyRealizesMeasurementAxis:
+      self.realizesMeasurementAxis()
+      
+        implies
+        
+      if self.realizedMeasurementAxis().getValueTypeUnits()->size() = 1 then
+        self.oclIsKindOf(PlatformPrimitive)
+      else
+        self.oclIsTypeOf(PlatformStruct) and
+        self.realizedMeasurementAxis().getValueTypeUnits()
+          = self.oclAsType(PlatformStruct).composition
+                                     ->collect(type.realizes)
+                                     ->asSet() and
+        self.realizedMeasurementAxis().getValueTypeUnits()->size()
+          = self.oclAsType(PlatformStruct).composition
+                                     ->collect(type.realizes)
+                                     ->size()               
+      endif
+    
+    /*
+     * A Measurement is realized by an PlatformStruct with one PlatformStructMember
+     * per MeasurementAxis. (Each PlatformStructMember's type realizes a unique axis
+     * in the Measurement; every axis is realized.)
+     * There are two exceptions:
+     *   - If a Measurement has one axis with one ValueTypeUnit (VTU)
+     *      and no MeasurementAttributes, it is realized by an PlatformPrimitive.
+     *   - If a Measurement has one axis with multiple VTUs
+     *      and no MeasurementAttributes, it is realized by an PlatformStruct
+     *      with one PlatformStructMember for each VTU in the axis.
+     *      (Each PlatformStructMember's type realizes a unique VTU in the axis;
+     *      every VTU is realized.) Each PlatformStructMember's type is consistent
+     *      with the type of the VTU it realizes.
+     */
+    inv idlTypeConsistentlyRealizesMeasurement:
+      self.realizesMeasurement() and
+      not self.realizedMeasurement().isStandardMeasurement()
+      
+        implies
+        
+      let realizedAxes = self.realizedMeasurement().measurementAxis in
+      
+      if realizedAxes->collect(getValueTypeUnits())->size() = 1 and
+         self.realizedMeasurement().attribute->size() = 0 then
+        self.oclIsKindOf(PlatformPrimitive)
+      else if realizedAxes->size() = 1 and
+              self.realizedMeasurement().attribute->size() = 0 then
+        self.oclIsTypeOf(PlatformStruct)
+          and
+        realizedAxes->collect(getValueTypeUnits())
+          = self.oclAsType(PlatformStruct).composition->select(realizes = null)
+                                                 ->collect(type.realizes)
+                                                 ->asBag()
+      else
+        self.oclIsTypeOf(PlatformStruct)
+          and
+        realizedAxes
+          = self.oclAsType(PlatformStruct).composition->select(realizes = null)
+                                                 ->collect(type.realizes)
+                                                 ->asSet()
+          and
+        realizedAxes->size()
+          = self.oclAsType(PlatformStruct).composition->select(realizes = null)
+                                                 ->collect(type.realizes)
+                                                 ->size()
+      endif
+      endif
+      
+  context PlatformStruct
+    /*
+     * A Measurement with MeasurementAttributes is realized by an PlatformStruct
+     * with one PlatformStructMember per MeasurementAttribute. (Each PlatformStructMember
+     * (that realizes) realizes a unique attribute in the Measurement;
+     * every attribute is realized.)
+     */
+    inv idlCompositionsConsistentlyRealizeMeasurementAttributes:
+      self.realizesMeasurement()
+      
+        implies
+        
+        --TODO CHECK IF NECESSARY
+      self.composition->collect(realizes)->reject(oclIsUndefined())->asSet()
+       = self.realizedMeasurement().attribute
+      
+  context PlatformStructMember
+    /*
+     * If an PlatformStructMember realizes a MeasurementAttribute, then
+     * the PlatformStructMember's type is consistent with its realization's type.
+     */
+    inv typeConsistentWithRealization:
+      self.realizes <> null implies
+      self.type.oclAsType(PlatformDataType).realizes = self.realizes.type
+  
+    /*
+     * An PlatformStructMember whose type is an IDLNumber has
+     * a precision greater than zero.
+     */
+    inv composedIDLNumberHasPrecisionSet:
+      self.type <> null and self.type.oclIsKindOf(IDLNumber)
+        implies
+      self.precision > 0
+      
+endpackage

@@ -1,0 +1,700 @@
+
+import  '../../../../../model/generated/Uddl.ecore'
+include 'helpers.ocl'
+include 'conceptual.ocl'
+
+package uddl --face::datamodel::logical
+
+  context LogicalElement
+    /*
+     * Every Logical LogicalElement has a unique name,
+     * with the exception of Constraints.
+     */
+    inv hasUniqueName:
+      not self.oclIsTypeOf(LogicalConstraint) implies
+      not LogicalElement.allInstances()->excluding(self)
+                                ->collect(name.toLowerCase())
+                                ->includes(self.name.toLowerCase())
+
+  context LogicalEntity
+    /*
+     * Helper method that gets the Characteristics contained in an LogicalEntity.
+     */
+    def: getLocalCharacteristics() : Set(LogicalCharacteristic) =
+      if self.oclIsTypeOf(LogicalAssociation) then
+        let compositions : Set(LogicalCharacteristic) =
+          self.composition in
+        
+        let participants : Set(LogicalCharacteristic) =
+          self.oclAsType(LogicalAssociation).participant in
+                                     
+        compositions->union(participants)
+      else
+        self.composition
+      endif
+      
+    /*
+     * Helper method that gets the Characteristics of an LogicalEntity,
+     * including those from specialized Entities.
+     */
+    def: getAllCharacteristics() : Set(LogicalCharacteristic) =
+      let allCharacteristics : Set(LogicalCharacteristic) =
+        self->closure(specializes)
+          ->including(self)
+          ->collect(getLocalCharacteristics()) in
+        
+        allCharacteristics  
+          ->reject(c1 |
+                   allCharacteristics->exists(c2 |
+                                              c2.specializes = c1))
+
+    /*
+     * A LogicalCharacteristic's rolename is unique within an LogicalEntity.
+     */
+    inv characteristicsHaveUniqueRolenames:
+      self.getAllCharacteristics()->isUnique(rolename)
+
+    /*
+     * Compositions in a logical LogicalEntity realize Compositions in
+     * the conceptual LogicalEntity that the logical LogicalEntity realizes.
+     */
+    inv compositionsConsistentWithRealization:
+      self.composition
+          ->collect(realizes)
+          ->forAll(c | self.realizes.composition->exists(c2 | c = c2))
+          
+    /*
+     * An LogicalEntity does not contain two Compositions that realize the same
+     * conceptual LogicalComposition unless their types are different Measurements
+     * and their multiplicities are equal.
+     */
+    inv realizedCompositionsHaveDifferentTypes:
+      self.composition->forAll(c1, c2 | c1 <> c2 and
+                                        c1.realizes = c2.realizes
+                                          implies
+                                        c1.type.oclIsTypeOf(LogicalMeasurement) and
+                                        c2.type.oclIsTypeOf(LogicalMeasurement) and
+                                        c1.type <> c2.type and
+                                        c1.lowerBound = c2.lowerBound and
+                                        c1.upperBound = c2.upperBound)
+    
+    /*
+     * If an LogicalEntity specializes, its specialization is
+     * consistent with its realization's specialization.
+     */
+    inv specializationConsistentWithRealization:
+      self.specializes <> null implies
+      self.specializes.realizes = self.realizes.specializes
+           
+    /*
+     * An LogicalEntity has at least one LogicalCharacteristic defined
+     * locally (not through generalization), unless the
+     * LogicalEntity is in the "middle" of a generalization hierarchy.
+     */
+    inv hasAtLeastOneLocalCharacteristic:
+      let inMiddleOfGeneralizationHierarchy =
+        self.specializes <> null and
+        LogicalEntity.allInstances()->collect(specializes)
+                             ->includes(self) in
+                             
+      not inMiddleOfGeneralizationHierarchy
+        implies
+      self.getLocalCharacteristics()->size() >= 1
+
+  context LogicalAssociation    
+    /*
+     * Participants in a logical LogicalAssociation realize Participants in
+     * the conceptual LogicalAssociation that the logical LogicalAssociation realizes.
+     */
+    inv participantsConsistentWithRealization:
+      self.participant
+          ->collect(realizes)
+          ->forAll(ae | self.realizes.oclAsType(ConceptualAssociation)
+                            .participant
+                            ->exists(ae2 | ae = ae2))
+    
+    /*
+     * Participants in an LogicalAssociation realize unique Participants.
+     */
+    inv participantsRealizeUniquely:
+      self.participant->forAll(p1, p2 | p1 <> p2 implies
+                                        p1.realizes <> p2.realizes)
+
+  context LogicalCharacteristic
+    /*
+     * Helper method that gets the rolename of a LogicalCharacteristic.
+     */
+    def: getRolename() : String =
+      if self.oclIsKindOf(LogicalComposition) then
+        self.oclAsType(LogicalComposition).rolename
+      else
+        self.oclAsType(LogicalParticipant).getRolename()
+      endif
+      
+    /*
+     * Helper method that gets the type of a LogicalCharacteristic.
+     */
+    def: getType() : LogicalComposableElement =
+      if self.oclIsTypeOf(LogicalComposition) then
+        self.oclAsType(LogicalComposition).type
+      else
+        self.oclAsType(LogicalParticipant).getResolvedType()
+      endif
+
+    /*
+     * Helper method that gets the conceptual LogicalCharacteristic a
+     * logical LogicalCharacteristic realizes.
+     */
+    def: getRealizes() : ConceptualCharacteristic =
+      if self.oclIsTypeOf(LogicalComposition) then
+        self.oclAsType(LogicalComposition).realizes
+      else
+        self.oclAsType(LogicalParticipant).realizes
+      endif
+
+    /*
+     * The rolename of a LogicalCharacteristic is a valid identifier.
+     */
+    inv rolenameIsValidIdentifier:
+      self.getRolename() <> null implies
+      Element::isValidIdentifier(self.rolename)
+
+    /*
+     * A LogicalCharacteristic's lowerBound is less than or equal to its upperBound,
+     * unless its upperBound is -1.
+     */
+    inv lowerBound_LTE_UpperBound:
+      self.upperBound <> -1 implies self.lowerBound <= self.upperBound
+
+    /*
+     * A LogicalCharacteristic's upperBound is equal to -1 or greater than 1.
+     */
+    inv upperBoundValid:
+      self.upperBound = -1 or self.upperBound >= 1
+    
+    /*
+     * If a LogicalCharacteristic specializes, its specialization is
+     * consistent with its realization's specialization.
+     */
+    inv specializationConsistentWithRealization:
+      self.specializes <> null implies
+      self.specializes.getRealizes() = self.getRealizes().specializes
+
+  context LogicalComposition
+    /*
+     * A LogicalComposition's type is consistent with its realization's type.
+     */
+    inv typeConsistentWithRealization:
+      if self.type.oclIsKindOf(LogicalEntity) then
+        self.type.oclAsType(LogicalEntity).realizes = self.realizes.type
+      else
+      if self.type.oclIsKindOf(LogicalMeasurement) then
+        self.type.oclAsType(LogicalMeasurement).realizes = self.realizes.type
+      else
+        false
+      endif
+      endif
+      
+    /*
+     * A LogicalComposition's multiplicity is at least as
+     * restrictive as the LogicalComposition it realizes.
+     */
+    inv multiplicityConsistentWithRealization:
+      self.lowerBound >= self.realizes.lowerBound and
+      if self.realizes.upperBound = -1 then
+        self.upperBound >= self.realizes.upperBound
+      else
+        self.upperBound <= self.realizes.upperBound
+      endif
+      
+    /*
+     * A LogicalComposition's multiplicity is at least as
+     * restrictive as the LogicalComposition it specialization.
+     */
+    inv multiplicityConsistentWithSpecialization:
+      self.specializes <> null implies
+      self.lowerBound >= self.specializes.lowerBound and
+      if self.specializes.upperBound = -1 then
+        self.upperBound >= self.specializes.upperBound
+      else
+        self.upperBound <= self.specializes.upperBound
+      endif
+
+  context LogicalParticipant
+    /*
+     * Helper method that gets a LogicalParticipant's LogicalPathNode sequence.
+     */      
+    def: getPathSequence() : OrderedSet(LogicalPathNode) =
+      self.path->asOrderedSet()
+               ->closure(pn : LogicalPathNode |
+                         let projectedParticipantPath =
+                           if pn.projectsParticipant() then
+                              pn.projectedParticipant().path
+                           else
+                             null
+                           endif in
+                     
+                         OrderedSet{projectedParticipantPath,
+                                    pn.node}
+                           ->reject(oclIsUndefined()))
+                ->prepend(self.path)
+                ->reject(oclIsUndefined())
+      
+    /*
+     * Helper method that determines if a LogicalParticipant's
+     * path sequence contains a cycle.
+     */
+    def: hasCycleInPath() : Boolean =
+      self.getPathSequence()
+          ->collect(getProjectedCharacteristic())
+          ->includes(self)
+
+    /*
+     * Helper method that gets the element projected by a LogicalParticipant.
+     * Returns a LogicalComposableElement.
+     */
+    def: getResolvedType() : LogicalComposableElement =
+      if self.hasCycleInPath() then
+        null
+      else if self.path = null then
+        self.type
+      else
+        self.getPathSequence()->last().getNodeType()
+      endif
+      endif
+
+    /*
+     * Helper method that gets the rolename of a LogicalParticipant.
+     * (A LogicalParticipant's rolename is either projected from a
+     * characteristic or defined directly on the LogicalParticipant.)
+     */
+    def: getRolename() : String =
+      if self.rolename.size() > 0 then
+        self.rolename
+      else if self.path <> null and
+              self.getPathSequence()->last()
+                  .oclIsTypeOf(LogicalCharacteristicPathNode) then
+        self.getPathSequence()->last()
+            .oclAsType(LogicalCharacteristicPathNode)
+            .projectedCharacteristic.getRolename()
+      else
+        null
+      endif
+      endif
+      
+    /* 
+     * A LogicalParticipant has a rolename, either projected from a
+     * characteristic or defined directly on the LogicalParticipant.
+     */
+    inv rolenameDefined:
+      self.getRolename() <> null
+                        
+    /*
+     * If LogicalParticipant "A" realizes LogicalParticipant "B",
+     * then A's type realizes B's type,
+     * and A's LogicalPathNode sequence "realizes" B's LogicalPathNode sequence.
+     * (A LogicalPathNode sequence "A" "realizes" a sequence "B" if
+     * the projected element of each LogicalPathNode in A realizes the
+     * projected element of the corresponding LogicalPathNode in B.)
+     */
+    inv typeConsistentWithRealization:      
+      self.type.realizes = self.realizes.type
+        and
+      self.getPathSequence()->collect(getProjectedCharacteristic()
+                                       .getRealizes()) =
+      self.realizes.getPathSequence()->collect(getProjectedCharacteristic())
+
+    /*
+     * A LogicalParticipant's multiplicity is at least as
+     * restrictive as the LogicalParticipant it realizes.
+     */
+    inv multiplicityConsistentWithRealization:
+      self.lowerBound >= self.realizes.lowerBound and
+      if self.realizes.upperBound = -1 then
+        self.upperBound >= self.realizes.upperBound
+      else
+        self.upperBound <= self.realizes.upperBound
+      endif
+      
+      and
+      
+      self.sourceLowerBound >= self.realizes.sourceLowerBound and
+      if self.realizes.sourceUpperBound = -1 then
+        self.sourceUpperBound >= self.realizes.sourceUpperBound
+      else
+        self.sourceUpperBound <= self.realizes.sourceUpperBound
+      endif
+
+    /*
+     * A LogicalParticipant's multiplicity is at least as
+     * restrictive as the LogicalParticipant it specializes.
+     */
+    inv multiplicityConsistentWithSpecialization:
+      (self.specializes <> null and
+       self.specializes.oclIsTypeOf(LogicalParticipant))
+         implies
+      let specializedParticipant = self.specializes.oclAsType(LogicalParticipant) in
+    
+      self.lowerBound >= specializedParticipant.lowerBound and
+      if specializedParticipant.upperBound = -1 then
+        self.upperBound >= specializedParticipant.upperBound
+      else
+        self.upperBound <= specializedParticipant.upperBound
+      endif
+      
+      and
+      
+      self.sourceLowerBound >= specializedParticipant.sourceLowerBound and
+      if specializedParticipant.sourceUpperBound = -1 then
+        self.sourceUpperBound >= specializedParticipant.sourceUpperBound
+      else
+        self.sourceUpperBound <= specializedParticipant.sourceUpperBound
+      endif
+      
+  context LogicalView
+    /*
+     * Helper method that gets the LogicalView realized by a LogicalView.
+     */
+    def: getRealizes() : ConceptualView =
+      if self.oclIsKindOf(LogicalQuery) then
+        self.oclAsType(LogicalQuery).realizes
+      else
+        self.oclAsType(LogicalCompositeQuery).realizes
+      endif
+
+  context LogicalCompositeQuery
+    /*
+     * A LogicalQueryComposition's rolename is unique within a LogicalCompositeQuery.
+     */
+    inv compositionsHaveUniqueRolenames:
+      self.composition->collect(rolename)
+                      ->isUnique(rn | rn)
+      
+    /*
+     * A LogicalCompositeQuery does not compose itself.
+     */
+    inv noCyclesInConstruction:
+      let composedQueries = self->closure(composition
+                                          ->collect(type)
+                                          ->selectByKind(LogicalCompositeQuery)) in
+                                 
+      not composedQueries->includes(self)
+    
+    /*
+     * A LogicalCompositeQuery does not compose the same LogicalView more than once.
+     */
+    inv viewComposedOnce:
+      self.composition->collect(type)->isUnique(view | view)
+      
+    /*
+     * QueryCompositions in a logical LogicalCompositeQuery realize QueryCompositions
+     * in the conceptual LogicalCompositeQuery that the logical LogicalCompositeQuery
+     * realizes.
+     */
+    inv compositionsConsistentWithRealization:
+      if self.realizes = null
+      then
+        self.composition->forAll(c | c.realizes = null)
+      else
+        self.composition->forAll(c |
+            self.realizes.composition->exists(c2 | c.realizes = c2)
+        )
+      endif
+      
+    /*
+     *  A LogicalCompositeQuery that realizes has the same "isUnion" property
+     *  as the LogicalCompositeQuery it realizes.
+     */
+    inv realizationUnionConsistent:
+      self.realizes->forAll(realized | self.isUnion = realized.isUnion)
+      
+    /*
+     * A LogicalCompositeQuery does not contain two QueryCompositions that realize the
+     * same LogicalQueryComposition.
+     */
+    inv realizedCompositionsHaveDifferentTypes:
+      self.realizes <> null implies
+      self.composition->forAll(c1, c2 | c1 <> c2 implies
+                                        c1.realizes <> c2.realizes)
+
+  context LogicalQueryComposition
+    /*
+     * The rolename of a LogicalQueryComposition is a valid identifier.
+     */
+    inv rolenameIsValidIdentifier:
+      Element::isValidIdentifier(self.rolename)
+    
+    /*
+     * If LogicalQueryComposition "A" realizes LogicalQueryComposition "B",
+     * then A's type realizes B's type.
+     */
+    inv typeConsistentWithRealization:
+      self.realizes <> null implies
+      self.type.getRealizes() = self.realizes.type
+
+  context LogicalPathNode
+    /*
+     * Helper method that gets the LogicalCharacteristic projected by a LogicalPathNode.
+     */
+    def: getProjectedCharacteristic() : LogicalCharacteristic =
+      if self.oclIsTypeOf(LogicalCharacteristicPathNode) then
+        self.oclAsType(LogicalCharacteristicPathNode).projectedCharacteristic
+      else -- LogicalParticipantPathNode
+        self.oclAsType(LogicalParticipantPathNode).projectedParticipant
+      endif
+    
+    /*
+     * Helper method that determines if a LogicalPathNode projects a LogicalParticipant.
+     */  
+    def: projectsParticipant() : Boolean =
+      self.oclIsTypeOf(LogicalCharacteristicPathNode) and
+      self.oclAsType(LogicalCharacteristicPathNode)
+          .projectedCharacteristic
+          .oclIsTypeOf(LogicalParticipant)
+          
+    /*
+     * Helper method that gets the LogicalParticipant projected by a LogicalPathNode.
+     * Returns null if no LogicalParticipant is projected.
+     */  
+    def: projectedParticipant() : LogicalParticipant =
+      let pp = self.oclAsType(LogicalCharacteristicPathNode)
+                    .projectedCharacteristic
+                    .oclAsType(LogicalParticipant) in
+      if not pp.oclIsInvalid() then
+        pp
+      else
+        null
+      endif
+
+    /*
+     * Helper method that gets the "node type" of a LogicalPathNode. For a
+     * LogicalCharacteristicPathNode, the node type is the type of the projected
+     * characteristic. For a LogicalParticipantPathNode, the node type is the
+     * LogicalAssociation containing the projected LogicalParticipant.
+     * Returns a LogicalComposableElement.
+     */
+    def: getNodeType() : LogicalComposableElement =
+      if self.oclIsTypeOf(LogicalCharacteristicPathNode) then
+        self.oclAsType(LogicalCharacteristicPathNode)
+            .projectedCharacteristic
+            .getType()
+      else
+        -- get LogicalAssociation that contains projectedCharacteristic
+        LogicalAssociation.allInstances()
+          ->select(participant->includes(self.oclAsType(LogicalParticipantPathNode)
+                                             .projectedParticipant))
+          ->any(true)
+      endif
+
+  context LogicalValueTypeUnit
+    /*
+     * If a LogicalValueTypeUnit "A" contains an LogicalEnumerationConstraint,
+     * then A's valueType is an LogicalEnumerated, and the constraint's
+     * allowedValues are EnumerationLabels from that LogicalEnumerated.
+     */
+    inv appropriateLabelsForEnumeratedConstraint:
+      self.constraint <> null and
+      self.constraint.oclIsTypeOf(LogicalEnumerationConstraint)
+      
+      implies
+
+      self.valueType.oclIsTypeOf(LogicalEnumerated) and
+      self.constraint
+          .oclAsType(LogicalEnumerationConstraint)
+          .allowedValue
+          ->forAll(allowedValue | self.valueType
+                                      .oclAsType(LogicalEnumerated)
+                                      .label
+                                      ->exists(label | label = allowedValue))
+
+  context LogicalValueType
+    /*
+     * A LogicalValueType is named the same as its metatype.
+     * (e.g. a String is named "String")
+     */
+    inv nameOfValueTypeMatchesNameOfMetaclass:
+      self.oclIsTypeOf(LogicalEnumerated) or
+      self.name = self.oclType().name
+      
+  context LogicalFixedLengthStringConstraint
+    /*
+     * A LogicalFixedLengthStringConstraint's length is greater than zero.
+     */
+    inv nonNegativeLength:
+      self.length > 0
+      
+  context LogicalEnumerated
+    /*
+     * An LogicalEnumerated's name is not an IDL reserved word.
+     */                        
+    inv nameIsNotReservedWord:
+      not Element::isReservedWord(self.name)
+  
+    /*
+     * An LogicalEnumerationLabel's name is unique within an LogicalEnumerated.
+     */
+    inv enumerationLabelNameUnique:
+      self.label->isUnique(name)
+      
+  context LogicalEnumerationLabel
+    /*
+     * An LogicalEnumerationLabel's name is not an IDL reserved word.
+     */                        
+    inv nameIsNotReservedWord:
+      not Element::isReservedWord(self.name)
+
+  context LogicalMeasurementSystem
+    /*
+     * Helper method that determines if a LogicalMeasurementSystem
+     * uses an LogicalEnumerated LogicalValueType in any of its axes.
+     */
+    def: hasAnEnumeratedValueType() : Boolean =
+      let valueTypes: Collection(LogicalValueType) =
+            self.measurementSystemAxis.defaultValueTypeUnit.valueType in
+      valueTypes->exists(vt | vt.oclIsTypeOf(LogicalEnumerated))
+
+    /*
+     * There is one LogicalMeasurementSystem that uses an LogicalEnumerated LogicalValueType
+     * in any of its axes. Its name is "AbstractDiscreteSet",
+     * and it has one axis.
+     */
+    inv onlyOneEnumeratedMeasurementSystem:
+      if self.name = 'AbstractDiscreteSetMeasurementSystem' then
+        self.hasAnEnumeratedValueType() and
+        self.measurementSystemAxis.defaultValueTypeUnit->size() = 1
+      else
+        not self.hasAnEnumeratedValueType()
+      endif
+
+    /*
+     * If a LogicalMeasurementSystem "A" is based on CoordinateSystem "B",
+     * then A and B have the same number of axes, 
+     * and every MeasurementSystemAxis in A is based on a unique
+     * CoordinateSystemAxis in B.
+     */
+    inv measurementSystemConsistentWithCoordinateSystem:
+      self.measurementSystemAxis->collect(axis)->asSet()
+        = coordinateSystem.axis
+
+    /*
+     * A LogicalReferencePoint in a LogicalMeasurementSystem contains ReferencePointParts
+     * that use MeasurementSystemAxes used by that LogicalMeasurementSystem.
+     */
+    inv referencePointPartsConsistentWithAxes:
+      self.referencePoint->forAll(rp |
+        rp.referencePointPart->collect(axis)->forAll(rppAxis |
+          rppAxis <> null implies
+          self.measurementSystemAxis->exists(msa | msa = rppAxis)
+        )
+      )
+      
+    /*
+     * In a LogicalMeasurementSystem, each ReferencePoints' parts use the same
+     * set of VTUs as the LogicalMeasurementSystem's axes.
+     */
+    inv referencePointPartsCoverAllAxes:
+      self.referencePoint->forAll(rp | 
+        rp.referencePointPart->collect(valueTypeUnit)
+          = self.measurementSystemAxis->collect(defaultValueTypeUnit)
+        )
+      
+    /*
+     * If a LogicalMeasurementSystem has ReferencePoints, then it has
+     * at least as many ReferencePoints as it has axes.
+     */
+    inv hasSufficientReferencePoints:
+      self.referencePoint->notEmpty() implies
+      self.referencePoint->size() >= self.measurementSystemAxis->size()
+      
+  context LogicalReferencePoint
+    /*
+     * If two ReferencePointParts in a LogicalReferencePoint refer to the same
+     * VTU, then they refer to distinct (non-null) axes.
+     */
+     inv noAmbiguousVTUReference:
+       let allVTUs = self.referencePointPart->collect(valueTypeUnit) in
+       let vtusUsedMoreThanOnce = allVTUs->reject(vtu |
+                                                  allVTUs->count(vtu) = 1) in
+       
+       vtusUsedMoreThanOnce->forAll(vtu |
+         let rppsThatUseTheVTU
+          = self.referencePointPart
+                ->select(rpp |
+                         vtusUsedMoreThanOnce->includes(rpp.valueTypeUnit)) in
+          
+         rppsThatUseTheVTU->forAll(rpp | rpp.axis <> null) and
+         rppsThatUseTheVTU->collect(axis)
+                          ->asSet()
+                          ->size() = rppsThatUseTheVTU->collect(axis)->size()
+       )
+
+  context LogicalMeasurement
+    /*
+     * Helper method that determines if a LogicalMeasurement
+     * uses an LogicalEnumerated LogicalValueType in any of its axes.
+     */
+    def: hasAnEnumeratedValueType() : Boolean =
+      let valueTypes: Collection(LogicalValueType) =
+            self.measurementAxis.valueTypeUnit.valueType in
+      valueTypes->exists(vt | vt.oclIsTypeOf(LogicalEnumerated))
+
+    /*
+     * Helper method that determines if a LogicalMeasurement is
+     * based on a LogicalStandardMeasurementSystem.
+     */
+    def: isStandardMeasurement() : Boolean =
+        self.measurementSystem.oclIsTypeOf(LogicalStandardMeasurementSystem)
+
+    /*
+     * A LogicalMeasurement that uses an LogicalEnumerated LogicalValueType in any of its axes
+     * is based on the 'AbstractDiscreteSet' LogicalMeasurementSystem.
+     */
+    inv enumeratedMeasurementUsesEnumeratedMeasurementSystem:
+      if self.hasAnEnumeratedValueType() then
+        self.measurementSystem.name = 'AbstractDiscreteSetMeasurementSystem'
+      else
+        self.measurementSystem.name <> 'AbstractDiscreteSetMeasurementSystem'
+      endif
+
+    /*
+     * If a LogicalMeasurement "A" is based on LogicalMeasurementSystem "B",
+     * then A and B have the same number of axes, 
+     * and every LogicalMeasurementAxis in A is based on a unique
+     * MeasurementSystemAxis in B.
+     * If a LogicalMeasurement is based on a LogicalStandardMeasurementSystem,
+     * then it has no axes.
+     */
+    inv measurementConsistentWithMeasurementSystem:
+      if self.isStandardMeasurement() then
+        self.measurementAxis->isEmpty()
+      else
+        self.measurementAxis->collect(measurementSystemAxis)->asSet()
+          = self.measurementSystem.oclAsType(LogicalMeasurementSystem)
+                .measurementSystemAxis
+      endif
+      
+    /*
+     * A LogicalMeasurement does not use itself as a MeasurementAttribute.
+     */
+    inv noCyclesInMeasurements:
+      not self->closure(attribute.type)->includes(self)
+    
+    /*
+     * A LogicalMeasurement's attributes have unique rolenames.
+     */
+    inv measurementAttributesHaveUniqueRolenames:
+      self.attribute->isUnique(rolename)
+
+  context LogicalMeasurementAxis
+    /*
+     * Helper method that gets the ValueTypeUnits used in a LogicalMeasurementAxis.
+     */
+    def: getValueTypeUnits() : Set(LogicalValueTypeUnit) =
+      if self.valueTypeUnit->isEmpty() then
+        self.measurementSystemAxis.defaultValueTypeUnit
+      else
+        -- the LogicalMeasurementSystem's default LogicalValueTypeUnit is overridden
+        self.valueTypeUnit
+      endif
+
+endpackage
