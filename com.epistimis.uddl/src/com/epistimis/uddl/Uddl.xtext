@@ -32,7 +32,9 @@ QualifiedNameWithWildcard:
  // Metamodel concepts starts here   
 
 Element:
-	ConceptualDataModel | LogicalDataModel | PlatformDataModel
+	ConceptualDataModel | LogicalDataModel | PlatformDataModel|
+	ConceptualElement|
+	LogicalElement
 ;
 
 ConceptualDataModel:
@@ -61,7 +63,8 @@ PlatformDataModel:
 ConceptualElement:
 	ConceptualDomain |
 	ConceptualBasisEntity |
-	ConceptualComposableElement 	
+	ConceptualComposableElement |
+	ConceptualView	
 ;
 
 ConceptualComposableElement:
@@ -93,12 +96,12 @@ ConceptualEntity:
 	ConceptualAssociation |
 	'ce' name=ID (description=STRING)? ':' (specializes=[ConceptualComposableElement|QN])? '{'
 		(composition+=ConceptualComposition)?
-		('basis:' (ConceptualBasisEntity+=[ConceptualBasisEntity|QN]))?
+		('basis:' (basisEntity+=[ConceptualBasisEntity|QN]))?
 	'}' ';'
 ;
 
 ConceptualComposition:
-	type=[ConceptualComposableElement|QN]  name=ID '[' (lowerBound=INT)? ':' (upperBound=INT)? ']' (description=STRING)? ':' (specializes=[ConceptualCharacteristic|QN])? ';'
+	type=[ConceptualComposableElement|QN]  rolename=ID '[' (lowerBound=INT)? ':' (upperBound=INT)? ']' (description=STRING)? ':' (specializes=[ConceptualCharacteristic|QN])? ';'
 ;
 
 ConceptualAssociation:
@@ -110,7 +113,7 @@ ConceptualAssociation:
 ;
 
 ConceptualParticipant:
-	type=[ConceptualEntity|QN]  name=ID '[' (lowerBound=INT)? ':' (upperBound=INT)? ']' (description=STRING)? ':' (specializes=[ConceptualCharacteristic|QN])? 
+	type=[ConceptualEntity|QN]  rolename=ID '[' (lowerBound=INT)? ':' (upperBound=INT)? ']' (description=STRING)? ':' (specializes=[ConceptualCharacteristic|QN])? 
 		'{'
 			'src:' '['sourceLowerBound=INT ':' sourceUpperBound=INT ']'
 			'path:' path=ConceptualPathNode 
@@ -166,15 +169,12 @@ LogicalElement:
 	LogicalUnit | //LogicalConvertibleElement | // LogicalConvertibleElement has a single inheritance of LogicalUnit - promote that to here
 	LogicalMeasurementConversion |
 	LogicalMeasurementSystemConversion |
-	//LogicalMeasurement | // Also derived from AbstractMeasurement
 	LogicalMeasurementAxis | // Also derived from AbstractMeasurement
-	LogicalMeasurementSystem |
+	LogicalAbstractMeasurementSystem| //LogicalMeasurementSystem |
 	LogicalMeasurementSystemAxis |
 	LogicalValueType | // Also derived from AbstractMeasurement
 	LogicalView 
 ;
-
-
 
 // NOTE: LogicalConvertibleElement has LogicalUnit as a single inheritance. Since it has nothing else, promote LogicalUnit directly
 // to LogicalElement
@@ -185,12 +185,16 @@ LogicalUnit:
 // NOTE: LogicalConversion has LogicalAffineConversion as a single inheritance. Since it has nothing else, promote LogicalAffineConversion directly
 // to LogicalElement
 LogicalConversion:
-	source=[LogicalAssociation|QN] '->'  destination=[LogicalAssociation|QN] ';' |
+	'conv' name=ID  (description=STRING)? '{'
+		source=[LogicalAssociation|QN] '->'  destination=[LogicalAssociation|QN] 
+		'}' ';' |
 	LogicalAffineConversion
 ;
 
 LogicalAffineConversion:
-	source=[LogicalAssociation|QN] '-(' conversionFactor=FLOAT ',' offset=FLOAT ')->'  destination=[LogicalAssociation|QN] ';' 
+	'aconv' name=ID  (description=STRING)? '{'
+		source=[LogicalAssociation|QN] '-(' conversionFactor=FLOAT ',' offset=FLOAT ')->'  destination=[LogicalAssociation|QN]
+	'}' ';' 
 ;
 
 LogicalValueType:
@@ -210,16 +214,22 @@ LogicalNumeric:
 	LogicalInteger |
 	LogicalNatural |
 	LogicalReal |
-	LogicalNonNegativeInteger
+	LogicalNonNegativeReal
 ;
 
 LogicalInteger:					'int' 	name=ID (description=STRING)? ';'	;
 LogicalNatural:					'nat' 	name=ID (description=STRING)? ';'	;
 LogicalReal:					'real' 	name=ID (description=STRING)? ';'	;
-LogicalNonNegativeInteger:		'real+' name=ID (description=STRING)? ';'	;
-LogicalEnumerated:				'enum' 	name=ID (description=STRING)? ';'	;
+LogicalNonNegativeReal:			'real+' name=ID (description=STRING)? ';'	;
+LogicalEnumerated:				
 
-LogicalEnumerationLabel:		name=ID (description=STRING)? ';' ;
+	'enum' 	name=ID (description=STRING)? '['
+		label+=LogicalEnumerationLabel (',' label+=LogicalEnumerationLabel)*
+		']'
+		';'	
+		;
+
+LogicalEnumerationLabel:		'(' name=ID (description=STRING)? ')' ;
 
 LogicalCoordinateSystem:
 	'coord' name=ID (description=STRING)? '{'
@@ -350,9 +360,9 @@ LogicalMeasurementSystemConversion:
 // See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
 // Use a FilteringScope
 //LogicalAbstractMeasurement:
-//	LogicalMeasurement |
-//	LogicalMeasurementAxis |
-//	LogicalValueTypeUnit
+//	LogicalMeasurement |  // Use LogicalComposableElement
+//	LogicalMeasurementAxis | // Use LogicalElement
+//	LogicalValueTypeUnit  //Use LogicalElement
 //;
 
 
@@ -385,7 +395,7 @@ LogicalMeasurementConversion:
 
 LogicalComposableElement:
 	LogicalEntity |
-	LogicalMeasurement
+	LogicalMeasurement  // Also derived from AbstractMeasurement
 ;
 
 
@@ -418,7 +428,7 @@ LogicalAssociation:
 LogicalParticipant:
 	type=[LogicalAssociation|QN]  rolename=ID '[' lowerBound=INT ':' upperBound=INT ']' (description=STRING)? (':' specializes=[LogicalCharacteristic|QN])?  '->' realizes=[ConceptualParticipant|QN] '{'
 		'source:' '[' sourceLowerBound=INT ':' sourceUpperBound=INT ']'
-		('path:' pathNode=LogicalPathNode )?
+		('path:' path=LogicalPathNode )?
 	'}' ';'
 ;
 
@@ -448,7 +458,7 @@ LogicalQuery:
 ;
 
 LogicalCompositeQuery:
-	'lcquery' name=ID  (description=STRING)? ('->' realizes=[ConceptualQuery|QN])? '{'
+	'lcquery' name=ID  (description=STRING)? ('->' realizes=[ConceptualCompositeQuery|QN])? '{'
 		isUnion?='isUnion'
 		composition+=LogicalQueryComposition
 		'}' ';'
