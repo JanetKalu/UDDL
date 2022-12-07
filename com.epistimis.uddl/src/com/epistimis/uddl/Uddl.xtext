@@ -590,7 +590,9 @@ PlatformEntity:
 
 PlatformComposition:
 	type=[PlatformComposableElement|QN]  rolename=ID '[' lowerBound=INT ':' upperBound=INT ']' (description=STRING)? (':' specializes=[PlatformCharacteristic|QN])?  '->' realizes=[LogicalComposition|QN]
-	
+		'{'
+			'prec:' precision=FLOAT
+		'}'';'	
 ;
 
 PlatformAssociation:
@@ -605,7 +607,7 @@ PlatformAssociation:
 PlatformParticipant:
 	type=[PlatformAssociation|QN]  rolename=ID '[' lowerBound=INT ':' upperBound=INT ']' (description=STRING)? (':' specializes=[PlatformCharacteristic|QN])?  '->' realizes=[LogicalParticipant|QN] '{'
 		'source:' '[' sourceLowerBound=INT ':' sourceUpperBound=INT ']'
-		('path:' pathNode=PlatformPathNode )?
+		('path:' path=PlatformPathNode )?
 	'}' ';'
 ;
 
