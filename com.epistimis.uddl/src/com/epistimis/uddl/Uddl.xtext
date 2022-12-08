@@ -32,6 +32,7 @@ QualifiedNameWithWildcard:
  // Metamodel concepts starts here   
 
 Element:
+	DataModel |
 	ConceptualDataModel | LogicalDataModel | PlatformDataModel|
 	ConceptualElement|
 	LogicalElement
