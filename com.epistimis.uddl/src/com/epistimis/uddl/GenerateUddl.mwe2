@@ -34,9 +34,9 @@ Workflow {
 			name = "com.epistimis.uddl.Uddl"
 			fileExtensions = "uddl"
 
+
 			serializer = {
-				generateStub = false
-				
+				generateStub = false				
 			}
 			validator = {
 				composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
@@ -52,8 +52,7 @@ Workflow {
 				generateJavaMain = true
 			}
 			junitSupport = {
-				junitVersion = "5"
-				
+				junitVersion = "5"			
 			}
 			fileWizard = {
 				generate = true
