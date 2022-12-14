@@ -193,7 +193,7 @@ package uddl
      */
     inv rolenameIsValidIdentifier:
       self.getRolename() <> null implies
-      Element::isValidIdentifier(self.getRolename())
+      UddlElement::isValidIdentifier(self.getRolename())
 
     /*
      * A ConceptualCharacteristic's lowerBound is less than or equal to its upperBound,
@@ -495,7 +495,7 @@ package uddl
      * The rolename of a ConceptualQueryComposition is a valid identifier.
      */
     inv rolenameIsValidIdentifier:
-      Element::isValidIdentifier(self.rolename)
+      UddlElement::isValidIdentifier(self.rolename)
 
   context ConceptualPathNode
     /*

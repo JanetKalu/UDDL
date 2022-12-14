@@ -157,7 +157,7 @@ package uddl --face::datamodel::logical
      */
     inv rolenameIsValidIdentifier:
       self.getRolename() <> null implies
-      Element::isValidIdentifier(self.rolename)
+      UddlElement::isValidIdentifier(self.rolename)
 
     /*
      * A LogicalCharacteristic's lowerBound is less than or equal to its upperBound,
@@ -422,7 +422,7 @@ package uddl --face::datamodel::logical
      * The rolename of a LogicalQueryComposition is a valid identifier.
      */
     inv rolenameIsValidIdentifier:
-      Element::isValidIdentifier(self.rolename)
+      UddlElement::isValidIdentifier(self.rolename)
     
     /*
      * If LogicalQueryComposition "A" realizes LogicalQueryComposition "B",
@@ -528,7 +528,7 @@ package uddl --face::datamodel::logical
      * An LogicalEnumerated's name is not an IDL reserved word.
      */                        
     inv nameIsNotReservedWord:
-      not Element::isReservedWord(self.name)
+      not UddlElement::isReservedWord(self.name)
   
     /*
      * An LogicalEnumerationLabel's name is unique within an LogicalEnumerated.
@@ -541,7 +541,7 @@ package uddl --face::datamodel::logical
      * An LogicalEnumerationLabel's name is not an IDL reserved word.
      */                        
     inv nameIsNotReservedWord:
-      not Element::isReservedWord(self.name)
+      not UddlElement::isReservedWord(self.name)
 
   context LogicalMeasurementSystem
     /*

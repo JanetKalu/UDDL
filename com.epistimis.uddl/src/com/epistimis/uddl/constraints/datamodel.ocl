@@ -6,16 +6,16 @@ package  uddl
        
   context DataModel
     /*
-     * Every Element in an DataModel has a unique name.
+     * Every UddlElement in an DataModel has a unique name.
      * 
 	 * Note: This is equivalent constraint to hasUniqueName. 
 	 *		Original constraint modified to work with Kepler
 	 */
     inv childModelsHaveUniqueNames:
-      let children : Bag(Element)=
-        self.cdm.oclAsType(Element)->union(
-        self.pdm.oclAsType(Element)->union(
-        self.ldm.oclAsType(Element))) in
+      let children : Bag(UddlElement)=
+        self.cdm.oclAsType(UddlElement)->union(
+        self.pdm.oclAsType(UddlElement)->union(
+        self.ldm.oclAsType(UddlElement))) in
         
       children->isUnique(name.toLowerCase())
 	  
@@ -24,7 +24,7 @@ package  uddl
 	 *   CR 242
      */                        
     inv nameIsNotReservedWord:
-      not Element::isReservedWord(self.name)
+      not UddlElement::isReservedWord(self.name)
 
 	  
 

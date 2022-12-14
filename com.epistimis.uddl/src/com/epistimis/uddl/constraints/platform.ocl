@@ -18,7 +18,7 @@ package uddl
      * A Platform PlatformElement's name is not an IDL reserved word.
      */                        
     inv nameIsNotReservedWord:
-      not Element::isReservedWord(self.name)
+      not UddlElement::isReservedWord(self.name)
 
   context PlatformEntity
     /*
@@ -165,14 +165,14 @@ package uddl
      */
     inv rolenameIsValidIdentifier:
       self.getRolename() <> null implies
-      Element::isValidIdentifier(self.getRolename())
+      UddlElement::isValidIdentifier(self.getRolename())
       
     /*
      * The rolename of a PlatformCharacteristic is not an IDL reserved word.
      */
     inv rolenameIsNotReservedWord:
       self.getRolename() <> null implies
-      (not Element::isReservedWord(self.getRolename()))
+      (not UddlElement::isReservedWord(self.getRolename()))
 
     /*
      * A PlatformCharacteristic's lowerBound is less than or equal to its upperBound,
@@ -437,13 +437,13 @@ package uddl
      * The rolename of a PlatformQueryComposition is a valid identifier.
      */
     inv rolenameIsValidIdentifier:
-      Element::isValidIdentifier(self.rolename)
+      UddlElement::isValidIdentifier(self.rolename)
       
     /*
      * The rolename of a PlatformQueryComposition is not an IDL reserved word.
      */
     inv rolenameIsNotReservedWord:
-      not Element::isReservedWord(self.rolename)
+      not UddlElement::isReservedWord(self.rolename)
     
     /*
      * If PlatformQueryComposition "A" realizes QueryComposition "B", then

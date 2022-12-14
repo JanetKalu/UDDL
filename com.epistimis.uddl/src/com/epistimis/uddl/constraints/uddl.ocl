@@ -5,12 +5,12 @@ include 'helpers.ocl'
 
 package uddl 
 
-  context Element                                
+  context UddlElement                                
     /*
      * The name of an Element is a valid identifier.
      */
     inv nameIsValidIdentifier:
-      Element::isValidIdentifier(self.name)
+      UddlElement::isValidIdentifier(self.name)
     
     /*
      * The following elements have a non-empty description:

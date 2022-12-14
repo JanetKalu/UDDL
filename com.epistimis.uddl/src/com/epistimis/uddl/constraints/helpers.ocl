@@ -4,7 +4,7 @@ import  '../../../../../model/generated/Uddl.ecore'
 
 package uddl
 
-  context Element
+  context UddlElement
     /*
      * Helper method that determines if a string is a valid identifier.
      * An identifier is valid if it consists of alphanumeric characters.
