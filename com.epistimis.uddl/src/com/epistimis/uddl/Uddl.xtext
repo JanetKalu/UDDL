@@ -16,9 +16,9 @@ DataModel:
 
 // A few generic rules
 
-LONG returns ecore::ELong: INT ("L"|"l");
+//LONG returns ecore::ELong: INT ("L"|"l");
 FLOAT returns ecore::EFloat : INT '.' INT;
-DOUBLE returns ecore::EDouble : INT '.' INT ('D'|'d');
+//DOUBLE returns ecore::EDouble : INT '.' INT ('D'|'d');
 
 QN:
     ID ('.' ID)*;
