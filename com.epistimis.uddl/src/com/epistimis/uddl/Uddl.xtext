@@ -41,23 +41,20 @@ UddlElement:
 
 ConceptualDataModel:
 	'cdm'	name=ID (description=STRING)? '{'
-		(element+=ConceptualElement)?
-		(cdm+=ConceptualDataModel)?
+		(element+=ConceptualElement | cdm+=ConceptualDataModel)*
 	'}'
 ;
 
 LogicalDataModel:
 	'ldm'	name=ID (description=STRING)? '{'
-		(element+=LogicalElement)?
-		(ldm+=LogicalDataModel)?	
+		(element+=LogicalElement | ldm+=LogicalDataModel)*	
 	'}'
 ;
 
 
 PlatformDataModel:
 	'pdm'	name=ID (description=STRING)? '{'
-		(element+=PlatformElement)?
-		(ldm+=PlatformDataModel)?	
+		(element+=PlatformElement | ldm+=PlatformDataModel)*	
 	'}'
 ;
 
@@ -77,11 +74,11 @@ ConceptualComposableElement:
 
 
 ConceptualBasisEntity:
-	'basis' name=ID (description=STRING)? 
+	'basis' name=ID (description=STRING)? ';'
 ;
 
 ConceptualDomain:
-	'domain' name=ID (description=STRING)? 
+	'domain' name=ID (description=STRING)? ';'
 ;
 
 ConceptualObservable:
@@ -169,6 +166,8 @@ LogicalElement:
 	LogicalComposableElement |
 	LogicalConversion | // LogicalConversion has a single inheritance of LogicalAffineConversion - so that is promoted to here
 	LogicalUnit | //LogicalConvertibleElement | // LogicalConvertibleElement has a single inheritance of LogicalUnit - promote that to here
+	LogicalCoordinateSystem |
+	LogicalCoordinateSystemAxis |
 	LogicalMeasurementConversion |
 	LogicalMeasurementSystemConversion |
 	LogicalMeasurementAxis | // Also derived from AbstractMeasurement
@@ -238,7 +237,7 @@ LogicalCoordinateSystem:
 		('axis:' 		axisRelationshipDescription=STRING)?
 		('angleEq:' 	angleEquation=STRING)?
 		('distanceEq:' 	distanceEquation=STRING)?
-		'['axis+=[LogicalCoordinateSystemAxis|QN] ']'
+		'['axis+=[LogicalCoordinateSystemAxis|QN]+ ']'
 	'}' ';'
 ;
 
