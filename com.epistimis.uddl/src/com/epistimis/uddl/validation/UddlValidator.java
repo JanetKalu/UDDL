@@ -3,6 +3,22 @@
  */
 package com.epistimis.uddl.validation;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.CheckType;
+
+import com.epistimis.uddl.CLPExtractors;
+import com.epistimis.uddl.uddl.ConceptualAssociation;
+import com.epistimis.uddl.uddl.ConceptualCharacteristic;
+import com.epistimis.uddl.uddl.ConceptualEntity;
+import com.epistimis.uddl.uddl.LogicalEntity;
+import com.epistimis.uddl.uddl.PlatformEntity;
+import com.epistimis.uddl.uddl.UddlElement;
+import com.epistimis.uddl.uddl.UddlPackage;
 
 /**
  * This class contains custom validation rules. 
@@ -21,5 +37,64 @@ public class UddlValidator extends AbstractUddlValidator {
 //					INVALID_NAME);
 //		}
 //	}
+	protected static String ISSUE_CODE_PREFIX = "com.epistimis.uddl.";
+	public static String ENTITY_NEEDS_2_ELEMENTS = ISSUE_CODE_PREFIX + "EntityNeeds2Elements";
 	
+	/**
+	 * Structures must have more than 1 member - but they can be inherited - so check entire specialization hierarchy
+	 * for:
+	 * (C/L/P)Entity
+	 * 
+	 * Also -must check both composition and participant lists - The net across all of them must be at least 2
+	 */
+	
+	private static <Entity extends UddlElement, 
+					Characteristic, 
+					Association extends Entity,
+					Participant extends Characteristic> 
+	List<Characteristic> 	getEntityCharacteristics(Entity ent){
+		
+		List<Characteristic> results = new ArrayList<>();
+		if (CLPExtractors.getSpecializes(ent) != null) {
+			Entity ce = (Entity)ent;
+			results.addAll(getEntityCharacteristics(ce));
+		}
+		/**
+		 * Now check mine
+		 */
+		results.addAll((Collection<? extends Characteristic>) CLPExtractors.getComposition(ent));
+		if (CLPExtractors.isAssociation(ent)) {
+			Association ca =(Association) CLPExtractors.conv2Association(ent);
+			results.addAll((Collection<? extends Characteristic>) CLPExtractors.getParticipant(ca));
+		}
+		return results;	
+	}
+	
+	@Check(CheckType.EXPENSIVE)
+	public void checkCharacteristicCount(ConceptualEntity ent) {
+		List<ConceptualCharacteristic> chars = getEntityCharacteristics(ent);
+		if (chars.size() < 2) {
+			error("Entity '" + ent.getName() + "' should have at least 2 characteristics",
+					UddlPackage.eINSTANCE.getConceptualEntity_Composition(),
+					ENTITY_NEEDS_2_ELEMENTS, ent.getName());
+		}	
+	}
+	@Check(CheckType.EXPENSIVE)
+	public void checkCharacteristicCount(LogicalEntity ent) {
+		List<ConceptualCharacteristic> chars = getEntityCharacteristics(ent);
+		if (chars.size() < 2) {
+			error("Entity '" + ent.getName() + "' should have at least 2 characteristics",
+					UddlPackage.eINSTANCE.getLogicalEntity_Composition(),
+					ENTITY_NEEDS_2_ELEMENTS, ent.getName());
+		}	
+	}
+	@Check(CheckType.EXPENSIVE)
+	public void checkCharacteristicCount(PlatformEntity ent) {
+		List<ConceptualCharacteristic> chars = getEntityCharacteristics(ent);
+		if (chars.size() < 2) {
+			error("Entity '" + ent.getName() + "' should have at least 2 characteristics",
+					UddlPackage.eINSTANCE.getPlatformEntity_Composition(),
+					ENTITY_NEEDS_2_ELEMENTS, ent.getName());
+		}	
+	}
 }

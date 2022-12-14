@@ -31,11 +31,12 @@ QualifiedNameWithWildcard:
  
  // Metamodel concepts starts here   
 
-Element:
+UddlElement:
 	DataModel |
 	ConceptualDataModel | LogicalDataModel | PlatformDataModel|
 	ConceptualElement|
-	LogicalElement
+	LogicalElement |
+	PlatformElement
 ;
 
 ConceptualDataModel:
@@ -95,7 +96,7 @@ ConceptualCharacteristic:
 
 ConceptualEntity:
 	ConceptualAssociation |
-	'ce' name=ID (description=STRING)? ':' (specializes=[ConceptualComposableElement|QN])? '{'
+	'ce' name=ID (description=STRING)? ':' (specializes=[ConceptualEntity|QN])? '{'
 		(composition+=ConceptualComposition)?
 		('basis:' (basisEntity+=[ConceptualBasisEntity|QN]))?
 	'}' ';'
@@ -106,7 +107,7 @@ ConceptualComposition:
 ;
 
 ConceptualAssociation:
-		'ca' name=ID (description=STRING)? ':' (specializes=[ConceptualComposableElement|QN])? '{'
+		'ca' name=ID (description=STRING)? ':' (specializes=[ConceptualEntity|QN])? '{'
 		(composition+=ConceptualComposition)?
 		('basis:' (ConceptualBasisEntity+=[ConceptualBasisEntity|QN]))?
 		('participants:' participant+=ConceptualParticipant)?
@@ -159,7 +160,7 @@ ConceptualCompositeQuery:
 ;
 
 ConceptualQueryComposition:
-	type=[ConceptualView|QN] rolename=STRING ';'
+	type=[ConceptualView|QN] rolename=ID ';'
 ;
 
 
@@ -383,7 +384,7 @@ LogicalMeasurementAxis:
 ;
 
 LogicalMeasurementAttribute:
-	type=[LogicalMeasurement|QN] rolename=STRING
+	type=[LogicalMeasurement|QN] rolename=ID
 ;
 
 LogicalMeasurementConversion:
