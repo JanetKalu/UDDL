@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: com.epistimis.uddl.ui.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: com.epistimis.uddl.ui.tests
-Bundle-Vendor: My Company
+Bundle-Vendor: Epistimis LLC
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: com.epistimis.uddl.ui.tests; singleton:=true
 Bundle-ActivationPolicy: lazy

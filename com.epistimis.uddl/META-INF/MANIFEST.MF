@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: com.epistimis.uddl
 Bundle-ManifestVersion: 2
 Bundle-Name: com.epistimis.uddl
-Bundle-Vendor: Epistimis
+Bundle-Vendor: Epistimis LLC
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: com.epistimis.uddl; singleton:=true
 Bundle-ActivationPolicy: lazy
@@ -18,7 +18,9 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.ocl.xtext.completeocl;bundle-version="1.17.0",
  org.eclipse.ocl;bundle-version="3.17.0",
  org.eclipse.ocl.xtext.oclstdlib;bundle-version="1.17.0",
- org.eclipse.emf.validation;bundle-version="1.8.1"
+ org.eclipse.emf.validation;bundle-version="1.8.1",
+ io.typefox.xtext2langium;bundle-version="0.2.0",
+ com.epistimis.uddl.query;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: com.epistimis.uddl.parser.antlr,
  com.epistimis.uddl.services,
@@ -32,4 +34,5 @@ Export-Package: com.epistimis.uddl.parser.antlr,
  com.epistimis.uddl.uddl,
  com.epistimis.uddl,
  com.epistimis.uddl.serializer
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j,
+ org.eclipse.xtext.ui.resource
