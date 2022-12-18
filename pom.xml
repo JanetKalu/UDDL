@@ -25,7 +25,8 @@
 		<module>com.epistimis.uddl.ide</module>
 		<module>com.epistimis.uddl.ui</module>
 		<module>com.epistimis.uddl.target</module>
-		<module>com.epistimis.uddl.tests</module>
+		<module>com.epistimis.uddl.feature</module>
+		<module>com.epistimis.uddl.repository</module>
 		<module>com.epistimis.uddl.ui.tests</module>
 	</modules>
 	<dependencyManagement>
@@ -46,6 +47,39 @@
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>feature-source</id>
+						<goals>
+							<goal>feature-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>attach-p2-metadata</id>
+						<phase>package</phase>
+						<goals>
+							<goal>p2-metadata</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>

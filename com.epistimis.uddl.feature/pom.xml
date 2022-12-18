@@ -6,16 +6,10 @@
 		<artifactId>com.epistimis.uddl.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>com.epistimis.uddl.tests</artifactId>
-	<packaging>eclipse-test-plugin</packaging>
+	<artifactId>com.epistimis.uddl.feature</artifactId>
+	<packaging>eclipse-feature</packaging>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.xtend</groupId>
-				<artifactId>xtend-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 
+	<dependencies>
+	</dependencies>
 </project>

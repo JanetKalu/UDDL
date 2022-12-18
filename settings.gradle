@@ -1,0 +1,3 @@
+include 'com.epistimis.uddl'
+include 'com.epistimis.uddl.ide'
+include 'com.epistimis.uddl.tests'

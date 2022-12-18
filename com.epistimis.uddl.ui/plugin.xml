@@ -431,4 +431,61 @@
 			type="text">
 		</fileTypes>
 	</extension>
+	<extension
+		point="org.eclipse.ui.newWizards">
+		<category id="com.epistimis.uddl.ui.category" name="Uddl">
+		</category>
+		<wizard
+			category="com.epistimis.uddl.ui.category"
+			class="com.epistimis.uddl.ui.UddlExecutableExtensionFactory:org.eclipse.xtext.ui.wizard.template.TemplateNewProjectWizard"
+			id="com.epistimis.uddl.ui.wizard.UddlNewProjectWizard"
+			name="Uddl Project"
+			icon="icons/new_Uddl_proj.gif"
+			project="true">
+		</wizard>
+	</extension>
+	<extension
+		point="org.eclipse.xtext.ui.projectTemplate">
+		<projectTemplateProvider
+			class="com.epistimis.uddl.ui.UddlExecutableExtensionFactory:com.epistimis.uddl.ui.wizard.UddlProjectTemplateProvider"
+			grammarName="com.epistimis.uddl.Uddl">
+		</projectTemplateProvider>
+	</extension>
+	<extension
+		point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
+			<newWizardShortcut id="com.epistimis.uddl.ui.wizard.UddlNewProjectWizard"/>
+		</perspectiveExtension>
+		<perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
+			<newWizardShortcut id="com.epistimis.uddl.ui.wizard.UddlNewProjectWizard"/>
+		</perspectiveExtension>
+	</extension>
+	<extension
+		point="org.eclipse.ui.newWizards">
+		<category id="com.epistimis.uddl.ui.category" name="Uddl">
+		</category>
+		<wizard
+			category="com.epistimis.uddl.ui.category"
+			class="com.epistimis.uddl.ui.UddlExecutableExtensionFactory:org.eclipse.xtext.ui.wizard.template.TemplateNewFileWizard"
+			id="com.epistimis.uddl.ui.wizard.UddlNewFileWizard"
+			name="Uddl File"
+			icon="icons/new_Uddl_file.png">
+		</wizard>
+	</extension>
+	<extension
+		point="org.eclipse.xtext.ui.fileTemplate">
+		<fileTemplateProvider
+			class="com.epistimis.uddl.ui.UddlExecutableExtensionFactory:com.epistimis.uddl.ui.wizard.UddlFileTemplateProvider"
+			grammarName="com.epistimis.uddl.Uddl">
+		</fileTemplateProvider>
+	</extension>
+	<extension
+		point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
+			<newWizardShortcut id="com.epistimis.uddl.ui.wizard.UddlNewFileWizard"/>
+		</perspectiveExtension>
+		<perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
+			<newWizardShortcut id="com.epistimis.uddl.ui.wizard.UddlNewFileWizard"/>
+		</perspectiveExtension>
+	</extension>
 </plugin>
