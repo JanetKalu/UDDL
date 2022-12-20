@@ -3,14 +3,9 @@
  */
 package com.epistimis.uddl;
 
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class UddlRuntimeModule extends AbstractUddlRuntimeModule {
-	@Override
-    public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
-        return UddlQNP.class;
-    }
 }
