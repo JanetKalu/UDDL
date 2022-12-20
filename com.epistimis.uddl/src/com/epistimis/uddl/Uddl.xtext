@@ -15,21 +15,23 @@ DataModel:
 	;
 
 // A few generic rules
-
+terminal fragment DEC:  ('0'..'9')+;
+@Override
+terminal INT returns ecore::EInt:  ('+'|'-')? DEC;
 //LONG returns ecore::ELong: INT ("L"|"l");
-FLOAT returns ecore::EFloat : INT '.' INT;
+terminal FLOAT returns ecore::EFloat : ('+'|'-')? DEC '.' DEC;
 //DOUBLE returns ecore::EDouble : INT '.' INT ('D'|'d');
 
 QN:
     ID ('.' ID)*;
- 
+
 Import:
     'import' importedNamespace=QualifiedNameWithWildcard;
- 
+
 QualifiedNameWithWildcard:
     QN '.*'?;
- 
- // Metamodel concepts starts here   
+
+ // Metamodel concepts starts here
 
 UddlElement:
 	DataModel |
@@ -47,14 +49,14 @@ ConceptualDataModel:
 
 LogicalDataModel:
 	'ldm'	name=ID (description=STRING)? '{'
-		(element+=LogicalElement | ldm+=LogicalDataModel)*	
+		(element+=LogicalElement | ldm+=LogicalDataModel)*
 	'}'
 ;
 
 
 PlatformDataModel:
 	'pdm'	name=ID (description=STRING)? '{'
-		(element+=PlatformElement | ldm+=PlatformDataModel)*	
+		(element+=PlatformElement | pdm+=PlatformDataModel)*
 	'}'
 ;
 
@@ -63,7 +65,7 @@ ConceptualElement:
 	ConceptualDomain |
 	ConceptualBasisEntity |
 	ConceptualComposableElement |
-	ConceptualView	
+	ConceptualView
 ;
 
 ConceptualComposableElement:
@@ -93,29 +95,29 @@ ConceptualCharacteristic:
 
 ConceptualEntity:
 	ConceptualAssociation |
-	'ce' name=ID (description=STRING)? ':' (specializes=[ConceptualEntity|QN])? '{'
-		(composition+=ConceptualComposition)?
-		('basis:' (basisEntity+=[ConceptualBasisEntity|QN]))?
+	'centity' name=ID (description=STRING)? (':' specializes=[ConceptualEntity|QN])? '{'
+		(composition+=ConceptualComposition)*
+		('basis:' (basisEntity+=[ConceptualBasisEntity|QN]))*
 	'}' ';'
 ;
 
 ConceptualComposition:
-	type=[ConceptualComposableElement|QN]  rolename=ID '[' (lowerBound=INT)? ':' (upperBound=INT)? ']' (description=STRING)? ':' (specializes=[ConceptualCharacteristic|QN])? ';'
+	type=[ConceptualComposableElement|QN]  rolename=ID ('[' (lowerBound=INT)? ':' (upperBound=INT)? ']')? (description=STRING)? (':' specializes=[ConceptualCharacteristic|QN])? ';'
 ;
 
 ConceptualAssociation:
-		'ca' name=ID (description=STRING)? ':' (specializes=[ConceptualEntity|QN])? '{'
-		(composition+=ConceptualComposition)?
-		('basis:' (ConceptualBasisEntity+=[ConceptualBasisEntity|QN]))?
-		('participants:' participant+=ConceptualParticipant)?
+		'cassoc' name=ID (description=STRING)? (':' specializes=[ConceptualEntity|QN])? '{'
+		(composition+=ConceptualComposition)*
+		('basis:' (ConceptualBasisEntity+=[ConceptualBasisEntity|QN]))*
+		('participants:' participant+=ConceptualParticipant)*
 	'}' ';'
 ;
 
 ConceptualParticipant:
-	type=[ConceptualEntity|QN]  rolename=ID '[' (lowerBound=INT)? ':' (upperBound=INT)? ']' (description=STRING)? ':' (specializes=[ConceptualCharacteristic|QN])? 
+	type=[ConceptualEntity|QN]  rolename=ID ('[' (lowerBound=INT)? ':' (upperBound=INT)? ']')? (description=STRING)? (':' specializes=[ConceptualCharacteristic|QN])?
 		'{'
 			'src:' '['sourceLowerBound=INT ':' sourceUpperBound=INT ']'
-			'path:' path=ConceptualPathNode 
+			'path:' path=ConceptualPathNode
 		'}'
 		';'
 ;
@@ -174,7 +176,9 @@ LogicalElement:
 	LogicalAbstractMeasurementSystem| //LogicalMeasurementSystem |
 	LogicalMeasurementSystemAxis |
 	LogicalValueType | // Also derived from AbstractMeasurement
-	LogicalView 
+	LogicalView |
+	LogicalLandmark |
+	LogicalValueTypeUnit
 ;
 
 // NOTE: LogicalConvertibleElement has LogicalUnit as a single inheritance. Since it has nothing else, promote LogicalUnit directly
@@ -187,7 +191,7 @@ LogicalUnit:
 // to LogicalElement
 LogicalConversion:
 	'conv' name=ID  (description=STRING)? '{'
-		source=[LogicalAssociation|QN] '->'  destination=[LogicalAssociation|QN] 
+		source=[LogicalAssociation|QN] '->'  destination=[LogicalAssociation|QN]
 		'}' ';' |
 	LogicalAffineConversion
 ;
@@ -195,7 +199,7 @@ LogicalConversion:
 LogicalAffineConversion:
 	'aconv' name=ID  (description=STRING)? '{'
 		source=[LogicalAssociation|QN] '-(' conversionFactor=FLOAT ',' offset=FLOAT ')->'  destination=[LogicalAssociation|QN]
-	'}' ';' 
+	'}' ';'
 ;
 
 LogicalValueType:
@@ -203,7 +207,7 @@ LogicalValueType:
 	LogicalNumeric |
 	LogicalCharacter |
 	LogicalString |
-	LogicalEnumerated	
+	LogicalEnumerated
 ;
 
 LogicalString: 					'str' 	name=ID (description=STRING)? ';' 	;
@@ -222,12 +226,12 @@ LogicalInteger:					'int' 	name=ID (description=STRING)? ';'	;
 LogicalNatural:					'nat' 	name=ID (description=STRING)? ';'	;
 LogicalReal:					'real' 	name=ID (description=STRING)? ';'	;
 LogicalNonNegativeReal:			'real+' name=ID (description=STRING)? ';'	;
-LogicalEnumerated:				
+LogicalEnumerated:
 
 	'enum' 	name=ID (description=STRING)? '['
 		label+=LogicalEnumerationLabel (',' label+=LogicalEnumerationLabel)*
 		']'
-		';'	
+		';'
 		;
 
 LogicalEnumerationLabel:		'(' name=ID (description=STRING)? ')' ;
@@ -252,7 +256,7 @@ LogicalAbstractMeasurementSystem:
 	LogicalMeasurementSystem
 ;
 
-LogicalStandardMeasurementSystem: 
+LogicalStandardMeasurementSystem:
 	'smsys' name=ID (description=STRING)? '{'
 		'refStd:' referenceStandard=STRING
 	'}' ';'
@@ -262,13 +266,13 @@ LogicalLandmark:
 	'landmark' name=ID (description=STRING)? ';'
 ;
 
-LogicalMeasurementSystem: 
+LogicalMeasurementSystem:
 	'msys' name=ID (description=STRING)? '{'
+		'maxis:' '[' measurementSystemAxis+=[LogicalMeasurementSystemAxis|QN]+ ']'
+		'coord:' coordinateSystem=[LogicalCoordinateSystem|QN]
 		('extRefStd:' externalStandardReference=STRING)?
 		('orient:' orientation=STRING)?
-		'maxis:' '[' measurementSystemAxis+=[LogicalMeasurementSystemAxis|QN] ']'
-		'coord:' coordinateSystem=[LogicalCoordinateSystem|QN]
-		('refPt:' '[' referencePoint+=LogicalReferencePoint ']')?
+		('refPt:' '[' referencePoint+=LogicalReferencePoint+ ']')?
 		('![' constraint+=LogicalMeasurementConstraint ']')?
 	'}' ';'
 ;
@@ -276,27 +280,27 @@ LogicalMeasurementSystem:
 LogicalMeasurementSystemAxis:
 	'msa' name=ID (description=STRING)? '{'
 		'axis:' axis=[LogicalCoordinateSystemAxis|QN]
-		'vtu:' '[' defaultValueTypeUnit+=[LogicalValueTypeUnit|QN] ']'
-		('![' constraint+=LogicalMeasurementConstraint ']'	)?	
+		'vtu:' '[' defaultValueTypeUnit+=[LogicalValueTypeUnit|QN]+ ']'
+		('![' constraint+=LogicalMeasurementConstraint ']'	)?
 	'}' ';'
 ;
 
 LogicalReferencePoint:
-	'refPt'	name=ID (description=STRING)? '{'
+	'(' name=ID (description=STRING)?
 		'landmark:' landmark=[LogicalLandmark|QN]
-		'[' referencePointPart+=LogicalReferencePointPart ']'
-	'}' ';'
+		'[' referencePointPart+=LogicalReferencePointPart+ ']'
+	')'
 ;
 
 LogicalReferencePointPart:
-	'(' (valueTypeUnit=[LogicalValueTypeUnit|QN])? value=STRING (axis=[LogicalMeasurementSystemAxis|QN])? ')'
+	'(' (axis=[LogicalMeasurementSystemAxis|QN])?  value=STRING  (valueTypeUnit=[LogicalValueTypeUnit|QN])? ')'
 ;
 
 
 LogicalValueTypeUnit:
-	'vtu' unit=[LogicalUnit|QN] valueType=[LogicalValueType|QN] name=ID (description=STRING)? '{'
-	'!' constraint=LogicalConstraint
-	'}' ';'
+	'vtu' valueType=[LogicalValueType|QN] unit=[LogicalUnit|QN] name=ID (description=STRING)?
+	('{' '!' constraint=LogicalConstraint '}')?
+	 ';'
 ;
 
 LogicalConstraint:
@@ -323,7 +327,7 @@ LogicalRealRangeConstraint:
 	'rrc' name=ID ( '(' | lowerBoundInclusive?='[') lowerBound=FLOAT ':' upperBound=FLOAT (')'| upperBoundInclusive?=']') (description=STRING)?  ';'
 ;
 
-LogicalStringConstraint: 
+LogicalStringConstraint:
 	LogicalRegularExpressionConstraint |
 	LogicalFixedLengthStringConstraint
 ;
@@ -333,18 +337,18 @@ LogicalRegularExpressionConstraint:
 ;
 
 LogicalFixedLengthStringConstraint:
-	'flsc' name=ID '[' length=INT ']' (description=STRING)? ';'	
+	'flsc' name=ID '[' length=INT ']' (description=STRING)? ';'
 ;
 
-// NOTE: While the spec technically allows zero labels, it makes no sense to have a constraint that doesn't 
-// actually constrain anything. It might be in dynamic cases that this list could end up being empty - but 
+// NOTE: While the spec technically allows zero labels, it makes no sense to have a constraint that doesn't
+// actually constrain anything. It might be in dynamic cases that this list could end up being empty - but
 // for now we assume it has to have at least 1 value
 LogicalEnumerationConstraint :
 	{LogicalEnumerationConstraint} 'ec' '[' (allowedValue+=[LogicalEnumerationLabel|QN])? ']'
 ;
 
 LogicalMeasurementConstraint:
-	'mc'  name=ID '[' constraintText=STRING ']' (description=STRING)? ';'
+	 constraintText=STRING
 ;
 
 
@@ -369,16 +373,18 @@ LogicalMeasurementSystemConversion:
 
 LogicalMeasurement:
 	'meas' name=ID  (description=STRING)? '->' realizes=[ConceptualObservable|QN] '{'
-		attribute+=LogicalMeasurementAttribute
-		('axis:' '[' measurementAxis+=[LogicalMeasurementAxis|QN] ']')?
+		attribute+=LogicalMeasurementAttribute*
+		('axis:' '[' measurementAxis+=[LogicalMeasurementAxis|QN]+ ']')?
 		'sys:' measurementSystem=[LogicalAbstractMeasurementSystem|QN]
-		('![' constraint+=LogicalMeasurementConstraint ']')?	
+		('![' constraint+=LogicalMeasurementConstraint ']')?
+		'}' ';'
 ;
 
 LogicalMeasurementAxis:
 	'maxis' name=ID  (description=STRING)? ('->' realizes=[ConceptualObservable|QN])? '{'
-		('vtu:' '[' valueTypeUnit+=[LogicalValueTypeUnit|QN] ']')?
+		('vtu:' '[' valueTypeUnit+=[LogicalValueTypeUnit|QN]+ ']')?
 		'msaxis:' measurementSystemAxis=[LogicalMeasurementSystemAxis|QN]
+		('![' constraint+=LogicalMeasurementConstraint+ ']')?
 	'}' ';'
 ;
 
@@ -413,8 +419,8 @@ LogicalEntity:
 ;
 
 LogicalComposition:
-	type=[LogicalComposableElement|QN]  rolename=ID '[' lowerBound=INT ':' upperBound=INT ']' (description=STRING)? (':' specializes=[LogicalCharacteristic|QN])?  '->' realizes=[ConceptualComposition|QN]
-	
+	type=[LogicalComposableElement|QN]  rolename=ID ('[' lowerBound=INT ':' upperBound=INT ']')? (description=STRING)? (':' specializes=[LogicalCharacteristic|QN])?  '->' realizes=[ConceptualComposition|QN]
+
 ;
 
 LogicalAssociation:
@@ -423,11 +429,11 @@ LogicalAssociation:
 		// While technically this is optional, it makes no sense to have an Association with less than 2 participants. However,
 		// Those participants can be named anywhere in the inheritance/ specializes hierarchy - not just locally
 		('participants:' '[' participant+=LogicalParticipant ']')?
-	'}' ';'	
+	'}' ';'
 ;
 
 LogicalParticipant:
-	type=[LogicalAssociation|QN]  rolename=ID '[' lowerBound=INT ':' upperBound=INT ']' (description=STRING)? (':' specializes=[LogicalCharacteristic|QN])?  '->' realizes=[ConceptualParticipant|QN] '{'
+	type=[LogicalAssociation|QN]  rolename=ID ('[' lowerBound=INT ':' upperBound=INT ']')? (description=STRING)? (':' specializes=[LogicalCharacteristic|QN])?  '->' realizes=[ConceptualParticipant|QN] '{'
 		'source:' '[' sourceLowerBound=INT ':' sourceUpperBound=INT ']'
 		('path:' path=LogicalPathNode )?
 	'}' ';'
@@ -444,7 +450,7 @@ LogicalParticipantPathNode:
 
 LogicalCharacteristicPathNode:
 	':' projectedCharacteristic=[LogicalCharacteristic|QN]  ( node=LogicalPathNode)
-	
+
 ;
 
 LogicalView:
@@ -485,7 +491,7 @@ PlatformDataType:
 	PlatformStruct
 ;
 
-	
+
 PlatformPrimitive:
 	PlatformSequence |
 	PlatformBoolean |
@@ -518,7 +524,7 @@ PlatformBoundedString:		'string[' maxLength=INT ']'  	name=ID  (description=STRI
 PlatformCharArray:			'char['   length=INT ']'  		name=ID  (description=STRING)? '->' realizes=[/*LogicalAbstractMeasurement*/LogicalElement|QN] ';' ;
 
 PlatformEnumeration:		'enum'  						name=ID  (description=STRING)? '->' realizes=[/*LogicalAbstractMeasurement*/LogicalElement|QN] ';' ;
-	
+
 PlatformNumber:
 	PlatformReal |
 	PlatformInteger
@@ -580,7 +586,7 @@ PlatformStructMember:
 PlatformCharacteristic:
 	PlatformComposition |
 	PlatformParticipant
-;	
+;
 
 PlatformEntity:
 	'pentity' name=ID  (description=STRING)? (':' specializes=[PlatformEntity|QN])? '->' realizes=[LogicalEntity|QN] '{'
@@ -590,23 +596,23 @@ PlatformEntity:
 ;
 
 PlatformComposition:
-	type=[PlatformComposableElement|QN]  rolename=ID '[' lowerBound=INT ':' upperBound=INT ']' (description=STRING)? (':' specializes=[PlatformCharacteristic|QN])?  '->' realizes=[LogicalComposition|QN]
-		'{'
+	type=[PlatformComposableElement|QN]  rolename=ID ('[' lowerBound=INT ':' upperBound=INT ']')? (description=STRING)? (':' specializes=[PlatformCharacteristic|QN])?  '->' realizes=[LogicalComposition|QN]
+		('{'
 			'prec:' precision=FLOAT
-		'}'';'	
+		'}')? ';'
 ;
 
 PlatformAssociation:
-	'lassoc' name=ID  (description=STRING)? (':' specializes=[PlatformEntity|QN])? '->' realizes=[LogicalEntity|QN] '{'
+	'passoc' name=ID  (description=STRING)? (':' specializes=[PlatformEntity|QN])? '->' realizes=[LogicalEntity|QN] '{'
 		(composition+=PlatformComposition)?
 		// While technically this is optional, it makes no sense to have an Association with less than 2 participants. However,
 		// Those participants can be named anywhere in the inheritance/ specializes hierarchy - not just locally
 		('participants:' '[' participant+=PlatformParticipant ']')?
-	'}' ';'	
+	'}' ';'
 ;
 
 PlatformParticipant:
-	type=[PlatformAssociation|QN]  rolename=ID '[' lowerBound=INT ':' upperBound=INT ']' (description=STRING)? (':' specializes=[PlatformCharacteristic|QN])?  '->' realizes=[LogicalParticipant|QN] '{'
+	type=[PlatformAssociation|QN]  rolename=ID ('[' lowerBound=INT ':' upperBound=INT ']')? (description=STRING)? (':' specializes=[PlatformCharacteristic|QN])?  '->' realizes=[LogicalParticipant|QN] '{'
 		'source:' '[' sourceLowerBound=INT ':' sourceUpperBound=INT ']'
 		('path:' path=PlatformPathNode )?
 	'}' ';'
@@ -623,7 +629,7 @@ PlatformParticipantPathNode:
 
 PlatformCharacteristicPathNode:
 	':' projectedCharacteristic=[PlatformCharacteristic|QN]  ( node=PlatformPathNode)
-	
+
 ;
 
 PlatformView:
