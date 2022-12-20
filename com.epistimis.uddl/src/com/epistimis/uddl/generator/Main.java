@@ -11,6 +11,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
@@ -27,8 +28,10 @@ public class Main {
 			return;
 		}
 		Injector injector = new UddlStandaloneSetup().createInjectorAndDoEMFRegistration();
+
+		Injector queryInjector = new UddlStandaloneSetup().createInjectorAndDoEMFRegistration();
 		Main main = injector.getInstance(Main.class);
-		main.runGenerator(args[0]);
+		main.runGenerator(args);
 	}
 
 	@Inject
@@ -43,25 +46,38 @@ public class Main {
 	@Inject 
 	private JavaIoFileSystemAccess fileAccess;
 
-	protected void runGenerator(String string) {
-		// Load the resource
+	protected void runGenerator(String[] args) {
+		// For all specified files, load them
 		ResourceSet set = resourceSetProvider.get();
-		Resource resource = set.getResource(URI.createFileURI(string), true);
-
-		// Validate the resource
-		List<Issue> list = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
-		if (!list.isEmpty()) {
-			for (Issue issue : list) {
-				System.err.println(issue);
-			}
-			return;
+		for (String arg: args) {
+			// Load the resource
+			Resource resource = set.getResource(URI.createFileURI(arg), true);
 		}
 
+		/**
+		 * Validate the resources - since validation depends on resolving cross references, do that first
+		 * This should? do most of the work when resolving the first resource - it shouldn't repeat work?
+		 */
+		for (Resource resource: set.getResources()) {
+			EcoreUtil.resolveAll(resource);
+			List<Issue> list = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
+			if (!list.isEmpty()) {
+				for (Issue issue : list) {
+					System.err.println(issue);
+				}
+				return;
+			}
+		}
+		/**
+		 * Generate for the first resource only - the others were just there to resolve references
+		 */
+		URI uri = URI.createURI(args[0]);
+		Resource res2Gen = set.getResource(uri, false);
 		// Configure and start the generator
 		fileAccess.setOutputPath("src-gen/");
 		GeneratorContext context = new GeneratorContext();
 		context.setCancelIndicator(CancelIndicator.NullImpl);
-		generator.generate(resource, fileAccess, context);
+		generator.generate(res2Gen, fileAccess, context);
 
 		System.out.println("Code generation finished.");
 	}
