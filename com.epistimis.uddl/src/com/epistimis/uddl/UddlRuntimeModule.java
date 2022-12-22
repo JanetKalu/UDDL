@@ -3,9 +3,19 @@
  */
 package com.epistimis.uddl;
 
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class UddlRuntimeModule extends AbstractUddlRuntimeModule {
+
+	@Override
+	public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
+		// TODO Auto-generated method stub
+		return UddlQNP.class;
+	}
+
+
 }
