@@ -4,104 +4,137 @@
 package com.epistimis.uddl.formatting2
 
 import com.epistimis.uddl.services.UddlGrammarAccess
+import com.epistimis.uddl.uddl.ConceptualAssociation
+import com.epistimis.uddl.uddl.ConceptualCharacteristic
 import com.epistimis.uddl.uddl.ConceptualDataModel
+import com.epistimis.uddl.uddl.ConceptualElement
+import com.epistimis.uddl.uddl.ConceptualEntity
 import com.epistimis.uddl.uddl.DataModel
+import com.epistimis.uddl.uddl.LogicalAssociation
+import com.epistimis.uddl.uddl.LogicalCharacteristic
+import com.epistimis.uddl.uddl.LogicalComposition
+import com.epistimis.uddl.uddl.LogicalCoordinateSystem
+import com.epistimis.uddl.uddl.LogicalDataModel
+import com.epistimis.uddl.uddl.LogicalElement
+import com.epistimis.uddl.uddl.LogicalEntity
+import com.epistimis.uddl.uddl.LogicalEnumerated
+import com.epistimis.uddl.uddl.LogicalParticipant
+import com.epistimis.uddl.uddl.LogicalValueTypeUnit
+import com.epistimis.uddl.uddl.PlatformAssociation
+import com.epistimis.uddl.uddl.PlatformCharacteristic
+import com.epistimis.uddl.uddl.PlatformDataModel
+import com.epistimis.uddl.uddl.PlatformElement
+import com.epistimis.uddl.uddl.PlatformEntity
 import com.google.inject.Inject
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.common.util.EList
-import com.epistimis.uddl.uddl.LogicalDataModel
-import com.epistimis.uddl.uddl.LogicalCoordinateSystem
 import org.eclipse.xtext.formatting2.regionaccess.ISemanticRegion
+
 import static com.epistimis.uddl.uddl.UddlPackage.Literals.*
+import com.epistimis.uddl.uddl.LogicalMeasurementSystem
+import com.epistimis.uddl.uddl.LogicalReferencePoint
+import com.epistimis.uddl.uddl.LogicalReferencePointPart
 
 class UddlFormatter extends AbstractFormatter2 {
-	
+
 	@Inject extension UddlGrammarAccess
 
 	/**
 	 * Several standard methods needed for formatting
-	 * 1) All objects will have 
-	 * 		A) '{' and '};' on a newline. 
+	 * 1) All objects will have
+	 * 		A) '{' and '};' on a newline.
 	 * 		B) All content inside the '{' and '}' will be indented one tab
-	 * 
+	 *
 	 * NOTES: Because we don't know the structure of the object, we don't know how to format its
 	 * content. So we format the open and close separately
-	 * 
+	 *
 	 * 2) '{' and '}' for scoping means
 	 * 		A) all content indented one tab further
 	 * 		B) '{' on newline after name/description of scope
-	 * 
+	 *
 	 * 3) '[' and ']' for lists means
 	 * 		A) all list content have 1 space between
 	 * 		B) '[', ']' and content all on the same line
-	 * 
-	 * 
+	 *
+	 *
 	 */
 //	protected <O extends EObject> void formatObjOpen(O obj, IFormattableDocument doc) {
 //		obj.
-//		
+//
 //	}
 //	protected <O extends EObject> void formatObjClose(O obj, IFormattableDocument doc) {
-//		
+//
 //	}
-//	
+//
 //	protected <L extends EList<EObject>> void formatList(L list, IFormattableDocument doc) {
-//		
+//
 //	}
 //
 //	protected  <C extends EObject> void formatContainer(C container, IFormattableDocument doc) {
-//		
+//
 //	}
+
+	/** General functions */
 	def void objOpen(EObject obj, extension IFormattableDocument document) {
-		obj.regionFor.keyword('{').prepend[newLine];		
+		obj.regionFor.keyword('{').prepend[newLine];
 	}
 	def void objClose(EObject obj, extension IFormattableDocument document) {
-		obj.regionFor.keyword('}').surround[noSpace];		
-		obj.regionFor.keyword(';').append[newLine];		
+		obj.regionFor.keyword('};').surround[noSpace].append[newLine];
 	}
 
 	def void formatContainerContents(EList<EObject> objs, extension IFormattableDocument document) {
-		for (obj : objs) { 
+		for (obj : objs) {
 			obj.append[setNewLines(1, 1, 2)]
-		}			
-	}	
-	
+		}
+	}
+
 	def void formatContainer(EObject obj, extension IFormattableDocument document) {
-		val open = obj.regionFor.keyword("{") 
-		val close = obj.regionFor.keyword("}") 
+		val open = obj.regionFor.keyword("{")
+		val close = obj.regionFor.keyword("}")
 		open.append[newLine]
-		interior(open, close)[indent]			
-	}	
+		interior(open, close)[indent]
+	}
 	def void formatObj(EObject obj, extension IFormattableDocument document) {
-		obj.formatContainer(document);
-		
-		obj.regionFor.keyword('}').surround[noSpace];		
-		obj.regionFor.keyword(';').append[newLine];		
+		val open = obj.regionFor.keyword("{")
+		val close = obj.regionFor.keyword("};")
+		open.append[newLine]
+		interior(open, close)[indent]
+
+		obj.regionFor.keyword('};').surround[noSpace].append[newLine];
 	}
-	
-	def void formmatListContainer(EObject obj, EList<EObject> contents, extension IFormattableDocument document) {
-		obj.regionFor.keyword("[").surround[oneSpace]; 
-		obj.regionFor.keyword("]").surround[oneSpace]; 
-		contents.formatList(document);	
-		
+
+	def void formatListContainer(EObject obj, EList<EObject> contents, extension IFormattableDocument document) {
+		obj.regionFor.keyword("[").surround[oneSpace];
+		obj.regionFor.keyword("]").surround[oneSpace];
+		contents.formatList(document);
+
 	}
-	def void formatList(EList<EObject> objs, extension IFormattableDocument document) {	
+	def void formatList(EList<EObject> objs, extension IFormattableDocument document) {
 		for (EObject obj: objs) {
 			obj.surround[oneSpace]
 		}
 	}
-	
-	
+
+
 	def void formatAttribute(ISemanticRegion attrStart, ISemanticRegion attrEnd ,  extension IFormattableDocument document) {
 		attrStart.prepend[newLine]
 		attrEnd.append[newLine]
 	}
-	
-	
+
+	def void formatAttributeElement(ISemanticRegion elem,   extension IFormattableDocument document) {
+		elem.surround[oneSpace]
+	}
+
+	def void formatAttributeElement(EObject obj,  extension IFormattableDocument document) {
+		obj.surround[oneSpace];
+	}
+
+
+	/** Model specific functions */
 	def dispatch void format(DataModel dataModel, extension IFormattableDocument document) {
-		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
+		// TODO: format HiddenRegions around keywords, attributes, cross references, etc.
 		for (conceptualDataModel : dataModel.cdm) {
 			conceptualDataModel.format
 		}
@@ -114,7 +147,7 @@ class UddlFormatter extends AbstractFormatter2 {
 	}
 
 	def dispatch void format(ConceptualDataModel conceptualDataModel, extension IFormattableDocument document) {
-		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
+		// TODO: format HiddenRegions around keywords, attributes, cross references, etc.
 		conceptualDataModel.formatContainer(document);
 
 		for (conceptualElement : conceptualDataModel.element) {
@@ -128,7 +161,7 @@ class UddlFormatter extends AbstractFormatter2 {
 	}
 
 	def dispatch void format(LogicalDataModel logicalDataModel, extension IFormattableDocument document) {
-		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
+		// TODO: format HiddenRegions around keywords, attributes, cross references, etc.
 		logicalDataModel.formatContainer(document);
 
 		for (logicalElement : logicalDataModel.element) {
@@ -140,7 +173,104 @@ class UddlFormatter extends AbstractFormatter2 {
 			_logicalDataModel.format
 		}
 	}
-	
+
+	def dispatch void format(PlatformDataModel platformDataModel, extension IFormattableDocument document) {
+		// TODO: format HiddenRegions around keywords, attributes, cross references, etc.
+		platformDataModel.formatContainer(document);
+
+		for (platformElement : platformDataModel.element) {
+			platformElement.append[setNewLines(1, 1, 2)]
+			platformElement.format
+		}
+		for (_platformDataModel : platformDataModel.pdm) {
+			_platformDataModel.append[setNewLines(1, 1, 2)]
+			_platformDataModel.format
+		}
+	}
+
+
+	/** Conceptual */
+	def dispatch void format(ConceptualElement obj, extension IFormattableDocument document) {
+		obj.prepend[newLine]
+		//obj.regionFor.feature(UDDL_ELEMENT__DESCRIPTION).append[newLine]
+		formatObj(obj,document);
+		for (EObject contained: obj.eContents) {
+			contained.format
+		}
+	}
+
+	def dispatch void formatEntity(ConceptualEntity obj, extension IFormattableDocument document) {
+		obj.formatObj(document);
+		for (c : obj.composition) {
+			c.format
+			c.append[setNewLines(1, 1, 2)]
+		}
+	}
+
+	def dispatch void format(ConceptualEntity obj, extension IFormattableDocument document) {
+		obj.formatEntity(document)
+	}
+
+	def dispatch void format(ConceptualCharacteristic obj, extension IFormattableDocument document) {
+		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__ROLENAME ),document);
+		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__DESCRIPTION ),document);
+		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__SPECIALIZES ),document);
+	}
+
+	def dispatch void format(ConceptualAssociation obj, extension IFormattableDocument document) {
+		obj.formatEntity(document)
+
+		for (c : obj.participant) {
+			c.format
+			c.append[setNewLines(1, 1, 2)]
+		}
+	}
+
+	/** Logical  */
+	def dispatch void format(LogicalElement obj, extension IFormattableDocument document) {
+		obj.prepend[newLine]
+		formatObj(obj,document);
+		for (EObject contained: obj.eContents) {
+			contained.format
+		}
+	}
+
+	def dispatch void formatEntity(LogicalEntity obj, extension IFormattableDocument document) {
+		obj.formatObj(document);
+		for (c : obj.composition) {
+			c.format
+			c.append[setNewLines(1, 1, 2)]
+		}
+	}
+
+	def dispatch void format(LogicalEntity obj, extension IFormattableDocument document) {
+		obj.formatEntity(document);
+	}
+
+	def dispatch void formatCharacteristic(LogicalCharacteristic obj, extension IFormattableDocument document) {
+		formatAttributeElement(obj.regionFor.feature(LOGICAL_CHARACTERISTIC__ROLENAME ),document);
+		formatAttributeElement(obj.regionFor.feature(LOGICAL_CHARACTERISTIC__DESCRIPTION ),document);
+		formatAttributeElement(obj.regionFor.feature(LOGICAL_CHARACTERISTIC__SPECIALIZES ),document);
+	}
+
+	def dispatch void format(LogicalComposition obj, extension IFormattableDocument document) {
+		obj.formatCharacteristic(document);
+	}
+	def dispatch void format(LogicalParticipant obj, extension IFormattableDocument document) {
+		obj.formatCharacteristic(document);
+		formatAttributeElement(obj.regionFor.feature(LOGICAL_PARTICIPANT__SOURCE_LOWER_BOUND ),document);
+		formatAttributeElement(obj.regionFor.feature(LOGICAL_PARTICIPANT__SOURCE_UPPER_BOUND ),document);
+	}
+
+	def dispatch void format(LogicalAssociation obj, extension IFormattableDocument document) {
+		obj.formatEntity(document)
+
+		for (c : obj.participant) {
+			c.format
+			c.append[setNewLines(1, 1, 2)]
+		}
+	}
+
 	def dispatch void format(LogicalCoordinateSystem lcs, extension IFormattableDocument document) {
 		lcs.formatObj(document);
 		formatAttribute(lcs.regionFor.keyword('axis:'),lcs.regionFor.feature(LOGICAL_COORDINATE_SYSTEM__AXIS_RELATIONSHIP_DESCRIPTION),document);
@@ -150,7 +280,91 @@ class UddlFormatter extends AbstractFormatter2 {
 		for (EObject obj: lcs.axis) {
 			obj.surround[oneSpace]
 		}
-		
+
 	}
+
+	def dispatch void format(LogicalEnumerated obj, extension IFormattableDocument document) {
+		formatObj(obj,document);
+		formatAttributeElement(obj.regionFor.feature(LOGICAL_ENUMERATED__STANDARD_REFERENCE ),document);
+		for (EObject elem: obj.label) {
+			elem.surround[oneSpace]
+		}
+	}
+
+	def dispatch void format(LogicalMeasurementSystem obj, extension IFormattableDocument document) {
+		formatObj(obj,document);
+		/** measurementSystemAxis is a list of references so just print it out as a list */
+		for (elem : obj.measurementSystemAxis) { elem.surround[oneSpace]}
+
+		formatAttribute(obj.regionFor.keyword('coord:'),obj.regionFor.feature(LOGICAL_MEASUREMENT_SYSTEM__COORDINATE_SYSTEM),document);
+		formatAttribute(obj.regionFor.keyword('extRefStd:'),obj.regionFor.feature(LOGICAL_MEASUREMENT_SYSTEM__EXTERNAL_STANDARD_REFERENCE),document);
+		formatAttribute(obj.regionFor.keyword('orient:'),obj.regionFor.feature(LOGICAL_MEASUREMENT_SYSTEM__ORIENTATION),document);
+		for (elem : obj.referencePoint) { elem.format}
+		for (elem : obj.constraint) { elem.format}
+	}
+
+	def dispatch void format(LogicalReferencePoint obj, extension IFormattableDocument document) {
+		formatObj(obj,document);
+		formatAttribute(obj.regionFor.keyword('landmark:'),obj.regionFor.feature(LOGICAL_REFERENCE_POINT__LANDMARK),document);
+		for (elem : obj.referencePointPart) {
+			elem.format
+			elem.append[setNewLines(1, 1, 2)]
+		}
+	}
+
+	def dispatch void format(LogicalReferencePointPart obj, extension IFormattableDocument document) {
+		obj.regionFor.feature(LOGICAL_REFERENCE_POINT_PART__AXIS).surround[oneSpace]
+		obj.regionFor.feature(LOGICAL_REFERENCE_POINT_PART__VALUE).surround[oneSpace]
+		obj.regionFor.feature(LOGICAL_REFERENCE_POINT_PART__VALUE_TYPE_UNIT).surround[oneSpace]
+	}
+
+
+
+	//  These should be formatted properly by
+	// LogicalMeasurement
+
+	def dispatch void format(LogicalValueTypeUnit obj, extension IFormattableDocument document) {
+		formatObj(obj,document);
+		formatAttributeElement(obj.regionFor.feature(LOGICAL_VALUE_TYPE_UNIT__VALUE_TYPE ),document);
+		formatAttributeElement(obj.regionFor.feature(LOGICAL_VALUE_TYPE_UNIT__UNIT ),document);
+	}
+
+	/** Platform */
+	def dispatch void format(PlatformElement obj, extension IFormattableDocument document) {
+		obj.prepend[newLine]
+		formatObj(obj,document);
+		for (EObject contained: obj.eContents) {
+			contained.format
+		}
+	}
+
+	def dispatch void formatEntity(PlatformEntity obj, extension IFormattableDocument document) {
+		obj.formatObj(document);
+		for (c : obj.composition) {
+			c.format
+			c.append[setNewLines(1, 1, 2)]
+		}
+	}
+
+	def dispatch void format(PlatformEntity obj, extension IFormattableDocument document) {
+		obj.formatEntity(document);
+
+	}
+
+	def dispatch void format(PlatformCharacteristic obj, extension IFormattableDocument document) {
+		formatAttributeElement(obj.regionFor.feature(PLATFORM_CHARACTERISTIC__ROLENAME ),document);
+		formatAttributeElement(obj.regionFor.feature(PLATFORM_CHARACTERISTIC__DESCRIPTION ),document);
+		formatAttributeElement(obj.regionFor.feature(PLATFORM_CHARACTERISTIC__SPECIALIZES ),document);
+	}
+
+	def dispatch void format(PlatformAssociation obj, extension IFormattableDocument document) {
+		obj.formatEntity(document)
+
+		for (c : obj.participant) {
+			c.format
+			c.append[setNewLines(1, 1, 2)]
+		}
+	}
+
 	// TODO: implement for LogicalDataModel, PlatformDataModel, ConceptualEntity, ConceptualAssociation, ConceptualParticipant, ConceptualParticipantPathNode, ConceptualCharacteristicPathNode, ConceptualCompositeQuery, LogicalEnumerated, LogicalMeasurementSystem, LogicalMeasurementSystemAxis, LogicalReferencePoint, LogicalValueTypeUnit, LogicalMeasurement, LogicalEntity, LogicalAssociation, LogicalParticipant, LogicalParticipantPathNode, LogicalCharacteristicPathNode, LogicalCompositeQuery, PlatformStruct, PlatformEntity, PlatformAssociation, PlatformParticipant, PlatformParticipantPathNode, PlatformCharacteristicPathNode, PlatformCompositeQuery
 }

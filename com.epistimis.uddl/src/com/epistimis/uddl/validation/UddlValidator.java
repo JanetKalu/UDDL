@@ -3,7 +3,6 @@
  */
 package com.epistimis.uddl.validation;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 
 import com.epistimis.uddl.CLPExtractors;
-import com.epistimis.uddl.uddl.ConceptualAssociation;
 import com.epistimis.uddl.uddl.ConceptualCharacteristic;
 import com.epistimis.uddl.uddl.ConceptualEntity;
 import com.epistimis.uddl.uddl.LogicalEntity;
@@ -48,6 +46,7 @@ public class UddlValidator extends AbstractUddlValidator {
 	 * Also -must check both composition and participant lists - The net across all of them must be at least 2
 	 */
 	
+	@SuppressWarnings("unchecked")
 	private static <Entity extends UddlElement, 
 					Characteristic, 
 					Association extends Entity,

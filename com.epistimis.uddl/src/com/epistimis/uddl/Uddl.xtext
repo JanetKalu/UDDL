@@ -96,9 +96,9 @@ ConceptualCharacteristic:
 ConceptualEntity:
 	ConceptualAssociation |
 	'centity' name=ID (description=STRING)? (':' specializes=[ConceptualEntity|QN])? '{'
-		(composition+=ConceptualComposition)*
-		('basis:' (basisEntity+=[ConceptualBasisEntity|QN]))*
-	'}' ';'
+		composition+=ConceptualComposition*
+		('basis:' '[' basisEntity+=[ConceptualBasisEntity|QN]+ ']')?
+	'};'
 ;
 
 ConceptualComposition:
@@ -107,10 +107,10 @@ ConceptualComposition:
 
 ConceptualAssociation:
 		'cassoc' name=ID (description=STRING)? (':' specializes=[ConceptualEntity|QN])? '{'
-		(composition+=ConceptualComposition)*
-		('basis:' (ConceptualBasisEntity+=[ConceptualBasisEntity|QN]))*
-		('participants:' participant+=ConceptualParticipant)*
-	'}' ';'
+		composition+=ConceptualComposition*
+		('basis:' '[' ConceptualBasisEntity+=[ConceptualBasisEntity|QN]+ ']')?
+		('participants:' '[' participant+=ConceptualParticipant+ ']')?
+	'};'
 ;
 
 ConceptualParticipant:
@@ -147,7 +147,7 @@ ConceptualView:
 ConceptualQuery:
 	'cq' name=ID (description=STRING)? '{'
 		'spec:' specification=STRING
-	'}' ';'
+	'};'
 ;
 
 ConceptualCompositeQuery:
@@ -155,7 +155,7 @@ ConceptualCompositeQuery:
 		isUnion?='isUnion'
 		composition+=ConceptualQueryComposition
 		(composition+=ConceptualQueryComposition)+
-	'}' ';'
+	'};'
 ;
 
 ConceptualQueryComposition:
@@ -192,14 +192,14 @@ LogicalUnit:
 LogicalConversion:
 	'conv' name=ID  (description=STRING)? '{'
 		source=[LogicalAssociation|QN] '->'  destination=[LogicalAssociation|QN]
-		'}' ';' |
+		'};' |
 	LogicalAffineConversion
 ;
 
 LogicalAffineConversion:
 	'aconv' name=ID  (description=STRING)? '{'
 		source=[LogicalAssociation|QN] '-(' conversionFactor=FLOAT ',' offset=FLOAT ')->'  destination=[LogicalAssociation|QN]
-	'}' ';'
+	'};'
 ;
 
 LogicalValueType:
@@ -228,7 +228,9 @@ LogicalReal:					'real' 	name=ID (description=STRING)? ';'	;
 LogicalNonNegativeReal:			'real+' name=ID (description=STRING)? ';'	;
 LogicalEnumerated:
 
-	'enum' 	name=ID (description=STRING)? '['
+	'enum' 	name=ID (description=STRING)?  '{'
+		('stdRef:' standardReference=STRING)?
+		'['
 		label+=LogicalEnumerationLabel (',' label+=LogicalEnumerationLabel)*
 		']'
 		';'
@@ -242,7 +244,7 @@ LogicalCoordinateSystem:
 		('angleEq:' 	angleEquation=STRING)?
 		('distanceEq:' 	distanceEquation=STRING)?
 		'['axis+=[LogicalCoordinateSystemAxis|QN]+ ']'
-	'}' ';'
+	'};'
 ;
 
 LogicalCoordinateSystemAxis:
@@ -259,7 +261,7 @@ LogicalAbstractMeasurementSystem:
 LogicalStandardMeasurementSystem:
 	'smsys' name=ID (description=STRING)? '{'
 		'refStd:' referenceStandard=STRING
-	'}' ';'
+	'};'
 ;
 
 LogicalLandmark:
@@ -273,16 +275,16 @@ LogicalMeasurementSystem:
 		('extRefStd:' externalStandardReference=STRING)?
 		('orient:' orientation=STRING)?
 		('refPt:' '[' referencePoint+=LogicalReferencePoint+ ']')?
-		('![' constraint+=LogicalMeasurementConstraint ']')?
-	'}' ';'
+		('![' constraint+=LogicalMeasurementConstraint+ ']')?
+	'};'
 ;
 
 LogicalMeasurementSystemAxis:
 	'msa' name=ID (description=STRING)? '{'
 		'axis:' axis=[LogicalCoordinateSystemAxis|QN]
 		'vtu:' '[' defaultValueTypeUnit+=[LogicalValueTypeUnit|QN]+ ']'
-		('![' constraint+=LogicalMeasurementConstraint ']'	)?
-	'}' ';'
+		('![' constraint+=LogicalMeasurementConstraint+ ']'	)?
+	'};'
 ;
 
 LogicalReferencePoint:
@@ -357,7 +359,7 @@ LogicalMeasurementSystemConversion:
 		source=[LogicalMeasurementSystem|QN] '->' destination=[LogicalMeasurementSystem|QN]
 		'eqn:' '[' equation+=STRING (',' equation+=STRING)? ']'
 		'loss:' conversionLossDescription=STRING
-	'}' ';'
+	'};'
 ;
 
 
@@ -377,7 +379,7 @@ LogicalMeasurement:
 		('axis:' '[' measurementAxis+=[LogicalMeasurementAxis|QN]+ ']')?
 		'sys:' measurementSystem=[LogicalAbstractMeasurementSystem|QN]
 		('![' constraint+=LogicalMeasurementConstraint ']')?
-		'}' ';'
+		'};'
 ;
 
 LogicalMeasurementAxis:
@@ -385,7 +387,7 @@ LogicalMeasurementAxis:
 		('vtu:' '[' valueTypeUnit+=[LogicalValueTypeUnit|QN]+ ']')?
 		'msaxis:' measurementSystemAxis=[LogicalMeasurementSystemAxis|QN]
 		('![' constraint+=LogicalMeasurementConstraint+ ']')?
-	'}' ';'
+	'};'
 ;
 
 LogicalMeasurementAttribute:
@@ -397,7 +399,7 @@ LogicalMeasurementConversion:
 		source=[LogicalMeasurementSystem|QN] '->' destination=[LogicalMeasurementSystem|QN]
 		'eqn:' '[' equation+=STRING (',' equation+=STRING)? ']'
 		'loss:' conversionLossDescription=STRING
-	'}' ';'
+	'};'
 ;
 
 LogicalComposableElement:
@@ -413,30 +415,30 @@ LogicalCharacteristic:
 
 LogicalEntity:
 	'lentity' name=ID  (description=STRING)? (':' specializes=[LogicalEntity|QN])? '->' realizes=[ConceptualEntity|QN] '{'
-		(composition+=LogicalComposition)?
-	'}' ';'
+		composition+=LogicalComposition*
+	'};'
 	| LogicalAssociation
 ;
 
 LogicalComposition:
-	type=[LogicalComposableElement|QN]  rolename=ID ('[' lowerBound=INT ':' upperBound=INT ']')? (description=STRING)? (':' specializes=[LogicalCharacteristic|QN])?  '->' realizes=[ConceptualComposition|QN]
+	type=[LogicalComposableElement|QN]  rolename=ID ('[' lowerBound=INT ':' upperBound=INT ']')? (description=STRING)? (':' specializes=[LogicalCharacteristic|QN])?  '->' realizes=[ConceptualComposition|QN] ';'
 
 ;
 
 LogicalAssociation:
 	'lassoc' name=ID  (description=STRING)? (':' specializes=[LogicalEntity|QN])? '->' realizes=[ConceptualEntity|QN] '{'
-		(composition+=LogicalComposition)?
+		composition+=LogicalComposition*
 		// While technically this is optional, it makes no sense to have an Association with less than 2 participants. However,
 		// Those participants can be named anywhere in the inheritance/ specializes hierarchy - not just locally
-		('participants:' '[' participant+=LogicalParticipant ']')?
-	'}' ';'
+		('participants:' '[' participant+=LogicalParticipant+ ']')?
+	'};'
 ;
 
 LogicalParticipant:
 	type=[LogicalAssociation|QN]  rolename=ID ('[' lowerBound=INT ':' upperBound=INT ']')? (description=STRING)? (':' specializes=[LogicalCharacteristic|QN])?  '->' realizes=[ConceptualParticipant|QN] '{'
 		'source:' '[' sourceLowerBound=INT ':' sourceUpperBound=INT ']'
 		('path:' path=LogicalPathNode )?
-	'}' ';'
+	'};'
 ;
 
 LogicalPathNode:
@@ -461,14 +463,14 @@ LogicalView:
 LogicalQuery:
 	'lquery' name=ID  (description=STRING)? ('->' realizes=[ConceptualQuery|QN])? '{'
 		'spec:' specification=STRING
-		'}' ';'
+		'};'
 ;
 
 LogicalCompositeQuery:
 	'lcquery' name=ID  (description=STRING)? ('->' realizes=[ConceptualCompositeQuery|QN])? '{'
 		isUnion?='isUnion'
 		composition+=LogicalQueryComposition
-		'}' ';'
+		'};'
 ;
 
 LogicalQueryComposition:
@@ -590,8 +592,8 @@ PlatformCharacteristic:
 
 PlatformEntity:
 	'pentity' name=ID  (description=STRING)? (':' specializes=[PlatformEntity|QN])? '->' realizes=[LogicalEntity|QN] '{'
-		(composition+=PlatformComposition)?
-	'}' ';'
+		composition+=PlatformComposition*
+	'};'
 	| PlatformAssociation
 ;
 
@@ -604,18 +606,18 @@ PlatformComposition:
 
 PlatformAssociation:
 	'passoc' name=ID  (description=STRING)? (':' specializes=[PlatformEntity|QN])? '->' realizes=[LogicalEntity|QN] '{'
-		(composition+=PlatformComposition)?
+		composition+=PlatformComposition*
 		// While technically this is optional, it makes no sense to have an Association with less than 2 participants. However,
 		// Those participants can be named anywhere in the inheritance/ specializes hierarchy - not just locally
-		('participants:' '[' participant+=PlatformParticipant ']')?
-	'}' ';'
+		('participants:' '[' participant+=PlatformParticipant+ ']')?
+	'};'
 ;
 
 PlatformParticipant:
 	type=[PlatformAssociation|QN]  rolename=ID ('[' lowerBound=INT ':' upperBound=INT ']')? (description=STRING)? (':' specializes=[PlatformCharacteristic|QN])?  '->' realizes=[LogicalParticipant|QN] '{'
 		'source:' '[' sourceLowerBound=INT ':' sourceUpperBound=INT ']'
 		('path:' path=PlatformPathNode )?
-	'}' ';'
+	'};'
 ;
 
 PlatformPathNode:
@@ -640,14 +642,14 @@ PlatformView:
 PlatformQuery:
 	'lquery' name=ID  (description=STRING)? ('->' realizes=[LogicalQuery|QN])? '{'
 		'spec:' specification=STRING
-		'}' ';'
+		'};'
 ;
 
 PlatformCompositeQuery:
 	'lcquery' name=ID  (description=STRING)? ('->' realizes=[LogicalQuery|QN])? '{'
 		isUnion?='isUnion'
 		composition+=PlatformQueryComposition
-		'}' ';'
+		'};'
 ;
 
 PlatformQueryComposition:
