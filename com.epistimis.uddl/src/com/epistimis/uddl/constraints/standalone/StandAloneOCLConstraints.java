@@ -42,7 +42,7 @@ public class StandAloneOCLConstraints
 {
     private static HashMap<EPackage, PivotEObjectValidator> validators;
     private static final StandAloneOCLConstraints Instance;
-    
+
     public static HashMap<EPackage, PivotEObjectValidator> initializeStandAloneData(final boolean validateEntityUniqueness, final boolean validateObservableUniqueness) throws IOException {
         if (StandAloneOCLConstraints.validators == null) {
             CompleteOCLStandaloneSetup.doSetup();
@@ -112,7 +112,7 @@ public class StandAloneOCLConstraints
                                                                     //pkg = (EPackage)PlatformPackage.eINSTANCE;
                                                                     pkg = (EPackage)UddlPackage.eINSTANCE;
                                                                 }
-// IN FACE - at a different level                                                                
+// IN FACE - at a different level
 //                                                                else if (ocl.contains("uop.ocl")) {
 //                                                                    pkg = (EPackage)UopPackage.eINSTANCE;
 //                                                                }
@@ -152,11 +152,11 @@ public class StandAloneOCLConstraints
         System.out.println("Number of OCL Validators: " + Integer.toString(StandAloneOCLConstraints.validators.size()));
         return StandAloneOCLConstraints.validators;
     }
-    
+
     static Path copyFileToWorkingDirectory(final File destDir, final String oclFileName) throws IOException, IllegalStateException {
         return copyFileToWorkingDirectory(destDir, oclFileName, oclFileName);
     }
-    
+
     static Path copyFileToWorkingDirectory(final File destDir, final String destFileName, final String inputStreamName) throws IOException, IllegalStateException {
         if (!destDir.isDirectory()) {
             throw new IllegalStateException("java.io.File is not Directory: " + destDir.getName());
@@ -181,10 +181,10 @@ public class StandAloneOCLConstraints
         }
         return constraintFile;
     }
-    
+
     static {
         StandAloneOCLConstraints.validators = null;
         Instance = new StandAloneOCLConstraints();
-    } 
-    
+    }
+
 }

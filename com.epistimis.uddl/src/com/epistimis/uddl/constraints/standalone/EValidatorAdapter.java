@@ -5,7 +5,6 @@ package com.epistimis.uddl.constraints.standalone;
 
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.BasicDiagnostic;
-import org.eclipse.emf.validation.model.IConstraintStatus;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -15,24 +14,26 @@ import org.eclipse.emf.ecore.EClass;
 import java.util.Map;
 import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.validation.model.EvaluationMode;
-import org.eclipse.emf.validation.service.ModelValidationService;
-import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.ecore.util.EObjectValidator;
+import org.eclipse.emf.validation.model.EvaluationMode;
+import org.eclipse.emf.validation.model.IConstraintStatus;
+import org.eclipse.emf.validation.service.IBatchValidator;
+import org.eclipse.emf.validation.service.ModelValidationService;
 
 public class EValidatorAdapter extends EObjectValidator
 {
+	
     private final IBatchValidator batchValidator;
-    
+
     public EValidatorAdapter() {
         (this.batchValidator = (IBatchValidator)ModelValidationService.getInstance().newValidator(EvaluationMode.BATCH)).setIncludeLiveConstraints(true);
         this.batchValidator.setReportSuccesses(false);
     }
-    
+
     public boolean validate(final EObject eObject, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
         return this.validate(eObject.eClass(), eObject, diagnostics, context);
     }
-    
+
     public boolean validate(final EClass eClass, final EObject eObject, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
         super.validate(eClass, eObject, diagnostics, (Map<Object, Object>)context);
         IStatus status = Status.OK_STATUS;
@@ -43,17 +44,17 @@ public class EValidatorAdapter extends EObjectValidator
         }
         return status.isOK();
     }
-    
+
     public boolean validate(final EDataType eDataType, final Object value, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
         return super.validate(eDataType, value, diagnostics, (Map<Object, Object>)context);
     }
-    
+
     private void processed(final EObject eObject, final Map<Object, Object> context, final IStatus status) {
         if (context != null) {
             context.put(eObject, status);
         }
     }
-    
+
     private boolean hasProcessed(EObject eObject, final Map<Object, Object> context) {
         boolean result = false;
         if (context != null) {
@@ -69,7 +70,7 @@ public class EValidatorAdapter extends EObjectValidator
         }
         return result;
     }
-    
+
     private void appendDiagnostics(final IStatus status, final DiagnosticChain diagnostics) {
         if (status.isMultiStatus()) {
             final IStatus[] children =  status.getChildren();
@@ -81,4 +82,5 @@ public class EValidatorAdapter extends EObjectValidator
             diagnostics.add((Diagnostic)new BasicDiagnostic(status.getSeverity(), status.getPlugin(), status.getCode(), status.getMessage(), ((IConstraintStatus)status).getResultLocus().toArray()));
         }
     }
+    
 }
