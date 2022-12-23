@@ -1,0 +1,1597 @@
+dm Conceptual_Model  {
+	cdm FACE_Shared_Data_Model_Conceptual  {
+	cdm Observables {
+		observable NonPhysicalAddress "A scheme applied over a non-physical location/space used to delineate different elements or parts (e.g. IPv4, IPv4, telephone number)." ;
+		observable Metric "A function that defines a relationship between each pair of elements of a set." ;
+		observable Order "Order is an observable that describes a measure of the position of an element in a group of elements." ;
+		observable Polarization "The action of restricting the vibrations of a transverse wave, especially light, wholly or partially to one direction.";
+		observable Size "Size is an observable that describes the magnitude or number of a measurable or countable entity.";
+		observable Uncertainty "Not completely confident or sure. Used to describe the degree of uncertainty in a value.";
+		observable Color "The human perception of frequencies of light, characterized by the spectral density of the light.";
+		observable Gain "A multiplicative increase (or decrease, for values less than one) in the amount or rate of something.  This observable should only be used as an attribute of an Association.";
+		observable Sensitivity "The ratio of the output change to an input change.  This observable should only be used as an attribute of an Association.";
+		observable Probability "The extent to which something is likely to occur.  More precisely, it is the relative frequency of an outcome in the hypothetical limit of an infinite number of identical experiments.";
+		observable Efficiency "The ratio of useful output of a machine or process compared to its input.  This observable should only be used as an attribute of an Association.";
+		observable IndexOfRefraction "The ratio of the speed of light in vacuum to that in the medium.";
+
+		cdm AssociationObservables {
+			observable Ratio "The quantitative relation between two amounts showing the number of times one value contains or is contained within the other.  This should only be used within an Association and should identify the two participating attributes using the path attribute of the associated entity.";
+
+		}
+		cdm ProductObservables {
+			observable Image "A representation of the external form of an object.  Measurements should be referenced to an external standards.";
+			observable Video "The reproduction, display or broadcast of moving visual images.  Measurements should be referenced to an external standards.";
+			observable Audio "The reproduction or transmission of sound data.  Measurements should be referenced to an external standards.";
+		}
+		cdm AmountOfSubstance {
+			observable AmountOfSubstance "Quantity of elementary entities, such as atoms, molecules, electrons, and other particles.";
+			observable ChemicalConcentration "Amount of substance contained within a defined volume or mass.";
+		}
+
+		cdm Angle {
+			observable Angle "Divergence of two straight lines from a common point or of two planes from a common line.  This should typically be used within an Association indicating the angle between two associated entities. " ;
+		}
+		cdm Area {
+			observable ScalarArea "Magnitude of a surface space. " ;
+		}
+		cdm Counting {
+			observable Count "Total number of a collection of objects. " ;
+			observable Resolution "Describes the sharpness, fineness, or granularity of separation of the individual elements of a thing which can be produced or recorded. Examples are the separation of pixels in an image, or the separation of a chemical mixture into its component parts. " ;
+		}
+		cdm Density {
+			observable Density "Mass of a substance per unit volume. " ;
+			observable Humidity "Amount of water vapor in the atmosphere or in a gas. " ;
+		}
+
+		cdm State {
+			observable ConfigurationState "Captures the particular configuration condition relevant to an entity. " ;
+			observable HealthState "Condition of an item with respect to some purpose or use. " ;
+			observable Mode "A way or manner in which something occurs or is experienced, expressed, or done. " ;
+			observable OperationalState "The relative standing of any process, method or series of acts of a practical or mechanical nature. " ;
+			observable ValidityState "Indication of fitness of information with respect to some use or purpose. " ;
+		}
+		cdm Identifier {
+			observable Identifier "Distinguishes an item from other items.  The uniqueness of this identifier should be quantified in the realized measurement.  Identifiers may best be used in the context of an association to capture how one associated entity refers to another. " ;
+		}
+		cdm InformationElement "Abstract information that applies to attributes of an entity (e.g., text, diagrams, labels, etc.)" {
+			cdm Kind {
+				observable Kind "Describes the concept of a type descriptor. " ;
+			}
+			cdm Description {
+				observable Description "Summary level information about an item. " ;
+			}
+		}
+		cdm Length {
+			observable Distance "Amount of separation between two points. " ;
+			observable Extent "Dimensions of the bounding region encompassing the item. " ;
+		}
+		cdm Mass {
+			observable Mass "Amount of matter in a physical body (solid, liquid, gas) which determines the bodys resistance to being accelerated by a force and the strength of its mutual gravitational attraction with other bodies. " ;
+		}
+		cdm Orientation {
+			observable Orientation "Angular position of an object relative to a fixed reference frame that describes how the object is placed. " ;
+		}
+		cdm Position {
+			observable Position "Location of an item relative to a fixed reference frame. " ;
+		}
+		cdm Power {
+			observable Power "Rate at which work is performed or energy is converted. " ;
+		}
+
+		cdm Rate {
+			observable Acceleration "Rate of change of velocity per unit time. " ;
+			observable AngularAcceleration "Rate of change of angular velocity. " ;
+			observable AngularVelocity "Norm of a vector of angular motion of the target body. " ;
+			observable CountRate "Rate at which a total amount is accumulated over a time period. " ;
+			observable DataRate "Quantity of data transferred over a defined time period. " ;
+			observable MassFlowRate "Mass of substance which passes through a given surface per unit time. " ;
+			observable OrientationAcceleration "Rate of change in Orientation Velocity. " ;
+			observable OrientationVelocity "Rate of change in Orientation. " ;
+			observable ScalarAcceleration "Rate of change of speed. " ;
+			observable Speed "Rate at which an object covers a distance. " ;
+			observable TemporalFrequency "Number of occurrences of a repeating event per unit time. Events are assumed to have a uniform period. " ;
+			observable Velocity "Rate at which an object covers a distance in a specified direction. " ;
+		}
+		cdm Temperature {
+			observable Temperature "Average kinetic energy of particles in an item (i.e., how hot or cold the item is). " ;
+			observable TemperatureDelta "A change or difference between two temperatures. " ;
+		}
+		cdm Time {
+			observable CalendarTime "Position in time, a realization of which could be a specific date and time on a calendar. This is not to be used for time durations, which would be the difference between two time observables. " ;
+			observable Duration "Quantity of time, such as would be obtained from the difference between two specific date/times on a calendar (i.e., the difference between two CalendarTime observables). " ;
+		}
+		cdm Viscosity {
+			observable DynamicViscosity "Property of a fluid that expresses its resistance to shearing flows. Also called Shear Viscosity. " ;
+			observable KinematicViscosity "Property of a fluid that is the ratio of its resistance to shearing flows (i.e., its dynamic viscosity) to its density. " ;
+		}
+		cdm Volume {
+			observable ScalarVolume "Magnitude of a three dimensional space. " ;
+		}
+	}
+	cdm BasisEntities {
+		basis Encryption "A type of procedure, method, or mechanism of encryption. " ;
+		basis Path "A set of ordered adjacent points in a topological metric space " ;
+		basis Point "A position with zero dimension in a space " ;
+	}
+}
+
+
+    ldm FACE_Shared_Data_Model_Logical {
+	ldm CoordinateSystems {
+		ldm Cartesian {
+			coord Cartesian_Y_CoordSys "One dimensional Cartesian Y coordinate system." {
+				axis: "only one axis"
+				angleEq: "n/a"
+				distanceEq: "d = x2-x1 "
+				[ Cartesian_Y_CoordSysAxis]
+			};
+			coord Cartesian_Z_CoordSys "One dimensional Cartesian Zcoordinate system." {
+				axis: "There is only one axis"
+				angleEq: "n/a"
+				distanceEq: "d = x2-x1 "
+				[Cartesian_Z_CoordSysAxis]
+			};
+			coord Cartesian_X_CoordSys "One dimensional Cartesian coordinate system." {
+				axis: "There is only one axis."
+				angleEq: "n/a"
+				distanceEq: "d = x2-x1 "
+				[Cartesian_X_CoordSysAxis ]
+			};
+
+			coord Cartesian_2D_CoordSys "Two dimensional Cartesian coordinate system." {
+				axis: "Axes are orthogonal to each other."
+				angleEq: "theta = inverse cos ((a dot b)/(|a|*|b|)), where a and b are vectors."
+				distanceEq: "d=sqrt((x2-x1)^2+(y2-y1)^2) "
+				[Cartesian_X_CoordSysAxis Cartesian_Y_CoordSysAxis]
+			};
+			coord Cartesian_3D_CoordSys "Three dimensional Cartesian coordinate system." {
+				axis: "Axes are orthogonal to each other."
+				angleEq: "theta = inverse cos ((a dot b)/(|a|*|b|)), where a and b are vectors."
+				distanceEq: "d = sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2) "
+				[Cartesian_X_CoordSysAxis Cartesian_Y_CoordSysAxis Cartesian_Z_CoordSysAxis]
+			};
+			coord Cartesian_3DPlusTime_CoordSys "3 dimensional Cartesian coordinate system with an additional (non-spatial) axis to represent time." {
+				axis: "Axes are orthogonal to each other."
+				angleEq: "theta = inverse cos ((a dot b)/(|a|*|b|)), where a and b are vectors."
+				distanceEq: "d = sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2) "
+				[Cartesian_T_CoordSysAxis Cartesian_X_CoordSysAxis Cartesian_Y_CoordSysAxis Cartesian_Z_CoordSysAxis]
+			};
+			csa Cartesian_T_CoordSysAxis "T (time) axis of Cartesian coordinate system " ;
+			csa Cartesian_X_CoordSysAxis "X Axis of Cartesian coordinate system. " ;
+			csa Cartesian_Y_CoordSysAxis "Y Axis of Cartesian coordinate system " ;
+			csa Cartesian_Z_CoordSysAxis "Z Axis of Cartesian coordinate system " ;
+
+		}
+		ldm FixedAxisRotations {
+			coord Rotation_Fixed_Psi_CoordSys "The independent Psi vector of a three axis rotational Coordinate System"
+          	 {
+				axis: "Right-handed orthogonal"
+				angleEq: "Alpha = Psi"
+				distanceEq: "NA "
+				[Rotation_Fixed_Psi_CoordSysAxis]
+			};
+			coord Rotation_Fixed_Theta_CoordSys "The independent Theta vector of a three axis rotational Coordinate System" {
+				axis: "Right-handed orthogonal"
+				angleEq: "Alpha = Theta"
+				distanceEq: "NA "
+				[Rotation_Fixed_Theta_CoordSysAxis]
+			};
+			coord Rotation_Fixed_Phi_CoordSys "The independent Phi vector of a three axis rotational Coordinate System" {
+				axis: "Right-handed orthogonal"
+				angleEq: "Alpha = Phi"
+				distanceEq: "NA "
+				[Rotation_Fixed_Phi_CoordSysAxis]
+			};
+			coord Rotation_Fixed_CoordSys "One fixed axis rotational Coordinate System" {
+				axis: "Right-handed orthogonal"
+				angleEq: "Alpha = Psi"
+				distanceEq: "NA "
+				[Rotation_Fixed_Psi_CoordSysAxis]
+			};
+			coord Rotation_Fixed_2D_CoordSys "Two fixed axis rotational Coordinate System" {
+				axis: "Right-handed orthogonal"
+				angleEq: "Alpha = Psi; Beta = Theta"
+				distanceEq: "NA "
+				[Rotation_Fixed_Psi_CoordSysAxis Rotation_Fixed_Theta_CoordSysAxis]
+			};
+			coord Rotation_Fixed_3D_CoordSys "Three fixed axis rotational Coordinate System" {
+				axis: "Right-handed orthogonal"
+				angleEq: "Alpha = Psi; Beta = Theta; Gamma = Phi"
+				distanceEq: "NA "
+				[Rotation_Fixed_Phi_CoordSysAxis Rotation_Fixed_Psi_CoordSysAxis Rotation_Fixed_Theta_CoordSysAxis]
+			};
+			csa Rotation_Fixed_Phi_CoordSysAxis "The Phi vector Q,E measuring rotation about the Fixed Coordinate System x axis " ;
+			csa Rotation_Fixed_Psi_CoordSysAxis "The Psi vector Q,E measuring rotation about the Fixed Coordinate System z axis. " ;
+			csa Rotation_Fixed_Theta_CoordSysAxis "The Theta vector Q,Emeasuring rotation about the Fixed Coordinate System y axis " ;
+		}
+        ldm Rotational {
+          ldm Tait_BryanRotations {
+            coord  Rotation_Psi_CoordSys "The independent Psi vector of a three axis rotational Coordinate System" {
+            axis: "Right-handed orthogonal" angleEq: "Alpha = Psi" distanceEq:"NA"
+            [ Rotation_Psi_CoordSysAxis ]
+};
+            coord  Rotation_Theta_CoordSys "The independent Theta vector of a three axis rotational Coordinate System" {
+axis: "Right-handed orthogonal" angleEq:"Alpha = Theta" distanceEq:"NA"
+[Rotation_Theta_CoordSysAxis]
+};
+            coord  Rotation_Phi_CoordSys "The independent Phi vector of a three axis rotational Coordinate System" {
+axis: "Right-handed orthogonal" angleEq:"Alpha = Phi" distanceEq:"NA"
+            	 [Rotation_Phi_CoordSysAxis]
+};
+            coord   Rotation_1D_CoordSys "One axis rotational Coordinate System" {
+            	 axis: "Right-handed orthogonal" angleEq:"Alpha = Psi" distanceEq:"NA"
+            	[ Rotation_Psi_CoordSysAxis]
+            };
+            coord  Rotation_2D_CoordSys "Two axis rotational Coordinate System" {
+            	  axis: "Right-handed orthogonal" angleEq:"Alpha = R(rotation Matrix) X v(initial vector)" distanceEq:"NA"
+            	 [Rotation_Psi_CoordSysAxis Rotation_Theta_CoordSysAxis]
+            	  };
+            coord  Rotation_3D_CoordSys "Three axis rotational Coordinate System" {
+            	  axis: "Right-handed orthogonal" angleEq:"Alpha = R(rotation Matrix) X v(initial vector)" distanceEq:"NA"
+            	 [Rotation_Phi_CoordSysAxis Rotation_Psi_CoordSysAxis Rotation_Theta_CoordSysAxis]
+            	  };
+            csa   Rotation_Phi_CoordSysAxis "The Phi vector Q,E measuring rotation about the rotated local X (x'') axis.";
+            csa  Rotation_Psi_CoordSysAxis "The Psi vector Q,E measuring rotation about the Fixed Coordinate System z axis.";
+            csa   Rotation_Theta_CoordSysAxis "The Theta vector Q,E measuring rotation about the rotated local Y (N Q,E y') axis.";
+          }
+        }
+
+
+		ldm Scalar {
+			coord Scalar_CoordSys "A scale for one dimensional scalar measurements" {
+				axis: "n/a"
+				angleEq: "n/a"
+				distanceEq: "|v2-v1| "
+				[Scalar_CoordSysAxis]
+			};
+			csa Scalar_CoordSysAxis "A scale for one dimensional scalar measurements " ;
+		}
+		ldm Angular {
+			coord Polar_CoordSys "Polar Coordinate System" {
+				axis: "S2 Right Handed Orthogonal"
+				angleEq: "Alpha = Theta2 - Theta1"
+				distanceEq: "d = sqrt[(r1^2 +r2^2)-(2*r1*r2*cos(Theta2-Theta1))] "
+				[Angular_Azimuth_CoordSysAxis Angular_Radial_CoordSysAxis]
+			};
+			coord Spherical_Phi_CoordSys "The independent Phi axis of the 3 dimensional (3D) Spherically symmetric coordinate system." {
+				axis: "S3 Right Handed Orthogonal (R, Azimuth, Inclination),"
+				angleEq: "Alpha = sqrt[(Theta1^2 + Theta2^2) -2(Theta1*Theta2) * cos(Phi1-Phi2)]"
+				distanceEq: "Multiple distance metrics are possible depending upon the topology "
+				[Angular_Inclination_CoordSysAxis]
+			};
+			coord Spherical_R_CoordSys "The independent R axis of the 3 dimensional (3D) Spherically symmetric coordinate system." {
+				axis: "S3 Right Handed Orthogonal (R, Azimuth, Inclination),"
+				angleEq: "Alpha = sqrt[(Theta1^2 + Theta2^2) -2(Theta1*Theta2) * cos(Phi1-Phi2)]"
+				distanceEq: "Multiple distance metrics are possible depending upon the topology "
+				[Angular_Radial_CoordSysAxis]
+			};
+			coord Spherical_Theta_CoordSys "The independent Theta axis of the 3 dimensional (3D) Spherically symmetric coordinate system." {
+				axis: "S3 Right Handed Orthogonal (R, Azimuth, Inclination),"
+				angleEq: "Alpha = sqrt[(Theta1^2 + Theta2^2) -2(Theta1*Theta2) * cos(Phi1-Phi2)]"
+				distanceEq: "Multiple distance metrics are possible depending upon the topology "
+				[Angular_Azimuth_CoordSysAxis]
+			};
+			coord Spherical_Surface_CoordSys "A spherically symmetric coordinate system for a surface" {
+				axis: "S3 Right Handed Orthogonal (R, Azimuth, Inclination),"
+				angleEq: "Alpha = sqrt[(Theta1^2 + Theta2^2) -2(Theta1*Theta2) * cos(Phi1-Phi2)]"
+				distanceEq: "Multiple distance metrics are possible depending upon the topology "
+				[Angular_Inclination_CoordSysAxis Angular_Azimuth_CoordSysAxis]
+			};
+			coord Spherical_CoordSys "A 3 dimensional (3D) Spherically symmetric coordinate system." {
+				axis: "S3 Right Handed Orthogonal (R, Azimuth, Inclination),"
+				angleEq: "Alpha = sqrt[(Theta1^2 + Theta2^2) -2(Theta1*Theta2) * cos(Phi1-Phi2)]"
+				distanceEq: "Multiple distance metrics are possible depending upon the topology "
+				[Angular_Inclination_CoordSysAxis Angular_Azimuth_CoordSysAxis Angular_Radial_CoordSysAxis]
+			};
+			csa Angular_Inclination_CoordSysAxis "The inclination (or polar) Axis is the set of angles between the zenith direction and the line segment OP. " ;
+			csa Angular_Azimuth_CoordSysAxis "The azimuth (or azimuthal) Axis is the set of signed angles measured from the azimuth reference direction to the orthogonal projection of any line segment OP on the reference plane. " ;
+			csa Angular_Radial_CoordSysAxis "The radius or radial Axis is the set of Euclidian Distance vectors from the origin O to any point P " ;
+		}
+		ldm Discrete {
+			coord Discrete_CoordSys "Coordinate system used to model sets of discrete states (e.g. Q,E enumerations)." {
+				axis: "n/a"
+				angleEq: "n/a"
+				distanceEq: "n/a "
+				[Discrete_CoordSysAxis]
+			};
+			csa Discrete_CoordSysAxis "The axis used to represent a set of discrete states (e.g. Q,E a set of enumerations) " ;
+		}
+	}
+	ldm LogicalValueTypes "The types available to represent the values of Measures" {
+		bool Boolean "A type that can represent only two values, often meaning True or False " ;
+		char Character "A type representing a single character in some written language " ;
+		int Integer "A whole number in the range -infinity to +infinity " ;
+		nat Natural "A whole number ranging from +1 to +infinity; also called &quot;counting numbers&quot; " ;
+		real+ NonNegativeReal "A real number ranging from 0 to +infinity " ;
+		real Real "A type to represent any numeric quantity along a continuous line. Real numbers include all rational and irrational numbers " ;
+		str String "A type used to represent an ordered set of characters in some written language " ;
+	}
+	ldm Units {
+		lunit CountsPerSecond "Number of events that occur per second " ;
+		lunit CountsPerMinute "Number of events that occur per minute. " ;
+		lunit KilogramsPerSecond "Rate of change in mass that occur per second " ;
+		lunit PoundsPerHour "Rate of change in mass that occurs per hour. " ;
+		ldm DataRateUnits {
+			lunit BitsPerSecond "Bits per second " ;
+		}
+		ldm ElectricChargedDensity {
+			lunit CoulombsPerMeter "Coulombs per meter " ;
+			lunit CoulombsPerMeterCubed "Coulombs per meter cubed. " ;
+			lunit CoulombsPerMeterSquared "Coulombs per meter squared " ;
+		}
+		ldm ElectricCurrentDensity {
+			lunit AmpPerSquareMeter "Unit of measure for representing one amp of electric current flowing through a material with a cross-sequential area of one square meter. " ;
+		}
+		ldm Percentage {
+			lunit Percentage "Unit of measure represented as a number or ratio expressed as a fraction of 100. " ;
+			lunit PercentPerSecond "Unit of measure for the rate of change of percent per unit second. " ;
+		}
+		ldm Acceleration {
+			ldm AngularAcceleration {
+				lunit DegreesPerSecondPerSecond "Unit of measure for the rate of change of an angular speed in which the base angular measure unit is degrees. " ;
+				lunit RadiansPerSecondPerSecond "Unit of measure for the rate of change of an angular velocity in which the base angular measure unit is radian. " ;
+			}
+			ldm LinearAcceleration {
+				lunit g "The nominal gravitational acceleration of an object in a vacuum near the surface of the Earth. It is defined by standard as 9.80665 m/s^2, which is exactly 35.30394 km/(h·s) (about 32.174 ft/s^2, or 21.937 mph/s). " ;
+				lunit FeetPerSecondPerSecond "Unit of measure for the rate of change of velocity in which the base distance measure traveled is feet. " ;
+				lunit KnotsPerSecond "Unit of measure for the rate of change of velocity in which the base velocity measure is knots. " ;
+				lunit MetersPerSecondPerSecond "Unit of measure for the rate of change of velocity in which the base distance measure traveled is meters. " ;
+			}
+		}
+		ldm AmountOfConcentration {
+			lunit MolesPerCubicMeter "Unit of measure for the number of atoms of a substance per unit volume. " ;
+		}
+		ldm AmountOfSubstance {
+			lunit Moles "Unit of measure to express amounts of a chemical substance, defined as the amount of any substance that contains as many elementary entities as there are atoms in 12 grams of pure carbon-12. " ;
+		}
+		ldm Angle {
+			lunit DegreesOfArc "Unit of measure for a plane angle representing 1/360 of a full rotation. Not an SI unit. " ;
+			lunit Gradians "Unit of measure for a pane angle representing 1/400 of a full rotation. Not an SI unit. " ;
+			lunit MinutesOfArc "Unit of measure for angular measurement equal to 1/60 of one degree, because one degree is 1/360 of a circle, one minute of arc is 1/21,600 of a circle. " ;
+			lunit Radians "Unit of measure for angular measurement equal to the length of a corresponding arc of a unit circle, one radian is just under 57.3 degrees. It is a SI derived unit. " ;
+			lunit SecondsOfArc "Unit of measure for angular measurement equal to 1/60 of one minute because one degree is 1/360 of a circle, one minute of arc is 1/21,600 of a circle and one second of arc is 1/1296000. " ;
+			lunit Turns "Unit of measure for angular measurement equal to 360 degrees or 2 pi radians. 1 revolution. " ;
+		}
+		ldm Area {
+			lunit Acres "Unit of measure for land area in US and Britain, defined as 1/640 of a square mile. " ;
+			lunit Barns "Unit of measure for area in nuclear physics expressing the cross sectional are of nuclei and nuclear reactions. Is approximately the cross sectional area of a uranium nucleus. " ;
+			lunit Hectares "Unit of measure in the meter system for land area defined as 10,000 square meters. " ;
+			lunit SquareFeet "Unit of measure for area equal to a square measuring one foot on each side, not an SI unit. " ;
+			lunit SquareKilometers "Unit of measure is a decimal multiple of the surface area measure square meters, and is a derived SI unit. " ;
+			lunit SquareMeters "Unit of measure for surface area equal to a square measuring one meter on each side, and is a derived SI unit. " ;
+			lunit SquareMiles "Unit of measure for area equal to the area of a square of on statute mile, not an SI unit. " ;
+		}
+		ldm Density {
+			lunit CoulombsPerCubicMeter "Unit of measure for representing one coulomb of electric charge per one cubic meter of volume. " ;
+			lunit CoulombsPerSquareMeter "Unit of measure for representing one coulomb of electric charge per one square meter of surface. " ;
+			lunit Density "Unit of measure represented as mass per unit volume. The SI unit of kilogram per cubic meter (kg/m3) and the cgs unit of gram per cubic centimeter (g/cm3) are probably the most commonly used units for density. 1,000 kg/m3 equals 1 g/cm3. " ;
+			lunit JoulesPerCubicMeter "Unit of measure for representing useful energy in joules released from on cubic meter of fuel volume during complete combustion. " ;
+			lunit KilogramsPerSquareMeter "Unit of measure for representing surface density in mass per unit area. " ;
+			lunit WattsPerSquareMeter "Unit of measure for representing the rate one watt of heat energy to flow through one square meter of area normal to the direction of heat flux. Derived SI Unit. " ;
+		}
+		ldm DerivedUnits {
+			ldm Ratios {
+				lunit AmpPerMeter "Unit of measure for representing a magnetic field strength. Derived SI unit " ;
+				lunit Bels "Unit of measure for representing the comparison of the power levels in electrical communication or sound. " ;
+				lunit CubicMetersPerKilogram "Unit of measure for representing specific volume of a substance as the ratio of the substance volume per mass, the reciprocal of density. " ;
+				lunit Decibels "Unit of measure for representing the intensity of sound. " ;
+				lunit DecibelHertz "Unit of measure for representing carrier-to-noise density ratio. " ;
+				lunit DecibelWatt "The decibel watt or dBW is a unit for the measurement of the strength of a signal expressed in decibels relative to one watt. " ;
+				lunit JoulesPerKelvin "Unit of measure for representing heat capacity or entropy. Derived SI unit " ;
+				lunit JoulesPerKilogram "Unit of measure for representing specific energy per unit mass. Derived SI Unit. " ;
+				lunit JoulesPerKilogramKelvin "Unit of measure for representing specific heat capacity, which is the heat capacity per unit mass of a material. Derived SI Unit " ;
+				lunit KilogramsPerCubicMeter "Unit of measure for material density. Derived SI Unit " ;
+				lunit LitersPerHour "Unit of measure for volume flow rate. " ;
+				lunit MillimetersPerHour "Unit of measure for representing the number of millimeters traveled in one hour used in speed and velocity metrics. " ;
+				lunit Nepers "Unit of measure for representing the ratio of two current, voltages, or analogous quantities. Not an SI unit. " ;
+				lunit NewtonsPerMeter "Unit of measure for representing surface tension in force per unit length. SI Derived unit " ;
+				lunit RevolutionsPerMinute "Unit of measure for representing the frequency of rotation. " ;
+				lunit WattsPerSteradian "Unit of measure for representing the radiant intensity of an object. " ;
+			}
+		}
+        ldm Frequency {
+          lunit GigaHertz "Unit of measure for representing frequency used to measure the clock rate of modern digital logic, equal to one billion hertz.";
+          lunit Hertz "Unit of measure for representing frequency, equal to one cycle per second. An SI unit." ;
+          lunit KiloHertz "Unit of measure for representing frequency equivalent to 1,000 cycles per second or 1,000 hertz.";
+          lunit MegaHertz "Unit of measure for representing one million hertz, as measure of frequency of radio transmissions or transmission speeds of electronic devices.";
+        }
+
+		ldm Length {
+			lunit Angstroms "Unit of measure for representing length equal to one hundred-millionth of a centimeter mainly to express wavelengths and interatomic distances. " ;
+			lunit AstronomicalUnits "Unit of measure for representing the mean distance between the Earth and the Sun, equal to 149.6 million kilometers. " ;
+			lunit Cables "Unit of measure for representing length as a nautical unit of measure equal to one tenth of a nautical mile or 185.2 meters. " ;
+			lunit Centimeters "Unit of measure for representing length equal to one hundredth of a meter. " ;
+			lunit Chains "Unit of measure for representing a geodetic measure used for land survey, equal to 66 feet. " ;
+			lunit DataMiles "Unit of measure for representing radar related subjects equal to 6,000 feet. " ;
+			lunit Fathoms "Unit of measure for representing depth of water equal to 6 feet. " ;
+			lunit Feet "Unit of measure for representing length as multiple units of the international foot, equal to 12 inches. " ;
+			lunit Inches "Unit of measure for representing length in the imperial and US customary systems of measurement. " ;
+			lunit Kilometers "Unit of measure for representing length equal to 1000 meters. " ;
+			lunit Links "Unit of measure for representing length equal to 7.92 survey inches formerly used in land surveying. " ;
+			lunit Meters "Unit of measure for representing length equal to the distance traveled in a vacuum by light in 1/299, 782, 458 second or to about 39.37 inches. An SI Unit. " ;
+			lunit MetricMiles "Unit of measure for representing length in international athletics of 1500 meters. " ;
+			lunit Millimeters "Unit of measure for representing length equal to one thousandth of a meter. " ;
+			lunit NauticalMiles "Unit of measure for representing length at sea or air travel equal to 1.15 miles " ;
+			lunit ReciprocalMeters "Unit of measure for representing a measure of the shape of a curved surface equal to the reciprocal of the radius of curvature of a surface in meters. " ;
+			lunit Rods "Unit of measure for representing length equal to 5 1/5 yards or 16 1/2 feet used in land surveying. " ;
+			lunit StatuteMiles "Unit of measure for representing length on land in English speaking countries equal to 5,280 feet. " ;
+			lunit Yards "Unit of measure for representing length in the US Customary and British Imperial Systems equal to 3 feet. " ;
+		}
+		ldm Mass {
+			lunit Dalton_UnifiedAtomicMassUnits "Unit of measure for representing mass on an atomic or molecular scale defined as one twelfth of the rest mass of an unbound atom of carbon-12 in its nuclear and electronic ground state. " ;
+			lunit ElectronMass "Unit of measure for representing electron rest mass is an atomic fundamental physical constant is defined as the mass of a stationary electron. " ;
+			lunit Grams "Unit of measure for representing a metric unit of mass equal to one thousandth of a kilogram. " ;
+			lunit KiloGrams "Unit of measure for representing the mass equal to the International Prototype of the Kilogram. " ;
+			lunit Milligrams "Unit of measure for representing a metric unit of mass equal to one thousandth of a gram. " ;
+			lunit Tonnes "Unit of measure for representing a metric unit of mass equal to 1,000 kilograms or 2, 240 pounds. A non-SI unit. " ;
+			ldm Avoirdupois {
+				lunit AvoirdupoisGrains "Unit of measure for representing a unit of 1/7000 of a pound from the avoirdupois system based on the 16 ounce pound or 7,000 grains. " ;
+				lunit Drams "Unit of measure for representing a unit of mass of 1/256 of a pound or 1/16 of an ounce. " ;
+				lunit Hundredweights "Unit of measure for representing a unit of mass equal to 100 pounds defined and used in the US Customary System. " ;
+				lunit LongHundredweights "Unit of measure for representing a unit of mass equal to 112 pounds defined and used in the Imperial System. " ;
+				lunit LongTons "Unit of measure for representing a unit of weight equal to 2240 pounds used in the Imperial System. " ;
+				lunit Ounces "Unit of measure for representing an avoirdupois unit of weight equal to 1/16 of an avoirdupois pound or 437.5 grains. " ;
+				lunit Pounds "Unit of measure for representing an avoirdupois unit of weight equal to 7000 grains. " ;
+				lunit Tons "Unit of measure for representing a unit of weight equal to 2000 pounds used in the US Customary System. " ;
+			}
+			ldm Troy {
+				lunit TroyGrains "Unit of measure for representing a unit of weight used for precious metals and gemstones equal to  1/60 dram or equal to the avoirdupois grain. " ;
+				lunit TroyOunces "Unit of measure for representing a unit of weight used for precious metals and gemstones equal to 480 grains. " ;
+				lunit TroyPounds "Unit of measure for representing a unit of weight used for precious metals and gemstones equal to 5,760 grains. " ;
+			}
+		}
+		ldm MassConcentration {
+		}
+		ldm MolarEnergy {
+			lunit JoulesPerMole "Unit of measure for representing the measure of the energy per amount of material. An SI derived unit. " ;
+		}
+
+		ldm SolidAngle {
+			lunit SquareDegrees "Unit of measure for representing the measure of a solid angle used to measure parts of a sphere. A non-SI unit. " ;
+			lunit Steradians "Unit of measure for representing squared radian is the measure of a solid angle used to measure parts of a sphere. An SI unit. " ;
+		}
+		ldm Speed {
+			lunit FeetPerMinute "Speed unit of feet per minute. " ;
+			lunit FeetPerSecond "Speed unit of feet per second. " ;
+			lunit DegreesPerSecond "Unit of measure for representing rotational speed, defined by the change in orientation of an object, in degrees every second. An SI Unit. " ;
+			lunit KilometersPerHour "Unit of measure for representing a measure of speed expressed as the number of kilometers travelled in one hour. " ;
+			lunit Knots "Unit of measure for representing a measure of speed equal to one nautical mile per hour. " ;
+			lunit Mach "Unit of measure for representing the speed of sound, the distance travelled per unit of time by a sound wave propagating through an elastic medium.  " ;
+			lunit MetersPerSecond "Unit of measure for representing speed and velocity. An SI derived unit. " ;
+			lunit MilesPerHour "Unit of measure for representing speed expressing the number of statute miles covered in one hour used in the Imperial and US Customary systems. " ;
+			lunit RadiansPerSecond "Unit of measure for representing rotational speed, defined by the change in orientation of an object, in radians every second. An SI Unit. " ;
+			lunit SpeedOfLight "Unit of measure for representing the speed of light in a vacuum, is a universal physical constant whose value is 299,792,458 meters per second. " ;
+		}
+		ldm Temperature {
+			lunit DegreesCelsius "Unit of measure for representing temperature where water freezes at 0 degrees and boils at 100 degrees. " ;
+			lunit DegreesFarenheit "Unit of measure for representing temperature where water freezes at 32 degrees and boils at 212 degrees (at standard atmospheric pressure). " ;
+			lunit DegreesKelvin "Unit of measure for representing temperature at which all thermal motion ceases in the classical description of thermodynamics. An SI unit. " ;
+		}
+		ldm Time {
+			lunit Days "Unit of time duration equal to 24 hours; approximately one rotation of the Earth " ;
+			lunit Hours "Unit of time duration equal to 60 minutes " ;
+			lunit Microseconds "Unit of time duration equal to one millionth of a second " ;
+			lunit Milliseconds "Unit of time duration equal to one thousandth of a second " ;
+			lunit Minutes "Unit of time duration equal to 60 seconds " ;
+			lunit Nanoseconds "Unit of time duration equal to one billionth of a second " ;
+			lunit Seconds "SI base unit of time. One second is defined to be the duration of 9192631770 periods of the radiation corresponding to the transition between the two hyperfine levels of the ground state of the cesium 133 atom " ;
+		}
+		ldm Volume {
+			lunit Liters "Unit of measure for representing 1,000 cubic centimeters.  0.946352946 liters is exacty equal to 1 (fluid, US) quarts. " ;
+			lunit CubicCentimeters "Unit of measure representing volume of a cube measuring 1 cm x 1 cm x 1 cm. A SI derived unit. " ;
+			lunit CubicFeet "Unit of measure representing volume of a cube measuring the same multiple of a foot unit in length on all sides. " ;
+			lunit CubicInches "Unit of measure representing volume of a cube measuring 1 in x 1 in x 1 in. " ;
+			lunit CubicMeters "Unit of measure representing volume of a cube measuring 1 m x 1 m x 1 m. A SI derived unit. " ;
+			lunit CubicMillimeters "Unit of measure representing volume of a cube measuring 1 mm x 1 mm x 1 mm. A SI derived unit. " ;
+			lunit CubicYards "Unit of measure representing volume of a cube measuring 1 yds x 1 yds x 1 yds. " ;
+		}
+        ldm  UnitlessDimensionless {
+          lunit  Percent "A number or rate that is expressed as a certain number of parts of something divided into 100 parts.";
+          lunit  Ratio "A unit used to specify the ratio of one value to another having the same units";
+          lunit  Unitless "A &quot;placeholder&quot; to specify for values that have no engineering units or where units are not meaningful, but a Unit specification is required";
+        }
+	}
+
+
+      ldm  ValueTypeUnits {
+        vtu  Enumerations.AbstractDiscreteSet Units.UnitlessDimensionless.Unitless AbstractDiscreteSetUnitless "Abstract set of states for the AbstractDiscreteSetMeasurementSystem, which must be overridden in the MeasurementAxis for a &quot;real&quot; Measurement."  ;
+        vtu  LogicalValueTypes.Real Units.Length.Centimeters RealCentimeters "Centimeters represented as a Real" ;
+        vtu  LogicalValueTypes.Real Units.Speed.Mach RealMach "Mach represented as Real"  ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless IntegerCount "Number of occurrences as an integer"  ;
+        vtu  LogicalValueTypes.Integer Units.Time.Hours IntegerHours "Integer hours"  ;
+        vtu  LogicalValueTypes.Integer Units.Time.Microseconds IntegerMicroseconds "Integer microseconds"  ;
+        vtu  LogicalValueTypes.Integer Units.Time.Milliseconds IntegerMilliseconds "Integer milliseconds"  ;
+        vtu  LogicalValueTypes.Integer Units.Time.Minutes IntegerMinutes "Integer minutes"  ;
+        vtu  LogicalValueTypes.Integer Units.Time.Nanoseconds IntegerNanoseconds "Integer nanoseconds"  ;
+        vtu  LogicalValueTypes.Integer Units.Time.Seconds IntegerSeconds "Integer seconds"  ;
+        vtu  LogicalValueTypes.Natural Units.DataRateUnits.BitsPerSecond NaturalBitsPerSecond "Data rate as real number in bits per second"  ;
+        //vtu  LogicalValueTypes.Natural EventsPerSecond NaturalEventsPerSecond "Count rate as real number in counts per second"  ;
+        vtu  LogicalValueTypes.Natural Units.UnitlessDimensionless.Unitless NaturalPixelCount "Pixel count as a natural numerical representation."  ;
+        vtu  LogicalValueTypes.NonNegativeReal Units.Volume.CubicMeters NonNegativeRealCubicMeters "Non-negative Real cubic meters"  ;
+        vtu  LogicalValueTypes.NonNegativeReal Units.Length.Meters NonNegativeRealMeter "Meter as a non-negative real numerical representation."  ;
+        vtu  LogicalValueTypes.NonNegativeReal Units.Speed.MetersPerSecond NonNegativeRealMetersPerSecond "Meters per second as a non-negative real numerical representation."  ;
+        vtu  LogicalValueTypes.Real Units.Temperature.DegreesCelsius RealCelsius "Value in Degrees Celsius"  ;
+        //vtu  LogicalValueTypes.Real Degrees RealDegrees "Degrees as a real numerical representation."  ;
+        vtu  LogicalValueTypes.Real Units.Speed.DegreesPerSecond RealDegreesPerSecond "Orientation velocity in degrees per second as a real numerical representation."  ;
+        vtu  LogicalValueTypes.Real Units.Acceleration.AngularAcceleration.DegreesPerSecondPerSecond RealDegreesPerSecondPerSecond "Orientation acceleration in degrees per second squared as a real numerical representation."  ;
+        vtu  LogicalValueTypes.Real Units.Temperature.DegreesFarenheit RealFahrenheit "Value in Degrees Fahrenheit"  ;
+        vtu  LogicalValueTypes.Real Units.Frequency.Hertz RealHertz "Temporal frequency as real number in Hertz"  ;
+        vtu  LogicalValueTypes.Real Units.Temperature.DegreesKelvin RealKelvin "Value in Degrees Kelvin"  ;
+        //vtu  LogicalValueTypes.Real Kilogram RealKilogram "Mass described in the real numerical value of Kilograms."  ;
+        //vtu  LogicalValueTypes.Real KilogramsPerCubicMeter RealKilogramsPerCubicMeter "Real kilograms per cubic meter."  ;
+        vtu  LogicalValueTypes.Real Units.KilogramsPerSecond RealKilogramsPerSecond "Mass rate as real number in kilograms per second"  ;
+        vtu  LogicalValueTypes.Real Units.Speed.Knots RealKnots "Knots as a real number"  ;
+        vtu  LogicalValueTypes.Real Units.Acceleration.LinearAcceleration.KnotsPerSecond RealKnotsPerSecond "Acceleration in knots per second as a real number"  ;
+        vtu  LogicalValueTypes.Real Units.Length.Meters RealMeters "Meters representation as a Real"  ;
+        vtu  LogicalValueTypes.Real Units.Speed.MetersPerSecond RealMetersPerSecond "Velocity In Meters Per Second As Real"  ;
+        vtu  LogicalValueTypes.Real Units.Acceleration.LinearAcceleration.MetersPerSecondPerSecond RealMetersPerSecondPerSecond "Meters Per Second Per Second As Real"  ;
+        vtu  LogicalValueTypes.Real Units.AmountOfSubstance.Moles RealMoles "Amount of Substance described in the real numerical value of Moles."  ;
+        vtu  LogicalValueTypes.Real Units.AmountOfConcentration.MolesPerCubicMeter RealMolesPerCubicMeter "Moles per cubic meter in a real numerical representation."  ;
+        //vtu  LogicalValueTypes.Real NewtonMeters RealNewtonMeters "Real newton meters"  ;
+        //vtu  LogicalValueTypes.Real Newtons RealNewtons "Value type used to describe a value of Newtons as a real."  ;
+        vtu  LogicalValueTypes.Real Units.Percentage.Percentage RealPercentage "Percentage represented as a real value."  ;
+        vtu  LogicalValueTypes.Real Units.Speed.RadiansPerSecond RealRadiansPerSecond "Orientation velocity in radians per second as a real numerical representation."  ;
+        vtu  LogicalValueTypes.Real Units.Angle.Radians RealRadians "Radian rotations as a real numerical representation."  ;
+        vtu  LogicalValueTypes.Real Units.Acceleration.AngularAcceleration.RadiansPerSecondPerSecond RealRadiansPerSecondPerSecond "Orientation acceleration in radians per second squared as a real numerical representation."  ;
+        vtu  LogicalValueTypes.Real Units.Time.Seconds RealSeconds "Seconds as Real"  ;
+        vtu  LogicalValueTypes.Real Units.Area.SquareMeters RealSquareMeters  ;
+        //vtu  LogicalValueTypes.Real SquareMetersPerSecond RealSquareMetersPerSecond "Real numeric value for kinematic viscosity in SI units of m^2/sec"  ;
+        vtu  LogicalValueTypes.Real Units.UnitlessDimensionless.Unitless RealUnitless "Real numeric value for values with no units."  ;
+        //vtu  LogicalValueTypes.Real Volt RealVolt "Electric Potential described in the real numerical value of Volts"  ;
+        //vtu  LogicalValueTypes.Real Watts RealWatts "Watts as a non-negative real numerical representation."  ;
+        vtu  LogicalValueTypes.String Units.UnitlessDimensionless.Unitless StringISO8601Basic "Text String formatted per ISO 8601's basic format"  ;
+        vtu  LogicalValueTypes.String Units.UnitlessDimensionless.Unitless StringISO8601Extended "Text String formatted per ISO 8601's extended format"  ;
+        vtu  LogicalValueTypes.String Units.UnitlessDimensionless.Unitless StringUnitless "The StringUnitless ValueType is typically used for text based measurement systems."  ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless UTC_DayOfGregorianMonth "Day of the Gregorian Month and Year of the measurement"   {
+          ! irc  UTC_DayOfMonthConstraint[+1:+31] "UTC (and Gregorian) Day of Month is represented by values from 1 for the first day of the month to the number of days in the month, which depends on the month and year, but never exceeds 31" ;
+        } ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless UTC_GregorianYear "Gregorian calendar year of the measurement"  ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless UTC_HourOfGregorianDay "Hour of the Gregorian Day, Month, Year of the measurement. Each UTC day contains exactly 24 hours."   {
+          ! irc UTC_HourOfDayConstraint [+0:+23] "UTC Hour of Day starts a 0 and ends at 23. All days are 24 hours long.";
+        } ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless UTC_LocalTimeHourOffset "The number of hours that the local time is before or after the prime meridian (Zulu time). This offset represents the difference from Zulu due to time zone and daylight savings time."   {
+          ! irc  UTC_LocalTimeHourOffsetConstraint [-12:+14] "UTC time offset can range from UTC-12:00 to UTC+14:00 in 15 minute increments. This element is just the hour component of the offset." ;
+        } ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless UTC_LocalTimeMinuteOffset "The minute component of the hour:minute offset that the local time is before or after the prime meridian (Zulu time). Values can range from -45 to +45 in 15 min increments."   {
+          ! irc  UTC_LocalTimeMinuteOffsetConstraint [-45:+45] "UTC time offset can range from UTC-12:00 to UTC+14:00 in 15 minute increments. This element is just the minute component of the offset." ;
+        } ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless UTC_MinuteOfHour "Minute of the hour of the Gregorian Day, Month, Year of the measurement. Each UTC hour contains exactly 60 minutes."   {
+          ! irc  UTC_MinuteOfHourConstraint [+0:+59] "UTC Minute of hour starts at 0 and ends at 59. There are always 60 minutes per hour, though sometimes the last minute may be 1 sec longer or shorter than the other minutes" ;
+        } ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless UTC_MonthOfGregorianYear "Month of the Gregorian Year of the measurement"   {
+          ! irc  UTC_MonthOfYearConstraint[+1:+12] "UTC (and Gregorian calendar) uses values of 1 through 12 to represent the 12 months January through December, respectively" ;
+        } ;
+        vtu  LogicalValueTypes.Integer Units.UnitlessDimensionless.Unitless UTC_SecondOfMinute "Second of the hour and minute of the Gregorian Day, Month, Year of the measurement. UTC minutes usually have 60 seconds, but the last minute of the last day of a month can have 59 or 61 seconds."   {
+          ! irc  UTC_SecondOfMinuteConstraint [+0:+60] "UTC second of day starts at 0 and ranges to the number of seconds in a minute minus 1. UTC minutes usually have 60 seconds, but the last minute of the last day of a month can have 59 or 61 seconds." ;
+        } ;
+        ldm VTUConstraints {
+          vtu LogicalValueTypes.Real Units.Angle.DegreesOfArc RealDegreesNeg180To180Inclusive "Real degrees from -180 through 180 (-180 &lt;= N =&lt; 180)" {
+            ! rrc Minus_180_to_180_Inc_Constraint [-180.0: +180.0] "-180 &lt;= N =&lt; 180"  ; } ;
+
+          vtu LogicalValueTypes.Real Units.Angle.DegreesOfArc RealDegreesNeg90to90Inclusive "Real degrees from -90 through 90 (-90 &lt;= N =&lt; 90)"  {
+             ! rrc Minus_90_to_90_Inc_Constraint [-90.0:+90.0] "-90 &lt;= N =&lt; 90" ; } ;
+
+          vtu LogicalValueTypes.Real Units.Angle.Radians RealRadiansNegHalfPItoHalfPIInclusive "Real radians from -PI/2 through PI/2 (-90 &lt;= N =&lt; 90)" {
+            ! rrc Minus_HalfPI_to_HalfPI_Inclusive_Constraint [-1.5707964:+1.5707964] "-90 &lt;= N =&lt; 90" ; } ;
+
+          vtu LogicalValueTypes.Real Units.Angle.DegreesOfArc RealDegreesZeroThru360Inclusive "Real degrees from 0 through 360 (0 &lt;= N =&lt; 360) " {
+            ! rrc Inc_Constraint [0.0:360.0] "0&lt;= N =&lt; 360"  ; } ;
+
+          vtu LogicalValueTypes.Real Units.Angle.Radians RealRadiansNegPIThruPIInclusive "Real radians from -Pi through Pi (-Pi &lt;= N =&lt; Pi)" {
+            ! rrc Minus_Pi_To_Pi_Inc_Constraint [-3.1415927 :3.1415927] "-PI &lt;= N =&lt; PI"  ; } ;
+
+          vtu LogicalValueTypes.Real Units.Angle.Radians RealRadiansZeroThru2PIExclusive "Real radians from 0 to 2Pi (0 &lt;= N &lt; 2Pi)"  {
+            ! rrc Zero_to_2Pi_Excl_Constraint [0.0:6.2831855) "0 &lt;= N &lt; 2Pi"  ; } ;
+
+          vtu LogicalValueTypes.Real Units.Angle.Radians RealRadiansZeroThru2PIInclusive "Real radians from 0 through 2Pi (0 &lt;= N =&lt; 2Pi)" {
+            ! rrc Zero_to_2Pi_Inc_Contstraint [0.0:6.2831855] "0 &lt;= N =&lt; 2Pi" ; } ;
+
+        }
+      }
+
+      ldm LandMarks {
+        landmark VehicleHeading "The positive direction of the longitudinal axis of the vehicle.";
+        landmark VehicleCourse "The positive direction of the longitudinal velocity of the vehicle.";
+        landmark OneBitPerSecondDataRateLandmark "One bit per second data movement";
+        landmark OneCountLandmark "One occurrence of a countable event";
+        landmark OneCountPerSecondLandmark "One occurrence of a countable event per second";
+        landmark OneHertzLandmark "One occurrence of a repeatable event per second";
+        landmark OneKilogramPerSecondLandmark "One kilogram per second rate of flow in mass";
+        landmark ZeroCountLandmark "No occurrences of a countable event";
+        landmark ZeroCountRateLandmark "No occurrences of a countable event per second";
+        landmark ZeroDataRateLandmark "No data movement";
+        landmark ZeroFrequencyLandmark "No occurrences of a repeatable event";
+        landmark ZeroKilogramPerSecondLandmark "No change in mass per second";
+        ldm Inertial_Landmarks {
+          landmark BodyReferenceOrigin "An arbitrary point on the body where the values along the X, Y, and Z axes are 0.";
+          landmark BodyX_Landmark "A position in the body reference plane (XZ plane) and on the body reference axis. This point sets the reference axis.";
+          landmark BodyY_Landmark "A position tangent to the body reference plane (XZ plane) at the origin that sets the Y axis.";
+          landmark BodyZ_Landmark "A position in the body reference plane (XZ plane) perpendicular to the body reference axis at the origin. This point sets the Z axis.";
+          landmark ENU_UpNormal "The up Normal to the Tangent North/East plane at the position of the NED origin";
+          landmark NEDDownNormal "The down Normal to the Tangent North/East plane at the position of the NED origin";
+          landmark VehicleCenterOfGravity "The center of mass or gravity of a vehicle";
+        }
+        ldm EarthFrameLandmarks {
+          landmark EarthGeoid "The earth geoid that represents the surface of equal gravitational potential. This is represented by the Mean Sea Level.";
+          landmark EarthSurface "The earth geoid that represents the surface of equal gravitational potential. This is represented by the Mean Sea Level.";
+          landmark LocalEastParallel "The East Parallel at the position of the NED origin.";
+          landmark Location "The geographical location of a position or reference datum.";
+          landmark MagneticNorth "Position of the Magnetic North Pole.";
+          landmark WGS84Ellipsoid "The WGS84 Ellipsoid calculated to approximate the earth geoid.";
+          landmark EarthCenter "The center of the Mass of the Earth";
+          landmark NorthPoleAtPrimeMeridian "Describes the position of the North Pole at the Prime Meridian.";
+          landmark PrimeMeridianEquatorSurface "Describes the point of Intersection of the prime meridian, the equator, and the surface of the earth.";
+        }
+        ldm AccelerationLandmarks {
+          landmark OneMeterPerSecondPerSecondAccelerationInXAxisLandmark "Acceleration landmark of one m/sec^2 in X axis";
+          landmark OneMeterPerSecondPerSecondAccelerationInYAxisLandmark "Acceleration landmark of one m/sec^2 in Y axis";
+          landmark OneMeterPerSecondPerSecondAccelerationInZAxisLandmark "Acceleration landmark of one m/sec^2 in Z axis";
+          landmark ZeroAccelerationLandmark "Landmark for zero acceleration in all directions";
+        }
+        ldm AngularAccelerationLandmarks {
+          landmark PiRadiansPerSecondPerSecondAngularAccelerationLandmark "Landmark for Pi radians per second per second.";
+          landmark ZeroAngularAccelerationLandmark "Landmark for zero angular acceleration.";
+        }
+        ldm AngularVelocityLandmarks {
+          landmark PiRadiansPerSecondAngularVelocityLandmark "Landmark indicating an angular rate of Pi radians per second.";
+          landmark ZeroAngularVelocityLandmark "Angular velocity landmark representing a zero angular velocity (i.e., no rotation)";
+        }
+        ldm AreaLandmarks {
+          landmark UnitAreaLandmark "Landmark representing an area of 1 square meter";
+          landmark ZeroAreaLandmark "Landmark representing zero area";
+        }
+        ldm BodyAngleLandmark {
+          landmark BodyAngleAttitudeEquilibrium "The point at which the local vehicle body frame has no rotation in any of the three axes that originate at the vehicle center of gravity (longitudinal, lateral, and vertical).";
+          landmark BodyAnglePiOver2RadianLeftRoll "The orientation of the local vehicle body frame with respect to the vertical axis (or lateral axis) after a -Pi/2 radian rotation along the longitudinal axis (a roll to left)";
+          landmark BodyAnglePiOver4RadianPitchUp "The orientation of the local vehicle body frame with respect to the longitudinal (or vertical axis) after a Pi/4 radian rotation along the lateral axis (a pitch up)";
+          landmark BodyAnglePiOver6RadianYawLeft "The orientation of the local vehicle body frame with respect to the longitudinal axis (or lateral axis) after a -Pi/6 radian rotation along the vertical axis (a yaw left)";
+        }
+        ldm BodyFrameAttiudeLandmark {
+          landmark BodyAttitudeOriginLandmark "The point at which the body attitude is aligned to the local level frame and has no rotation in any of the three axes that originate at the vehicle center of gravity (longitudinal, lateral, and vertical).";
+          landmark BodyAttitudePiOver2RadianLeftRoll "The orientation of the body with respect to the vertical axis (or lateral axis) after a Pi/2 radian rotation along the longitudinal axis (a roll to left)";
+          landmark BodyAttitudePiOver4RadianUpPitch "The orientation of the body with respect to the longitudinal (or vertical axis) after a Pi/4 radian rotation along the lateral axis (a pitch up)";
+          landmark BodyAttitudePiOver6RadianLeftYaw "The orientation of the body with respect to the longitudinal axis (or lateral axis) after a -Pi/6 radian rotation along the vertical axis (a yaw left)";
+        }
+        ldm CovarianceLandmarks {
+          landmark ZeroValueLandmark "Zero value, unitless";
+          landmark PositiveOneValueLandmark "Positive one value, unitless";
+        }
+        ldm DensityLandmarks {
+          landmark WaterDensityLandmark "Density of water at 4 degrees C and 1 Atmosphere pressure";
+          landmark ZeroDensityLandmark "Zero value of density (i.e., no mass in a volume)";
+        }
+        ldm ElectricityLandmarks "Collection of landmark elements applicable to Electric Current measurements." {
+          landmark OneAmpLandmark "A current of 1 amp means that there is 1 coulomb of charge passing through a cross section of a wire every 1 second.";
+          landmark OneAmpPerSquareMeterCurrentDensityXDirectionLandmark "One amp per square meter of electric current density of the X vector direction. ";
+          landmark OneAmpPerSquareMeterCurrentDensityYDirectionLandmark "One amp per square meter of electric current density of the Y vector direction. ";
+          landmark OneAmpPerSquareMeterCurrentDensityZDirectionLandmark "One amp per square meter of electric current density of the Z vector direction. ";
+          landmark OneCoulombLandmark "Its SI definition is the charge transported by a constant current of one amp in one second:";
+          landmark OneCoulombPerMeterCubedLandmark "A unit of electric current density measured at one unit of coulombs per meter cubed as applied to volume.";
+          landmark OneCoulombPerMeterLandmark "A unit of electric current density measured at one unit of coulombs per meter.";
+          landmark OneCoulombPerMeterSquaredLandmark "A unit of electric current density measured at one unit of coulombs per meter squared as applied to a surface area.";
+          landmark OneFaradLandmark "A unit of stored electrical charge measured at One Farad";
+          landmark OneVoltLandmark "A unit of electric potential measured at one unit of volt.";
+          landmark ZeroCapacitanceLandmark "No electrical charge stored by a body.";
+          landmark ZeroElectricChargeDensityLandmark "No measurable electric charge density.";
+          landmark ZeroElectricChargeLandmark "No charge is flowing through a circuit.";
+          landmark ZeroElectricCurrentDensityLandmark "No measurable electric current density.";
+          landmark ZeroElectricPotentialLandmark "No measurable electric potential. No voltage.";
+        }
+        ldm EnergyLandmarks {
+          landmark OneJouleEnergyLandmark "A force of 1 newton through distance of meter.";
+          landmark ZeroEnergyLandmark "Zero energy.";
+        }
+        ldm ForceLandmarks {
+          landmark Kilopond "Force landmark equal to the magnitude of the force exerted by one kilogram of mass in a 9.80665 m/s^2 gravitational field.";
+          landmark ZeroForceLandmark "Landmark indicating a force of zero (no applied force)";
+        }
+        ldm HumidityLandmarks {
+          landmark SaturatedRelativeHumidityLandmark "Represents 100% relative humidity.";
+          landmark ZeroRelativeHumidity "Represents zero relative humidity.";
+        }
+        ldm IlluminanceLandmarks {
+          landmark OneLuxIlluminanceLandmark "1 lux (= lumen per square meter)";
+          landmark ZeroIlluminanceLandmark "zero illuminance landmark";
+        }
+        ldm LengthLandmarks {
+          landmark OneMeterDistanceLandmark "One meter.";
+          landmark ONeMeterWidthExtentLandmark "One Meter width landmark for extent";
+          landmark ZeroDistanceLandmark "Zero distance.";
+        }
+        ldm MassLandmarks "Collection of landmark elements applicable to Mass measurements." {
+          landmark OneKilogramLandmark "The one kilogram mass for a body as measured when the body is a rest relative to an observer, an inherent property of the body.";
+          landmark ZeroMassLandmark "No recorded object mass.";
+        }
+        ldm OrientationAccelerationLandmarks "Logical package to capture orientation acceleration landmarks elements." {
+          landmark AxialForcePiOver4RadianUpPitchAxis "Net force in the positive x-direction (Lateral Axis/PitchAxis) to create an angle Pi/4 radians in the up direction";
+          landmark NormalForcePiOver6RadianLeftYawAxis "Net force in positive z-direction (Vertical Axis/Yaw Axis) to create a Pi/6 radians angle in the negative direction";
+          landmark SideForcePiOver2RaidanRightRollAxis "Net force in positive y-direction (Longitudinal Axis/Roll Axis) to create a Pi/2 radians angle in the positive direction.";
+          landmark ZeroRotationalAcceleration "No rotation about any axis due to external forces on an object.";
+        }
+        ldm OrientationVelocityLandmarks {
+          landmark NeutralChangeRate "Rate of change in orientation is non-existent.";
+          landmark PiOver2RadianRightRollRate "Velocity Rate required to change the roll angle of orientation pi/2 radians right.";
+          landmark PiOver4RadianUpPitchRate "Velocity Rate required to change the pitch angle of orientation Pi/4 radians up.";
+          landmark PiOver6RadianLeftYawRate "Velocity Rate required to change the roll angle of orientation Pi/6 radians left.";
+        }
+        ldm PowerLandmarks {
+          landmark OneWattPowerLandmark "Landmark for 1 Watt of power";
+          landmark ZeroPowerLandmark "Zero Watts of Power Landmark";
+        }
+        ldm PressureLandmarks {
+          landmark OnePascalLandmark "Force of 1 N per square meter";
+          landmark ZeroPressureLandmark "Zero pressure";
+        }
+        ldm ResolutionLandmarks {
+          landmark OriginLandmark "Screen resolution origin expressed as (0,0)";
+          landmark UnitPixelLandmark "A one unit pixel defined landmark.";
+        }
+        ldm ScalarAccelerationLandmarks {
+          landmark OneMeterPerSecondPerSecondScalarAccelerationLandmark "Acceleration landmark of one m/sec^2 in X axis";
+          landmark ZeroScalarAccelerationLandmark "Zero velocity, an object's motion is constant, neither speeding up or slowing down";
+        }
+        ldm SpeedLandmarks {
+          landmark OneMeterPerSecondLandmark "One meter per second";
+          landmark ZeroSpeedLandmark "Zero speed.";
+        }
+        ldm TemperatureLandmarks {
+          landmark AbsoluteZero "The lower limit of the thermodynamic temperature scale, a fictitious state at which the enthalpy and entropy of a cooled ideal gas reaches its minimum value (-459.67 deg F, -273.15 deg C, 0 deg K)";
+          landmark BoilingPointOfWater "Boiling point of water at 1 atmosphere pressure (212 deg F, 671.67 deg R, 100 deg C, 373.15 deg K)";
+          landmark FreezingPointOfWater "Freezing point of water at 1 atmosphere pressure (32 deg F, 491.67 deg R, 0 deg C, 273.15 deg K)";
+        }
+        ldm TimeLandmarks {
+          landmark GregorianCalendarOrigin "Beginning of year 0 (1/1/0 0:00:00) per Pope Gregory's bull in 1582, to reform the Julian calendar to set the date for Easter to the time the First Council of Nicaea had agreed to in 325.";
+          landmark OneSecondDurationLandmark "One second duration landmark.";
+          landmark SpecificGregorianDayStart "The moment that a specified day of a specified month of a specified year starts. e.g. 0:00:0 of Feb 12, 2000.";
+          landmark SpecificGregorianMonthStart "The moment that a specified month of a specified year starts. e.g. 0:00:0 of Feb 1, 2000.";
+          landmark SpecificGregorianYearStart "The moment that a specified year starts (0:00:00 on Jan 1 of specified year)";
+          landmark SpecificTimeOfDay "The time duration between the specified time and the start of the specified Gregorian day";
+          landmark UnixEpochStart "Start of Unix Epoch (Jan 1, 1970 0:00:00)";
+          landmark UTC_DayStart "The moment that a specified UTC day of a specified month of a specified year starts. e.g. 0:00:00 Zulu";
+          landmark UTC_Noon "12 hours after the start of a specified UTC day of a specified month of a specified year. e.g. 12:00:00 Zulu";
+          landmark ZeroDurationLandmark "A zero second duration meaning no time has elapsed.";
+        }
+        ldm TorqueLandmarks {
+          landmark OneNewtonMeterLandmark "Unit value of torque representing 1 newton of force applied to a moment arm of 1 meter.";
+          landmark ZeroTorqueLandmark "No measurable torque.";
+        }
+        ldm VelocityLandmarks {
+          landmark NoMotionVelocityLandmark "Landmark for zero velocity in all directions";
+          landmark UnitVelocityInXAxisLandmark "Velocity landmark of one m/sec in X axis";
+          landmark UnitVelocityInYAxisLandmark "Velocity landmark of one m/sec in Y axis";
+          landmark UnitVelocityInZAxisLandmark "Velocity landmark of one m/sec in Z axis";
+        }
+        ldm VolumeLandmarks {
+          landmark OneCubicMeterLandmark "Landmark for a value of one cubic meter of volume.";
+          landmark ZeroVolumeLandmark "Landmark for zero volume";
+        }
+      }
+
+
+      ldm ReferencePoints {}
+      ldm Constraints {}
+      ldm MeasurementSystems {
+         ldm   AddressMeasurementSystem  {
+          msys   IntegerAddressMeasurementSystem  "Measurement system for integer-based addressing policies and standards." {
+          	maxis: [ Address_Integer_MeasSysAxis ]
+          	coord: CoordinateSystems.Discrete.Discrete_CoordSys
+          	extRefStd: "Non-specified unique addresses required."
+          	orient: "N/A"
+
+          	};
+          msys   Address_IPv4_MeasSys  "Measurement System for IPv4 addresses." {
+          	maxis: [ Address_Integer_MeasSysAxis ]
+          	coord:CoordinateSystems.Discrete.Discrete_CoordSys
+          	extRefStd:"IETF 1918"
+          	orient:"N/A"
+          	};
+          msys   Address_IPv6_MeasSys  "Measurement System for IPv6 addresses." {
+          maxis: [ Address_Integer_MeasSysAxis ]
+          coord:CoordinateSystems.Discrete.Discrete_CoordSys
+          extRefStd:"IETF RFC 4193"
+          orient:"N/A"
+          };
+          msys   Address_URI_MeasSys  "Measurement System for Uniform Resource Identifier (URI) measurements." {
+          	maxis: [ Address_Text_MeasAxis   ]
+          	coord:CoordinateSystems.Discrete.Discrete_CoordSys
+          	extRefStd: "RFC 3986"
+          	orient:"N/A"
+          	};
+		  msys   Address_Integer_MeasSys  "Measurement system for discrete, numeric-based addressing policies and standards." {
+		  maxis: [ Address_Integer_MeasSysAxis ]
+		    coord:CoordinateSystems.Discrete.Discrete_CoordSys
+		  extRefStd:"Non-specified unique addresses required."
+		  orient:"NA"
+		    };
+          msa   Address_Integer_MeasSysAxis  "Measurement System Axis for integer addresses." {
+          axis: CoordinateSystems.Discrete.Discrete_CoordSysAxis
+          vtu: [ ValueTypeUnits.IntegerCount ]
+          };
+          msa   Address_Text_MeasAxis  "A Measurement System Axis for Text based address measurements." {
+          axis: CoordinateSystems.Discrete.Discrete_CoordSysAxis
+          vtu: [ ValueTypeUnits.StringUnitless ]
+          };
+        }
+       ldm   GeneralPercentMeasurementSystems  {
+          landmark    ZeroPercentLandmark  "The zero point for a general percent scale.";
+          landmark    HundredPercentLandmark  "The landmark for 100% nominal capability for the general percent scale.";
+          msys   General_Percent_MeasSys  "A scalar for unitless percent measurements. The 100% reference point is a configuration parameter of the intended measurement." {
+          maxis: [ General_Percent_MeasSysAxis ]
+          coord: CoordinateSystems.Scalar.Scalar_CoordSys
+          extRefStd:"N/A"
+          orient:"Scalar"
+            refPt: [  ( ZeroPointReferencePoint  "The zero point for a general percentage scale."
+            			landmark: ZeroPercentLandmark
+            			[  (  General_Percent_MeasSysAxis  "0"  ValueTypeUnits.RealPercentage )]
+            		  )
+
+            		(   HundredPercentReferencePoint  "The 100% nominal capability for the general percent scale." landmark:  HundredPercentLandmark
+              			[ (   General_Percent_MeasSysAxis "100" ValueTypeUnits.RealPercentage )]
+						)
+					]
+            };
+          msa   General_Percent_MeasSysAxis  "A scale for unitless percent measurements. The 100% reference point is a configuration parameter of the intended measurement."
+          	{ axis: CoordinateSystems.Scalar.Scalar_CoordSysAxis vtu: [ ValueTypeUnits.RealPercentage ]};
+        }
+        ldm   VehicleReferencedMeasurementSystems  {
+          ldm   ComponentReferenceMeasurementSystems  {
+            ldm   ComponentReferenceMeasurementSystem  {
+              msys   Component_Reference_MeasSys  "A MS vehicle fixed Q,E arbitrary origin Q,E x-axis facing forward Q,E z-axis facing down Q,E y-axis completing the MS. This MS is used to locate points or components within the body or component frame of reference." {
+              maxis: [ VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis  VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis ]
+              coord: CoordinateSystems.Cartesian.Cartesian_3D_CoordSys
+              extRefStd: "ISO 1151, 6.1.9"
+              orient:"Right-handed Orthogonal"
+              refPt: [
+                   ( ComponentReferencePlaneAxisDatum  "The coordinate values of the Zaxis Datum for a body referenced measurement system. The Y datum and the X Datum establish the reference plane." landmark:  LandMarks.Inertial_Landmarks.BodyY_Landmark  [
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis  "0" ValueTypeUnits.RealMeters )
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                ])
+                ( ComponentYAxisDatum  "The coordinate values of the Yaxis Datum for a body referenced measurement system." landmark:  LandMarks.Inertial_Landmarks.BodyY_Landmark  [
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+                ( ComponentOrigin  "The coordinate values of the Origin for a body referenced measurement system." landmark:  LandMarks.Inertial_Landmarks.BodyReferenceOrigin  [
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+                ( ComponentReferenceAxisDatum  "The coordinate values of the X axis Datum for a body referenced measurement system." landmark: LandMarks.Inertial_Landmarks.BodyX_Landmark    [
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleReferenceMeasurementSystems.VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+              ]
+            };
+          }
+          }
+          ldm   VehicleReferenceMeasurementSystems  {
+            ldm   VehicleCoGReferenceMeasurementSystem  {
+              msys   Vehicle_CoG_Reference_MeasSys  "A MS vehicle fixed Q,E origin at the CoG Q,E x-axis coincident with the vehicle reference axis Q,E z-axis in the vehicle reference plane Q,E y-axis normal to the vehicle RP. This MS is used to locate points or components within the vehicle frame of reference." {
+				maxis: [ Body_X_MeasSysAxis Body_Y_MeasSysAxis Body_Z_MeasSysAxis ]
+				coord:CoordinateSystems.Cartesian.Cartesian_3D_CoordSys
+				extRefStd:"ISO 1151, 6.1.4"
+				orient:"Right-handed Orthogonal"
+				refPt: [
+                ( BodyReferencePlaneAxisDatum  "The coordinate values of the Zaxis Datum for a body referenced measurement system. The Y datum and the X Datum establish the reference plane." landmark:  LandMarks.Inertial_Landmarks.BodyY_Landmark [
+                  (   Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   Body_Z_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                ])
+                (   BodyYAxisDatum  "The coordinate values of the Yaxis Datum for a body referenced measurement system." landmark:  LandMarks.Inertial_Landmarks.BodyY_Landmark  [
+                  (   Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   Body_Y_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                  (   Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+                (   BodyCoGOrigin  "The coordinate values of the Origin for a body referenced measurement system." landmark:  LandMarks.Inertial_Landmarks.VehicleCenterOfGravity  [
+                  (   Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+                (   BodyReferenceAxisDatum  "The coordinate values of the X axis Datum for a body referenced measurement system." landmark: LandMarks.Inertial_Landmarks.BodyX_Landmark    [
+                  (   Body_X_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                  (   Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+              ]
+              };
+
+              msys   Vehicle_Reference_X_MeasSys  "A MS vehicle fixed Q,E arbitrary origin Q,E x-axis coincident with the vehicle reference axis. This MS is used to locate points or components within the vehicle frame of reference." {
+              maxis: [ Body_X_MeasSysAxis ]
+              coord: CoordinateSystems.Cartesian.Cartesian_X_CoordSys
+              extRefStd:"ISO 1151, 6.1.4"
+              orient:"Right-handed Orthogonal"
+			  refPt: [
+                (  BodyReferenceXAxisDatum  "The coordinate values of the X axis Datum for a body referenced measurement system." landmark: LandMarks.Inertial_Landmarks.BodyX_Landmark    [
+                  (   Body_X_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                ])
+                (   BodyXCoGOrigin  "The coordinate values of the Origin for a body referenced measurement system." landmark: LandMarks.Inertial_Landmarks.VehicleCenterOfGravity  [
+                  (   Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+              ]
+              };
+
+              msa   Body_X_MeasSysAxis  "The X axis of a body fixed reference plane (e.g. Q,E ISO 1151 Q,E 6.1.1). May be used in any body fixed measurement system." { axis: CoordinateSystems.Cartesian.Cartesian_Y_CoordSysAxis vtu: [ ValueTypeUnits.RealMeters ]};
+              msa   Body_Y_MeasSysAxis  "The Y Axis of a body fixed measurement system. May be used in any body fixed measurement system" { axis: CoordinateSystems.Cartesian.Cartesian_Y_CoordSysAxis vtu: [ ValueTypeUnits.RealMeters ]};
+              msa   Body_Z_MeasSysAxis  "The X axis of a body fixed reference plane (e.g. Q,E ISO 1151 Q,E 6.1.1). May be used in any body fixed measurement system." { axis: CoordinateSystems.Cartesian.Cartesian_Z_CoordSysAxis  vtu: [ ValueTypeUnits.RealMeters ]};
+            }
+            ldm   VehicleReferenceMeasurementSystem  {
+              msys   Vehicle_Reference_MeasSys  "A MS vehicle fixed Q,E arbitrary origin Q,E x-axis coincident with the vehicle reference axis Q,E z-axis in the vehicle reference plane Q,E y-axis normal to the vehicle RP. This MS is used to locate points or components within the vehicle frame of reference." {
+              maxis: [ VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis ]
+              coord:CoordinateSystems.Cartesian.Cartesian_3D_CoordSys
+              extRefStd:"ISO 1151, 6.1.4"
+              orient:"Right-handed Orthogonal"
+              refPt: [
+              	(  BodyReferencePlaneAxisDatum  "The coordinate values of the Zaxis Datum for a body referenced measurement system. The Y datum and the X Datum establish the reference plane." landmark: LandMarks.Inertial_Landmarks.BodyZ_Landmark  [
+                  (   VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                ])
+                (   BodyYAxisDatum  "The coordinate values of the Yaxis Datum for a body referenced measurement system." landmark: LandMarks.Inertial_Landmarks.BodyY_Landmark  [
+                  (   VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                  (   VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+                (   BodyOrigin  "The coordinate values of the Origin for a body referenced measurement system." landmark: LandMarks.Inertial_Landmarks.BodyReferenceOrigin  [
+                  (   VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+                (   BodyReferenceAxisDatum  "The coordinate values of the X axis Datum for a body referenced measurement system." landmark: LandMarks.Inertial_Landmarks.BodyX_Landmark    [
+                  (   VehicleCoGReferenceMeasurementSystem.Body_X_MeasSysAxis "Reference Value" ValueTypeUnits.RealMeters )
+                  (   VehicleCoGReferenceMeasurementSystem.Body_Y_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   VehicleCoGReferenceMeasurementSystem.Body_Z_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                ])
+
+                ]
+              };
+            }
+          }
+        }
+ 		ldm   GeneralAngleMeasurementSystem  {
+		  msys   GeneralAngleMeasurementSystem  "Used for a single angle between two rays that are specified by association participants rather than the definitions within a measurement system. Can be used for an exterior angle (greater than 180 degrees)." {
+		  	maxis: [ GeneralAngleMeasurementSystemAxis ]
+		  	coord:CoordinateSystems.Rotational.Tait_BryanRotations.Rotation_1D_CoordSys
+		  	orient: "Right-handed orthogonal"
+			refPt: [
+		     (   PerpendicularRotationReferencePoint  "An angle taking up the right angle measured counterclockwise from the reference ray to a line perpendicular to the reference ray." landmark: PerpendicularRotationLandmark  [
+			  (   GeneralAngleMeasurementSystemAxis "1.5707964" ValueTypeUnits.RealRadians )
+		    ])
+		    (   ZeroRotationReferencePoint  "An angle of zero so that both rays coincide." landmark: ZeroRotationLandmark  [
+			  (   GeneralAngleMeasurementSystemAxis "0" ValueTypeUnits.RealRadians )
+		    ])
+
+		    ]
+		  };
+		  msa   GeneralAngleMeasurementSystemAxis  "The angle between two rays, in radians." { axis: CoordinateSystems.FixedAxisRotations.Rotation_Fixed_Psi_CoordSysAxis vtu: [ ValueTypeUnits.RealRadians ]};
+		  landmark    PerpendicularRotationLandmark  "An angle taking up the right angle measured counterclockwise from the reference ray to a line perpendicular to the reference ray";
+		  landmark    ZeroRotationLandmark  "An angle of zero so that both rays coincide";
+		}
+        ldm   AngleMeasurementSystem { }
+        ldm   MagneticVariation  {
+//          ldm   LocationCenteredMagneticVariationMeasurementSystem  {
+//            msys   Location_Centered_MagneticVariation_MeasSys  "The angle on the horizontal plane between magnetic north Q,E  and true north at a geographic position." {
+//            	maxis: [ Local_Azimuth_MeasSysAxis ]
+//            	coord:CoordinateSystems.Rotational.Tait_BryanRotations.Rotation_1D_CoordSys
+//				extRefStd:""
+//				orient:"NED Azimuth"
+//				refPt: [
+//               (   TrueNorthDatum  "The coordinate values of the True North Datum for magnetic variation." landmark:  LandMarks.EarthFrameLandmarks.NorthPoleAtPrimeMeridian  [
+//                (   Local_Azimuth_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealRadiansZeroThru2PIExclusive )
+//              ])
+//              (   MagneticNorthDatum  "The coordinate values of Magnetic North datum for magnetic variation." landmark:  LandMarks.EarthFrameLandmarks.MagneticNorth  [
+//                (   Local_Azimuth_MeasSysAxis "Magnetic Variation" ValueTypeUnits.VTUConstraints.RealRadiansZeroThru2PIExclusive )
+//              ])
+//              (   Position  "The coordinate values of the Geographical Position for magnetic variation." landmark:  LandMarks.EarthFrameLandmarks.Location  [
+//                (   Local_Azimuth_MeasSysAxis "Geographical Position" ValueTypeUnits.VTUConstraints.RealRadiansZeroThru2PIExclusive )
+//              ])
+//          	]
+//          };
+//			}
+//          ldm   VehicleCenteredMagneticVariationMeasurementSystem  {
+//            msys   Vehicle_Centered_MagneticVariation_MeasSys  "The angle on the horizontal plane between magnetic north Q,E  and true north at the position of the vehicle." {
+//            	maxis: [ Local_Azimuth_MeasSysAxis ]
+//            	coord:CoordinateSystems.Rotational.Tait_BryanRotations.Rotation_1D_CoordSys
+//            	extRefStd:""
+//            	orient:"NED Azimuth"
+//            	refPt: [
+//            		(   VehicleOrigin  "The coordinate values of the Vehicle Position for magnetic variation." landmark:  LandMarks.Inertial_Landmarks.VehicleCenterOfGravity  [
+//                (   Local_Azimuth_MeasSysAxis "Vehicle Position" ValueTypeUnits.VTUConstraints.RealRadiansZeroThru2PIExclusive )
+//              ])
+//              (   TrueNorthDatum  "The coordinate values of the True North Datum for magnetic variation." landmark:  LandMarks.EarthFrameLandmarks.NorthPoleAtPrimeMeridian  [
+//                (   Local_Azimuth_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealRadiansZeroThru2PIExclusive )
+//              ])
+//              (   MagneticNorthDatum  "The coordinate values of Magnetic North datum for magnetic variation." landmark:  LandMarks.EarthFrameLandmarks.MagneticNorth  [
+//                (   Local_Azimuth_MeasSysAxis "Magnetic Variation" ValueTypeUnits.VTUConstraints.RealRadiansZeroThru2PIExclusive )
+//              ])
+//
+//              ]
+//          };
+//			}
+        }
+        ldm   PositionMeasurementSystem  {
+          ldm   WGS84PositionMeasurementSystem  {
+            msa   Position_WGS84_Height_MeasSysAxis  "Specifies the height axis for WGS-84." { axis: CoordinateSystems.Angular.Angular_Radial_CoordSysAxis vtu: [ ValueTypeUnits.RealMeters ] };
+            msa   Position_WGS84_Latitude_MeasSysAxis  "Specifies the latitude axis for WGS-84." { axis: CoordinateSystems.Angular.Angular_Inclination_CoordSysAxis  vtu: [ ValueTypeUnits.VTUConstraints.RealDegreesNeg90to90Inclusive]};
+            msa   Position_WGS84_Longitude_MeasSysAxis  "Specifies the longitude axis for WGS-84." { axis: CoordinateSystems.Angular.Angular_Azimuth_CoordSysAxis vtu: [ ValueTypeUnits.VTUConstraints.RealDegreesNeg180To180Inclusive] };
+            ldm   WGS84PositionAGLMeasurementSystem  {
+              msys   Position_WGS84_AGL_MeasSys  "Describes the WGS84 Frame of Reference in terms of coordinate system Q,E origin Q,E and axis orientation. Altitude is given as Above Ground Level." {
+              	maxis: [ PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Height_MeasSysAxis PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Latitude_MeasSysAxis Position_WGS84_Longitude_MeasSysAxis ]
+              	coord:CoordinateSystems.Angular.Spherical_CoordSys
+              	extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf DEPARTMENT OF DEFENSE WORLD GEODETIC SYSTEM 1984 Its Definition and Relationships with Local Geodetic Systems"
+              	orient:"Right-handed orthogonal"
+				refPt: [
+                 (   EarthOrigin  "The coordinate values of the Origin for WGS84 Reference Frame using earth surface datum." landmark:  LandMarks.EarthFrameLandmarks.EarthCenter  [
+                  (   Position_WGS84_Longitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg180To180Inclusive )
+                  (   PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Latitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg90to90Inclusive )
+                  (   PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Height_MeasSysAxis "-6,378,137.000" ValueTypeUnits.RealMeters )
+                ])
+                 (   LatLonZero  "The coordinate values of the point of the Intersection of the prime meridian, the equator, and the surface (land or water) of the earth." landmark:  LandMarks.EarthFrameLandmarks.PrimeMeridianEquatorSurface  [
+                  (   PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Height_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Latitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg90to90Inclusive )
+                  (   Position_WGS84_Longitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg180To180Inclusive )
+                ])
+                (   Lat90LonZero  "The coordinate values of the point of the Intersection of the prime meridian, the rotational axis of the earth, and the earth surface (land or water as applicable)." landmark:  LandMarks.EarthFrameLandmarks.NorthPoleAtPrimeMeridian  [
+                  (   PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Height_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Latitude_MeasSysAxis "90" ValueTypeUnits.VTUConstraints.RealDegreesNeg90to90Inclusive )
+                  (   Position_WGS84_Longitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg180To180Inclusive )
+                ])
+              ]
+            };
+            }
+            ldm   WGS84PositionMeasurementSystem  {
+              msys   Position_WGS84_MeasSys  "Describes the WGS84 Frame of Reference in terms of coordinate system Q,E origin Q,E and axis orientation." {
+              	maxis: [ Position_WGS84_Height_MeasSysAxis Position_WGS84_Latitude_MeasSysAxis Position_WGS84_Longitude_MeasSysAxis ]
+              	coord:CoordinateSystems.Angular.Spherical_CoordSys
+              	extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf DEPARTMENT OF DEFENSE WORLD GEODETIC SYSTEM 1984 Its Definition and Relationships with Local Geodetic Systems"
+              	orient:"Right-handed orthogonal"
+                refPt: [
+                	(   EarthOrigin  "The coordinate values of the Origin for WGS84 Reference Frame" landmark:  LandMarks.EarthFrameLandmarks.EarthCenter  [
+                  (   PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Height_MeasSysAxis "-6,378,137.000" ValueTypeUnits.RealMeters )
+                  (   PositionMeasurementSystem.WGS84PositionMeasurementSystem.Position_WGS84_Latitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg90to90Inclusive )
+                  (   Position_WGS84_Longitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg180To180Inclusive )
+                ])
+                (   LatLonZero  "The coordinate values of the point of the Intersection of the prime meridian, the equator, and the geoid of the earth." landmark:  LandMarks.EarthFrameLandmarks.PrimeMeridianEquatorSurface  [
+                  (   Position_WGS84_Height_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   Position_WGS84_Latitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg90to90Inclusive )
+                  (   Position_WGS84_Longitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg180To180Inclusive )
+                ])
+                (   Lat90LonZero  "The coordinate values of the point of the Intersection of the prime meridian, and the rotational axis of the earth." landmark:  LandMarks.EarthFrameLandmarks.NorthPoleAtPrimeMeridian  [
+                  (   Position_WGS84_Height_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+                  (   Position_WGS84_Latitude_MeasSysAxis "90" ValueTypeUnits.VTUConstraints.RealDegreesNeg90to90Inclusive )
+                  (   Position_WGS84_Longitude_MeasSysAxis "0" ValueTypeUnits.VTUConstraints.RealDegreesNeg180To180Inclusive )
+                ])
+              ]
+            };
+//            ldm   WGS84PositionMSLMeasurementSystem  {
+//              msys   Position_WGS84_MSL_MeasSys  "Describes the WGS84 Frame of Reference in terms of coordinate system Q,E origin Q,E and axis orientation. Altitude is given as Above Mean Sea Level." maxis: [ Position_WGS84_Height_MeasSysAxis Position_WGS84_Latitude_MeasSysAxis Position_WGS84_Longitude_MeasSysAxis ] coord:Spherical_CoordSys extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf DEPARTMENT OF DEFENSE WORLD GEODETIC SYSTEM 1984 Its Definition and Relationships with Local Geodetic Systems" orient:"Right-handed orthogonal  {
+//                refPt   EarthOrigin  "The coordinate values of the Origin for WGS84 Reference Frame using earth surface datum." landmark:  LandMarks.EarthFrameLandmarks.EarthCenter  {
+//                  (   Position_WGS84_Longitude_MeasSysAxis "0" RealDegreesNeg180To180Inclusive )
+//                  (   Position_WGS84_Latitude_MeasSysAxis "0" RealDegreesNeg90to90Inclusive )
+//                  (   Position_WGS84_Height_MeasSysAxis "-6,378,155.329" ValueTypeUnits.RealMeters )
+//                };
+//                refPt   LatLonZero  "The coordinate values of the point of the Intersection of the prime meridian, the equator, and the Geoid datum of the earth." landmark:  LandMarks.EarthFrameLandmarks.PrimeMeridianEquatorSurface  {
+//                  (   Position_WGS84_Height_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+//                  (   Position_WGS84_Latitude_MeasSysAxis "0" RealDegreesNeg90to90Inclusive )
+//                  (   Position_WGS84_Longitude_MeasSysAxis "0" RealDegreesNeg180To180Inclusive )
+//                };
+//                refPt   Lat90LonZero  "The coordinate values of the point of the Intersection of the prime meridian, the rotational axis of the earth, and the earth Geoid." landmark:  LandMarks.EarthFrameLandmarks.NorthPoleAtPrimeMeridian  {
+//                  (   Position_WGS84_Height_MeasSysAxis "0" ValueTypeUnits.RealMeters )
+//                  (   Position_WGS84_Latitude_MeasSysAxis "90" RealDegreesNeg90to90Inclusive )
+//                  (   Position_WGS84_Longitude_MeasSysAxis "0" RealDegreesNeg180To180Inclusive )
+//                };
+//              </element>
+//            }
+//            ldm   WGS84Position2AxisMeasurementSystem  {
+//              msys   Position_WGS84_LatLon_MeasSys  "Latitude and Longitude Measurement System using the WGS84 Frame of Reference. Assumes constant altitude of MSL" maxis: [ Position_WGS84_Longitude_MeasSysAxis Position_WGS84_Latitude_MeasSysAxis ] coord:"EAID_B6E3492E_47BE_44a5_B53B_BC44765EBCCD" extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf DEPARTMENT OF DEFENSE WORLD GEODETIC SYSTEM 1984 Its Definition and Relationships with Local Geodetic Systems" orient:"right-handed orthogonal  {
+//                refPt   Lat90LonZero  "The coordinate values of the point of the Intersection of the prime meridian, and the rotational axis of the earth." landmark:  LandMarks.EarthFrameLandmarks.NorthPoleAtPrimeMeridian  {
+//                  (   Position_WGS84_Latitude_MeasSysAxis "90" RealDegreesNeg90to90Inclusive )
+//                  (   Position_WGS84_Longitude_MeasSysAxis "0" RealDegreesNeg180To180Inclusive )
+//                };
+//                refPt   LatLonZero  "The coordinate values of the point of the Intersection of the prime meridian, and the equator," landmark:  LandMarks.EarthFrameLandmarks.PrimeMeridianEquatorSurface  {
+//                  (   Position_WGS84_Latitude_MeasSysAxis "0" RealDegreesNeg90to90Inclusive )
+//                  (   Position_WGS84_Longitude_MeasSysAxis "0" RealDegreesNeg180To180Inclusive )
+//                };
+//                refPt   EarthOrigin  "The coordinate values of the Origin for WGS84 Surface Reference Frame. Assuming altitude = MSL." landmark:  LandMarks.EarthFrameLandmarks.EarthCenter  {
+//                  (   Position_WGS84_Latitude_MeasSysAxis "0" RealDegreesNeg90to90Inclusive )
+//                  (   Position_WGS84_Longitude_MeasSysAxis "0" RealDegreesNeg180To180Inclusive )
+//                };
+//              </element>
+//            }
+//            ldm   WGS84PositionSingleAxisMeasurementSystem  {
+//              ldm   WGS84PositionAltitudeAGLMeasurementSystem  {
+//                msys   Position_WGS84_Altitude_AGL_MeasSys  "The Altitude measurement in a WGS84 Frame of Reference. Measured along a ray from the origin to the measured position above the earth surface. " maxis: [ Position_WGS84_Height_MeasSysAxis ] coord:"EAID_55E0A12F_4A1A_421e_ABA8_FC11DB1A3095" extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf" orient:"right-handed orthogonal  {
+//                  refPt   WGS84AGL  "The coordinate value of the earth Surface Reference Frame. Lat=Lon= 0." landmark:  "EAID_FDA77403_098B_48e3_836D_B7C4A19EECA4  {
+//                    (   Position_WGS84_Height_MeasSysAxis "-6,356,752.3" ValueTypeUnits.RealMeters )
+//                  };
+//                  refPt   EarthOrigin  "The coordinate values of the Origin for WGS84 Surface Reference Frame. Lat=Lon= 0." landmark:  LandMarks.EarthFrameLandmarks.EarthCenter  {
+//                    (   Position_WGS84_Height_MeasSysAxis "-6,356,752.3" ValueTypeUnits.RealMeters )
+//                  };
+//                </element>
+//              }
+//              ldm   WGS84PositionAltitudeMeasurementSystem  {
+//                msys   Position_WGS84_Altitude_MeasSys  "The Altitude measurement in a WGS84 Frame of Reference. Measured along a ray from the earth origin to the measured position above the WGS84 ellipsoid. " maxis: [ Position_WGS84_Height_MeasSysAxis ] coord:"EAID_55E0A12F_4A1A_421e_ABA8_FC11DB1A3095" extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf" orient:"right-handed orthogonal  {
+//                  refPt   EarthOrigin  "The coordinate values of the Origin for WGS84 Surface Reference Frame. Lat=Lon= 0." landmark:  LandMarks.EarthFrameLandmarks.EarthCenter  {
+//                    (   Position_WGS84_Height_MeasSysAxis "-6,356,752.3" ValueTypeUnits.RealMeters )
+//                  };
+//                  refPt   WGS84Ellipsoid  "The coordinate value of the WGS84 ellipsoid Surface Reference Frame. Lat=Lon= 0." landmark:  "EAID_C61CD9D1_AD77_486c_BDCA_6F51188A81C4  {
+//                    (   Position_WGS84_Height_MeasSysAxis "-6,356,752.3" ValueTypeUnits.RealMeters )
+//                  };
+//                </element>
+//              }
+//              ldm   WGS84PositionAltitudeMSLMeasurementSystem  {
+//                msys   Position_WGS84_Altitude_MSL_MeasSys  "The Altitude measurement in a WGS84 Frame of Reference. Measured along a ray from the origin to the measured position above the WGS84 ellipsoid. " maxis: [ Position_WGS84_Height_MeasSysAxis ] coord:"EAID_55E0A12F_4A1A_421e_ABA8_FC11DB1A3095" extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf" orient:"right-handed orthogonal  {
+//                  refPt   WGS84MSL  "The coordinate value of the WGS84 ellipsoid Surface Reference Frame. Lat=Lon= 0." landmark:  "EAID_CCAECCA6_A8E7_4b19_8372_3B124CCC9CB2  {
+//                    (   Position_WGS84_Height_MeasSysAxis "-6,356,752.3" ValueTypeUnits.RealMeters )
+//                  };
+//                  refPt   EarthOrigin  "The coordinate values of the Origin for WGS84 Surface Reference Frame. Lat=Lon= 0." landmark:  LandMarks.EarthFrameLandmarks.EarthCenter  {
+//                    (   Position_WGS84_Height_MeasSysAxis "-6,356,752.3" ValueTypeUnits.RealMeters )
+//                  };
+//                </element>
+//              }
+//              ldm   WGS84PositionLatitudeMeasurementSystem  {
+//                msys   Position_WGS84_Latitude_MeasSys  "A Measurement System for the latitude measurement in a WGS84 Frame of Reference Q,E " maxis: [ Position_WGS84_Latitude_MeasSysAxis ] coord:"EAID_B6CBB90E_3A43_44ca_B1B9_78FED0DA3C7D" extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf" orient:"right-handed orthogonal  {
+//                  refPt   LatLonZero  "The coordinate values of the point of the Intersection of the prime meridian, and the equator," landmark:  LandMarks.EarthFrameLandmarks.PrimeMeridianEquatorSurface  {
+//                    (   Position_WGS84_Latitude_MeasSysAxis "0" RealDegreesNeg90to90Inclusive )
+//                  };
+//                </element>
+//              }
+//              ldm   WGS84PositionLongitudeMeasurementSystem  {
+//                msys   Position_WGS84_Longitude_MeasSys  "A Measurement System for the longitude measurement in a WGS84 Frame of Reference Q,E " maxis: [ Position_WGS84_Longitude_MeasSysAxis ] coord:"EAID_2EF70F5A_7A56_468e_AC75_6663CE3CB2F4" extRefStd:"Reference: http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf" orient:"right-handed orthogonal  {
+//                  refPt   Lat90LonZero  "The coordinate values of the point of the Intersection of the prime meridian, and the rotational axis of the earth." landmark:  LandMarks.EarthFrameLandmarks.NorthPoleAtPrimeMeridian  {
+//                    (   Position_WGS84_Longitude_MeasSysAxis "0" RealDegreesNeg180To180Inclusive )
+//                  };
+//                </element>
+//              }
+//            }
+//          }
+			}
+			}
+		}
+         ldm   AreaMeasurementSystem  {
+          msys   Area_MeasSys  "Measurement system for values of area." {
+          	maxis: [ Area_MeasSysAxis ]
+          	coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys
+          	extRefStd:""
+          	orient:"Values increase as area increases."
+          	refPt: [
+            (   ZeroAreaReferencePoint  "Reference point representing an area of zero." landmark:  LandMarks.AreaLandmarks.ZeroAreaLandmark  [
+              (   Area_MeasSysAxis "0.0" ValueTypeUnits.RealSquareMeters )
+            ])
+            (   UnitAreaReferencePoint  "Reference point defining a value of one square meter of area." landmark:  LandMarks.AreaLandmarks.UnitAreaLandmark  [
+              (   Area_MeasSysAxis "1.0" ValueTypeUnits.RealSquareMeters )
+            ])
+          ]
+
+          };
+
+          msa   Area_MeasSysAxis  "Primary axis for the measurement of areas." { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ ValueTypeUnits.RealSquareMeters ] };
+        }
+        ldm   CountingMeasurementSystem  {
+          ldm   CountMeasurementSystem  {
+            msys   Count_MeasSys  "Measurement system for event occurrences measured in Counts." {
+            	maxis: [ Count_MeasSysAxis ]
+            	coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys
+            	extRefStd:""
+            	orient:"Value increases as event occurrences increases."
+            	refPt: [
+
+              (   ZeroCountReferencePoint  "No occurrences of an event" landmark:  LandMarks.ZeroCountLandmark  [
+                (   Count_MeasSysAxis "0" ValueTypeUnits.IntegerCount )
+              ])
+              (   OneCountReferencePoint  "One counted event" landmark:  LandMarks.OneCountLandmark  [
+                (   Count_MeasSysAxis "1" ValueTypeUnits.IntegerCount )
+              ])
+			]
+            };
+            msa   Count_MeasSysAxis  "Measurement system axis for Counts measured in counts with integers." { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ ValueTypeUnits.IntegerCount ]};
+          }
+
+         }
+         ldm   EnumerationMeasurementSystem  {
+          ldm   AbstractDiscreteSetMeasurementSystem  {
+            msys   AbstractDiscreteSetMeasurementSystem  "A template MeasurementSystem referenced by all Measurements whose value is one of a set of selected discrete states (e.g. Q,E enumerations and multi-state variables). The Measurement must specify the real state set in its MeasurementAxis discrete set." {
+            	 maxis: [ Abstract_DiscreteSet_MeasSysAxis ] coord:CoordinateSystems.Discrete.Discrete_CoordSys   extRefStd:"" orient:"n/a" };
+            msa   Abstract_DiscreteSet_MeasSysAxis  "&quot;Axis for the AbstractDiscreteSetMeasurementSystem. All &quot;&quot;real&quot;&quot; MeasurementAxes must reference this MSAxis and must override the ValueTypeUnitPair with one that specifies the real states in the Measurement's discrete set.&quot;" {
+            	 axis: CoordinateSystems.Discrete.Discrete_CoordSysAxis vtu: [ ValueTypeUnits.AbstractDiscreteSetUnitless ] };
+          }
+          ldm   ValidityMeasurementSystem {}
+        }
+         ldm   IdentifiersMeasurementSystem {}
+         ldm   InformationElementMeasurementSystem  {
+          ldm   TextMeasurementSystem  {
+            msys   Text_ASCII_MeasSys  "Representation of the ASCII character standard." {maxis: [ Text_MeasSysAxis ] coord:CoordinateSystems.Discrete.Discrete_CoordSys   extRefStd:"ASCII" orient:"N/A" };
+            msys   Text_UTF8_MeasSys  "A TextMeasurementSystem supports definition of a single text element.  UTF-8 was chosen as the default string encoding." {
+            	maxis: [ Text_MeasSysAxis ] coord:CoordinateSystems.Discrete.Discrete_CoordSys   extRefStd:"UTF-8" orient:"N/A"
+            	};
+
+            msa   Text_MeasSysAxis  "Representation of a single text based axis." { axis: CoordinateSystems.Discrete.Discrete_CoordSysAxis vtu: [ ValueTypeUnits.StringUnitless ] };
+          }
+        }
+        ldm   LengthMeasurementSystem  {
+          ldm   DistanceMeasurementSystem  {
+            msys   Distance_MeasSys  "Measurement system for distance" {
+            	maxis: [ Distance_MeasSysAxis ]
+            	coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys
+            	extRefStd:""
+            	orient:"Value increases as distance increases"
+              refPt: [   (ZeroDistanceReferencePoint  "zero distance reference point" landmark:  LandMarks.LengthLandmarks.ZeroDistanceLandmark  [
+                (   Distance_MeasSysAxis "0.0" ValueTypeUnits.NonNegativeRealMeter  )
+              ])
+              (   OneMeterDistanceReferencePoint  "Unit distance reference point" landmark:  LandMarks.LengthLandmarks.OneMeterDistanceLandmark  [
+                (   Distance_MeasSysAxis "1.0" ValueTypeUnits.NonNegativeRealMeter  )
+              ])
+				]
+            };
+            msa   Distance_MeasSysAxis  "Measurement System Axis for the Distance Measurement System" { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ ValueTypeUnits.NonNegativeRealMeter ]};
+          }
+          ldm   ExtentMeasurementSystem  {
+            msys   Extent_MeasSys  "Measurement system for range or space to which an object extends." {
+            	maxis: [ Length_Extent_MeasSysAxis Width_Extent_MeasSysAxis ]
+            	coord:CoordinateSystems.Cartesian.Cartesian_2D_CoordSys
+            	extRefStd:""
+            	orient:"Right-Handed"
+              refPt: [
+              	(  ZeroExtentReferencePoint  "Zero value of measurement as origin." landmark:  LandMarks.LengthLandmarks.ZeroDistanceLandmark  [
+                (   Length_Extent_MeasSysAxis "0" ValueTypeUnits.NonNegativeRealMeter  )
+                (   Width_Extent_MeasSysAxis  "0" ValueTypeUnits.NonNegativeRealMeter  )
+              ])
+              (   OneMeterLengthExtentReferencePoint  "One meter unit of a length extent measurement system." landmark:  LandMarks.LengthLandmarks.OneMeterDistanceLandmark  [
+                (   Length_Extent_MeasSysAxis "1" ValueTypeUnits.NonNegativeRealMeter  )
+                (   Width_Extent_MeasSysAxis  "0" ValueTypeUnits.NonNegativeRealMeter  )
+              ])
+              (   OneMeterWidthExtentReferencePoint  "One meter unit of a width extent measurement system." landmark:  LandMarks.LengthLandmarks.ONeMeterWidthExtentLandmark  [
+                (   Length_Extent_MeasSysAxis "0" ValueTypeUnits.NonNegativeRealMeter  )
+                (   Width_Extent_MeasSysAxis  "1" ValueTypeUnits.NonNegativeRealMeter  )
+              ])
+
+              ]
+              };
+
+            msa   Length_Extent_MeasSysAxis  "The width measurement system axis to describe the nature of the extent measurement." { axis: CoordinateSystems.Cartesian.Cartesian_Y_CoordSysAxis vtu: [ ValueTypeUnits.NonNegativeRealMeter ]};
+            msa   Width_Extent_MeasSysAxis  "The length measurement system axis to describe the nature of the extent measurement." { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ ValueTypeUnits.NonNegativeRealMeter ]};
+          }
+        }
+         ldm   TemperatureMeasurementSystem  {
+          msys   Temperature_MeasSys  "Measurement system to represent temperature values in Kelvin degrees" {
+          	maxis: [ Temperature_MeasSysAxis ] coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys extRefStd:"" orient:"Values increase as temperature increases"
+
+            refPt: [
+            	(WaterFreezingPoint  "Represents waters freezing point." landmark:  LandMarks.TemperatureLandmarks.FreezingPointOfWater  [
+              (   Temperature_MeasSysAxis "273.15" ValueTypeUnits.RealKelvin )
+            ])
+            (   WaterBoilingPoint  "Represents waters boiling point" landmark:  LandMarks.TemperatureLandmarks.BoilingPointOfWater  [
+              (   Temperature_MeasSysAxis "373.15" ValueTypeUnits.RealKelvin )
+            ])
+            (   AbsoluteZeroPoint  "Represents zero point of temperature" landmark:  LandMarks.TemperatureLandmarks.AbsoluteZero  [
+              (   Temperature_MeasSysAxis "0" ValueTypeUnits.RealKelvin )
+            ])
+            ]
+            };
+          msa   Temperature_MeasSysAxis  "Axis for Real number values in degrees Kelvin" { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ ValueTypeUnits.RealKelvin ]};
+        }
+        ldm   TemporalFrequencyMeasurementSystem  {
+          msys   Temporal_Frequency_MeasSys  "Measurement system for frequency of periodic events." {
+          	maxis: [ Temporal_Frequency_MeasSysAxis ] coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys extRefStd:"International System of Units (SI)" orient:"Value increases as frequency increases."
+            refPt: [ (   OneHertzReferencePoint  "One occurrence per second" landmark:  LandMarks.OneHertzLandmark  [
+              (   Temporal_Frequency_MeasSysAxis "1.00" ValueTypeUnits.RealHertz )
+            ])
+            (   ZeroFrequencyReferencePoint  "No occurrences per second" landmark:  LandMarks.ZeroFrequencyLandmark  [
+              (   Temporal_Frequency_MeasSysAxis "0.00" ValueTypeUnits.RealHertz )
+            ])
+
+            ]
+
+            };
+          msa   Temporal_Frequency_MeasSysAxis  "Measurement axis for frequency." { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ ValueTypeUnits.RealHertz] };
+        }
+         ldm   TimeMeasurementSystem  {
+          ldm   TimeDurationMeasurementSystem  {
+            msys   Time_Duration_MeasSys  "Measurement system for time duration." {
+            	maxis: [ Time_Duration_MeasSysAxis ] coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys extRefStd:"International System of Units - Second" orient:"Value increases as time moves towards the future"
+              refPt: [ (   ZeroDurationReferencePoint  "Duration origin" landmark:  LandMarks.TimeLandmarks.ZeroDurationLandmark  [
+                (   Time_Duration_MeasSysAxis "0.0" ValueTypeUnits.IntegerSeconds )
+              ])
+              (   OneSecondDurationReferencePoint  "Duration on positive one second" landmark:  LandMarks.TimeLandmarks.OneSecondDurationLandmark  [
+                (   Time_Duration_MeasSysAxis "1.0" ValueTypeUnits.IntegerSeconds )
+              ])
+
+              ]
+
+              };
+            msa   Time_Duration_MeasSysAxis  "Axis for time duration in seconds" { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ValueTypeUnits.IntegerSeconds ]};
+          }
+          ldm   PosixTimeMeasurementSystem  {
+            msys   Time_Posix_MeasSys  "Measurement system for time in accordance with the Posix." {
+            	maxis: [ Time_Posix_MeasSysAxis  ] coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys extRefStd:"IEEE Std 1003.1-2008" orient:"Value increases as time moves towards the future"
+              refPt: [ (   PositiveOneSecondAfterEpochStart  "Duration on positive one second" landmark:  LandMarks.TimeLandmarks.OneSecondDurationLandmark  [
+                (   Time_Posix_MeasSysAxis "1" ValueTypeUnits.IntegerSeconds )
+              ])
+              (   PosixEpochTimeStart  "POSIX/Unix time origin" landmark:  LandMarks.TimeLandmarks.UnixEpochStart   [
+                (   Time_Posix_MeasSysAxis  "0" ValueTypeUnits.IntegerSeconds )
+              ])
+
+              ]
+
+              };
+            msa   Time_Posix_MeasSysAxis  "Axis for time durationin seconds since Epoch Start." { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ValueTypeUnits.IntegerSeconds ]};
+          }
+          ldm   UTC_MeasurementSystem  "Time measurements based on Universal Coordinated Time."  {
+            msys   Time_LocalOffset_UTC_MeasSys  "Primary time system the world uses to regulate clocks and date-times Q,E a main goal of which is to correlate one rotation of the earth with one 24 hour day by making occasional 1 second corrections to the duration of a day. " {
+maxis: [ Time_LocalTime_UTC_MeasSysAxis  ]
+coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys
+extRefStd:"Coordinated Universal Time defined by International Telecommunications Union Recommendation (ITU-R TF.460-6), Standard-frequency and time-signal emissions"
+orient:"see UTC standard"
+              refPt: [ (   UTC_GregorianCalendarOrigin  "Start of Gregorian Calendar - Jan 1, 0:0:0 Zulu" landmark:  LandMarks.TimeLandmarks.GregorianCalendarOrigin  [
+                (   Time_LocalTime_UTC_MeasSysAxis "1" ValueTypeUnits.UTC_DayOfGregorianMonth )
+                (   Time_LocalTime_UTC_MeasSysAxis "1" ValueTypeUnits.UTC_MonthOfGregorianYear )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_GregorianYear )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_HourOfGregorianDay )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_MinuteOfHour )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_SecondOfMinute )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_LocalTimeHourOffset )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_LocalTimeMinuteOffset )
+              ])
+              (   UTC_UnixEpochTime  "Unix Epoch Time - Jan 1,1970 0:0:0 UTC" landmark:  LandMarks.TimeLandmarks.UnixEpochStart   [
+                (   Time_LocalTime_UTC_MeasSysAxis "1" ValueTypeUnits.UTC_DayOfGregorianMonth )
+                (   Time_LocalTime_UTC_MeasSysAxis "1" ValueTypeUnits.UTC_MonthOfGregorianYear )
+                (   Time_LocalTime_UTC_MeasSysAxis "1970" ValueTypeUnits.UTC_GregorianYear )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_HourOfGregorianDay )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_MinuteOfHour )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_SecondOfMinute )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_LocalTimeHourOffset )
+                (   Time_LocalTime_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_LocalTimeMinuteOffset )
+              ])
+              ]
+              };
+            msa   Time_LocalTime_UTC_MeasSysAxis  "Represents calendar day using Gregorian calendar (year Q,E month of year Q,E and day of month) Q,E time of day as hour of day Q,E minute of hour Q,E and second of minute Q,E and local offset from UTC as count of hours Q,E count of minutes." {
+            	axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ ValueTypeUnits.UTC_GregorianYear ValueTypeUnits.UTC_HourOfGregorianDay ValueTypeUnits.UTC_MonthOfGregorianYear ValueTypeUnits.UTC_MinuteOfHour ValueTypeUnits.UTC_DayOfGregorianMonth ValueTypeUnits.UTC_SecondOfMinute ValueTypeUnits.UTC_LocalTimeHourOffset ValueTypeUnits.UTC_LocalTimeMinuteOffset]};
+          }
+          ldm   UTC_TimeOfDayMeasurementSystem  {
+            msys   Time_TimeOfDay_UTC_MeasSys  "Measurement system for time duration in seconds" {
+			maxis: [ Time_TimeOfDay_UTC_MeasSysAxis ] coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys extRefStd:"Universal Coordinated Time" orient:"Value increases as time moves towards the future"
+              refPt:[ (   UTC_DayStart  "Start of UTC day" landmark:  LandMarks.TimeLandmarks.UTC_DayStart  [
+                (   Time_TimeOfDay_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_HourOfGregorianDay )
+                (   Time_TimeOfDay_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_MinuteOfHour )
+                (   Time_TimeOfDay_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_SecondOfMinute )
+              ])
+              (   UTC_Noon  "Noon of UTC day" landmark:  LandMarks.TimeLandmarks.UTC_Noon  [
+                (   Time_TimeOfDay_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_MinuteOfHour )
+                (   Time_TimeOfDay_UTC_MeasSysAxis "0" ValueTypeUnits.UTC_SecondOfMinute )
+                (   Time_TimeOfDay_UTC_MeasSysAxis "12" ValueTypeUnits.UTC_HourOfGregorianDay )
+              ])
+
+              ]
+
+              };
+            msa   Time_TimeOfDay_UTC_MeasSysAxis  "Axis for time duration in HMS" { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ValueTypeUnits.UTC_HourOfGregorianDay ValueTypeUnits.UTC_MinuteOfHour ValueTypeUnits.UTC_SecondOfMinute]};
+          }
+          ldm   NATO4586_TimeMeasurementSystem  {
+            msys   Time_NATO4586UTC_MeasSys  "NATO STANAG 4586 time system represented in Universal Time Coordinated (UTC) in seconds since Jan 1 Q,E 2000 with a precision of 0.001 seconds" {
+            	maxis: [ Time_NATO4586_UTC_MeasSysAxis ] coord:CoordinateSystems.Cartesian.Cartesian_X_CoordSys extRefStd:"NATO STANAG 4586 modification of UTC" orient:"see UTC standard"
+              refPt: [(   UTC_GregorianCalendarOrigin  "Start of Gregorian Calendar - Jan 1, 0:0:0 Zulu" landmark:  LandMarks.TimeLandmarks.GregorianCalendarOrigin  [
+                (   Time_NATO4586_UTC_MeasSysAxis "-63113904000" ValueTypeUnits.RealSeconds )
+              ])
+              (   PositiveOneSecondAfter20000000  "Duration of positive one second" landmark:  LandMarks.TimeLandmarks.OneSecondDurationLandmark  [
+                (   Time_NATO4586_UTC_MeasSysAxis "1" ValueTypeUnits.RealSeconds )
+              ])
+
+              ]
+
+              };
+
+            msa   Time_NATO4586_UTC_MeasSysAxis  "NATO STANAG 4586 time system represented in Universal Time Coordinated (UTC) in seconds since Jan 1 Q,E 2000 with a precision of 0.001 seconds" { axis: CoordinateSystems.Cartesian.Cartesian_X_CoordSysAxis vtu: [ ValueTypeUnits.RealSeconds ] };
+          }
+        }
+       }
+       ldm   Measurements  "FACE data model logical measurements."  {
+        ldm   UniqueIdentifierMeasurements  {
+          ldm   UniqueID_Unbounded_Integer  {
+            meas  UniqueID_Unbounded_Integer_Meas "A measurement for uniqueIdentifiers that use integers and are not governed by an organization or standard" -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier {
+axis: [ UniqueID_Unbounded_Integer_MeasAxis] sys: MeasurementSystems.CountingMeasurementSystem.CountMeasurementSystem.Count_MeasSys };
+            maxis    UniqueID_Unbounded_Integer_MeasAxis  "An instance of the CountMeasurementSystemAxis with a uniqueness constraint." -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier { msaxis:  MeasurementSystems.CountingMeasurementSystem.CountMeasurementSystem.Count_MeasSysAxis
+              ![ "IsUnique" ]
+            };
+          }
+          ldm   UniqueID_Unbounded_Text  {
+            meas   UniqueID_Unbounded_Text_Meas  "A measurement for uniqueIdentifiers that use UTF8 strings and are not governed by an organization or standard" -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier {
+            	 axis: [ UniqueID_Unbounded_Text_MeasAxis ] sys: MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_UTF8_MeasSys };
+            maxis    UniqueID_Unbounded_Text_MeasAxis  "An instance of the TextUTF8MeasurementSystemAxis with a uniqueness constraint."  -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier {
+            	msaxis:  MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_MeasSysAxis
+              !["IsUnique"]};
+          }
+          ldm   UniqueID_UUID_Text  {
+            meas   UniqueID_UUID_Text_Meas  "A measurement for uniqueIdentifiers that use UTF8 strings and are governed by the UUID (RFC 4122) standard." -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier {
+axis: [ UniqueID_UUID_Text_MeasAxis ] sys: MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_UTF8_MeasSys  };
+            maxis    UniqueID_UUID_Text_MeasAxis "An instance of the TextUTF8MeasurementSystemAxis with a UUID constraint."   -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier {
+            	msaxis:  MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_MeasSysAxis
+              ![ "UUID_RFC 4122" ]};
+          }
+        }
+        ldm   CountingMeasures  {
+          ldm   Resolution  {
+            meas   Resolution_Distance_CM_Meas  "Single dimensional measurement of resolution." -> FACE_Shared_Data_Model_Conceptual.Observables.Counting.Resolution {
+            	axis: [ Distance_Resolution_CM_MeasAxis] sys: MeasurementSystems.LengthMeasurementSystem.DistanceMeasurementSystem.Distance_MeasSys };
+            //meas   Resolution_Meas  -> FACE_Shared_Data_Model_Conceptual.Observables.Counting.Resolution { axis: [Horizontal_Resolution_MeasAxis Vertical_Resolution_MeasAxis] sys: Resolution_MeasSys };
+            //maxis    Horizontal_Resolution_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Counting.Resolution { msaxis:  Resolution_Horizontal_MeasSysAxis  };
+            maxis    Distance_Resolution_CM_MeasAxis  "Single dimensional Measurement of resolution Q,E an indication of scale of resolution." {
+            	vtu: [ ValueTypeUnits.RealCentimeters ] msaxis:  MeasurementSystems.LengthMeasurementSystem.DistanceMeasurementSystem.Distance_MeasSysAxis  };
+            //maxis    Vertical_Resolution_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Counting.Resolution {  msaxis:  Resolution_Vertical_MeasSysAxis  };
+          }
+          ldm   Count  "Logical model for the number of occurrences of a repeating event per unit time"  {
+            meas   Count_Meas  "Measurement of event occurrences measured in Counts with non-negative Integers" -> FACE_Shared_Data_Model_Conceptual.Observables.Counting.Count {
+            	axis: [ Count_MeasAxis ] sys: MeasurementSystems.CountingMeasurementSystem.CountMeasurementSystem.Count_MeasSys };
+            maxis    Count_MeasAxis -> FACE_Shared_Data_Model_Conceptual.Observables.Counting.Count { msaxis:  MeasurementSystems.CountingMeasurementSystem.CountMeasurementSystem.Count_MeasSysAxis  };
+          }
+        }
+        ldm   IdentifierMeasures  {
+          ldm   KindMeasures  {
+            meas   Kind_Unbounded_Integer_Meas  "A measurement for a Kind identifier that use integers and are not directly governed by an organization or standard" -> FACE_Shared_Data_Model_Conceptual.Observables.InformationElement.Kind.Kind { axis: [Kind_Unbounded_Integer_MeasAxis] sys: MeasurementSystems.CountingMeasurementSystem.CountMeasurementSystem.Count_MeasSys };
+            maxis    Kind_Unbounded_Integer_MeasAxis  "An instance of the CountMeasurementSystemAxis with a uniqueness constraint." -> FACE_Shared_Data_Model_Conceptual.Observables.InformationElement.Kind.Kind {
+            	msaxis:  MeasurementSystems.CountingMeasurementSystem.CountMeasurementSystem.Count_MeasSysAxis
+              ![ "IsUnique"]};
+
+          }
+          ldm   AddressMeasures  {
+            meas   Address_IPv4_Meas  "IPv4 address expressed as an integer." -> FACE_Shared_Data_Model_Conceptual.Observables.NonPhysicalAddress { axis: [Address_IPv4_MeasAxis ] sys: MeasurementSystems.AddressMeasurementSystem.Address_IPv4_MeasSys  };
+            meas   Address_IPv6_Meas  "IPv6 address expressed as an integer."  -> FACE_Shared_Data_Model_Conceptual.Observables.NonPhysicalAddress { axis: [Address_IPv6_MeasAxis ] sys: MeasurementSystems.AddressMeasurementSystem.Address_IPv6_MeasSys };
+            meas   Address_URI_Meas  "A Uniform Resource Identifier (URI) is a string of ASCII characters used to identify a resource."  -> FACE_Shared_Data_Model_Conceptual.Observables.NonPhysicalAddress {
+            	axis: [Address_URI_MeasAxis ] sys: MeasurementSystems.AddressMeasurementSystem.Address_URI_MeasSys  };
+            maxis    Address_IPv4_MeasAxis  "Set of integers for IPv4 address expressed as an integer."  -> FACE_Shared_Data_Model_Conceptual.Observables.NonPhysicalAddress { msaxis: MeasurementSystems.AddressMeasurementSystem.Address_Integer_MeasSysAxis  };
+            maxis    Address_IPv6_MeasAxis  "Set of integers for IPv6 address expressed as an integer."  -> FACE_Shared_Data_Model_Conceptual.Observables.NonPhysicalAddress { msaxis: MeasurementSystems.AddressMeasurementSystem.Address_Integer_MeasSysAxis  };
+            maxis    Address_URI_MeasAxis  "Axis of ASCII character sets for a Uniform Resource Identifier (URI) used to identify a resource"  -> FACE_Shared_Data_Model_Conceptual.Observables.NonPhysicalAddress { msaxis:  MeasurementSystems.AddressMeasurementSystem.Address_Text_MeasAxis    };
+          }
+        }
+       ldm   InformationElementMeasures  {
+          ldm   TextMeasurement  {
+            meas   Description_Meas  "Measurement representing a Description as a single element" -> FACE_Shared_Data_Model_Conceptual.Observables.InformationElement.Description.Description {  axis: [Description_MeasAxis ] sys: MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_UTF8_MeasSys };
+            meas   Name_Meas  "Measurement for representing a name." -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier { axis: [Name_MeasAxis] sys: MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_UTF8_MeasSys };
+            maxis    Description_MeasAxis -> FACE_Shared_Data_Model_Conceptual.Observables.InformationElement.Description.Description {  msaxis:  MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_MeasSysAxis  };
+            maxis    Name_MeasAxis -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier { msaxis:  MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_MeasSysAxis };
+            maxis    Name_Text_MeasAxis "The primary name axis."  -> FACE_Shared_Data_Model_Conceptual.Observables.Identifier.Identifier { msaxis: MeasurementSystems.InformationElementMeasurementSystem.TextMeasurementSystem.Text_MeasSysAxis };
+          }
+        }
+        ldm   LengthMeasures  {
+          ldm   DistanceMeasure  {
+            meas   Distance_Meas  "Measurement for distance" -> FACE_Shared_Data_Model_Conceptual.Observables.Length.Distance { axis: [Distance_MeasAxis ] sys: MeasurementSystems.LengthMeasurementSystem.DistanceMeasurementSystem.Distance_MeasSys };
+            maxis    Distance_MeasAxis -> FACE_Shared_Data_Model_Conceptual.Observables.Length.Distance { msaxis:  MeasurementSystems.LengthMeasurementSystem.DistanceMeasurementSystem.Distance_MeasSysAxis  };
+          }
+          ldm   ExtentMeasures  {
+            meas   Extent_Meas  "Length distance dimension of the extent."  -> FACE_Shared_Data_Model_Conceptual.Observables.Length.Extent {axis: [Length_Extent_Meas Width_Extent_Meas] sys: MeasurementSystems.LengthMeasurementSystem.ExtentMeasurementSystem.Extent_MeasSys };
+            maxis    Length_Extent_Meas -> FACE_Shared_Data_Model_Conceptual.Observables.Length.Extent { msaxis:  MeasurementSystems.LengthMeasurementSystem.ExtentMeasurementSystem.Length_Extent_MeasSysAxis  };
+            maxis    Width_Extent_Meas -> FACE_Shared_Data_Model_Conceptual.Observables.Length.Extent { msaxis:  MeasurementSystems.LengthMeasurementSystem.ExtentMeasurementSystem.Width_Extent_MeasSysAxis  };
+          }
+          ldm   LocalAir  "Length measurements based on the Local Air Reference Frame." {}
+          ldm   LocalBody  "Length measurements based on the Local Body Reference Frame."{}
+          ldm   LocalGround  "Length measurements based on the Local Ground Reference Frame."{}
+          ldm   LocalHorizontal  "Length measurements based on the Local Horizontal Reference Frame."{}
+          ldm   LocalNorthEastDown  "Length measurements based on the Local North East Down Reference Frame."{}
+          ldm   LocalVehicle  "Length measurements based on the Local Vehicle Reference Frame."{}
+          ldm   MeanSeaLevel  "Length measurements based on the Mean Sea Level Reference Frame."{}
+          ldm   WGS84  "Length measurements based on the WGS-84 Reference Frame."{}
+        }
+//           ldm   DataRate  "Logical model for the number of occurrences of a repeating event per unit time"  {
+//            meas   Data_Rate_Meas  "Measurement of data rate measured in bits per second with real numbers" -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.DataRate { axis: [Data_Rate_MeasAxis] sys: Data_Rate_MeasSys };
+//            maxis    Data_Rate_MeasAxis -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.DataRate { msaxis:  Data_Rate_MeasSysAxis  };
+//          }
+//           ldm   Velocity  {
+//            meas   Velocity_Meas  "Measurement for 3D velocity vector in meters/sec." -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { axis: [Velocity_X_MeasAxis Velocity_Y_MeasAxis Velocity_Z_MeasAxis] sys: Velocity_MeasSys };
+//            meas   Velocity_RealKnots_Meas  "Measurement for 3D velocity vector in knots."  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity {axis: [Velocity_X_RealKnots_MeasAxis Velocity_Y_RealKnots_MeasAxis Velocity_Z_RealKnots_MeasAxis] sys: Velocity_MeasSys };
+//            //meas   Velocity_U_Meas  "A geo measurement system attached to a vehicle. The three axes are centered at the vehicle CoG Q,E and oriented relative to features on the earth Q,E the North Pole (local meridian) Q,E the east (local parallel) Q,E and tangent to the NE plane. North Axis."  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity {axis: [Velocity_U_MeasAxis] sys: Position_VehicleNED_North_MeasSys };
+//            //meas   Velocity_V_Meas  "A geo measurement system attached to a vehicle. The three axes are centered at the vehicle CoG Q,E and oriented relative to features on the earth Q,E the North Pole (local meridian) Q,E the east (local parallel) Q,E and tangent to the NE plane. EastAxis."  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity {axis: [Velocity_V_MeasAxis] sys: Position_VehicleNED_East_MeasSys };
+//            //meas   Velocity_W_Meas  "A geo measurement attached to a vehicle. The three axes are centered at the vehicle CoG Q,E and oriented relative to features on the earth Q,E the North Pole (local meridian) Q,E the east (local parallel) Q,E and tangent to the NE plane. Down Axis"  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity {axis: [Velocity_W_MeasAxis] sys: Position_VehicleNED_Down_MeasSys };
+//            //meas   Velocity_UVW_Meas  "A geographical measurement system attached to a vehicle. The three axes are centered at the vehicle CoG Q,E and oriented relative to features on the earth Q,E the North Pole (local meridian) Q,E the east (local parallel) Q,E and tangent to the NE plane."  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity {axis: [Velocity_U_MeasAxis Velocity_V_MeasAxis Velocity_W_MeasAxis] sys: Position_VehicleNED_MeasSys };
+//            maxis    Velocity_X_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { msaxis:  Velocity_X_MeasSysAxis  };
+//            maxis    Velocity_X_RealKnots_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { vtu: [ ValueTypeUnits.RealKnots ] msaxis:  Velocity_X_MeasSysAxis  };
+//            maxis    Velocity_Y_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { msaxis:  Velocity_Y_MeasSysAxis  };
+//            maxis    Velocity_Y_RealKnots_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { vtu: [ ValueTypeUnits.RealKnots ] msaxis:  Velocity_Y_MeasSysAxis  };
+//            maxis    Velocity_Z_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { msaxis:  Velocity_Z_MeasSysAxis  };
+//            maxis    Velocity_Z_RealKnots_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { vtu: [ ValueTypeUnits.RealKnots ] msaxis:  Velocity_Z_MeasSysAxis  };
+//            //maxis    Velocity_U_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { vtu: [ ValueTypeUnits.RealMetersPerSecond ]  "The North axis of an NED Measurement System."  msaxis: Position_North_X_MeasSysAxis };
+//            //maxis    Velocity_V_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { vtu: [ ValueTypeUnits.RealMetersPerSecond ]  "The East axis of an NED Measurement System."  msaxis:  Position_East_Y_MeasSysAxis };
+//            //maxis    Velocity_W_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.Velocity { vtu: [ ValueTypeUnits.RealMetersPerSecond ]  "The Down axis of an NED Measurement System."  msaxis:  Position_Down_Z_MeasSysAxis };
+//          }
+//        }
+        ldm   TemperatureMeasures  {
+          meas   Temperature_Delta_Meas  "Measurement for expressing temperature deltas" -> FACE_Shared_Data_Model_Conceptual.Observables.Temperature.TemperatureDelta {
+          	axis: [Temperature_Delta_MeasAxis ] sys: MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSys };
+          meas   Temperature_Meas  "Thermodynamic temperature measures in degrees Kelvin." -> FACE_Shared_Data_Model_Conceptual.Observables.Temperature.Temperature {
+          	axis: [Temperature_MeasAxis ] sys: MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSys };
+          meas   Temperature_DegreesCelsius_Meas  "Thermodynamic temperature measures in degrees Celsius." -> FACE_Shared_Data_Model_Conceptual.Observables.Temperature.Temperature {
+          	axis: [Temperature_DegreesCelsius_MeasAxis ] sys: MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSys };
+          meas   Temperature_DegreesFahrenheit_Meas  "Thermodynamic temperature measures in degrees Fahrenheit." -> FACE_Shared_Data_Model_Conceptual.Observables.Temperature.Temperature {
+          	axis: [Temperature_DegreesFahrenheit_MeasAxis ] sys: MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSys };
+          maxis    Temperature_Delta_MeasAxis  "Measurement axis for values of temperature deltas." -> FACE_Shared_Data_Model_Conceptual.Observables.Temperature.TemperatureDelta { msaxis:  MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSysAxis  };
+          maxis    Temperature_MeasAxis -> FACE_Shared_Data_Model_Conceptual.Observables.Temperature.Temperature { vtu: [ValueTypeUnits.RealKelvin ] msaxis: MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSysAxis
+            !["Always >= absolute zero"]
+          };
+          maxis    Temperature_DegreesFahrenheit_MeasAxis  -> FACE_Shared_Data_Model_Conceptual.Observables.Temperature.Temperature {  vtu: [ValueTypeUnits.RealFahrenheit ] msaxis:  MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSysAxis
+            ![ "Always >= absolute zero"]
+          };
+          maxis    Temperature_DegreesCelsius_MeasAxis -> FACE_Shared_Data_Model_Conceptual.Observables.Temperature.Temperature { vtu: [ValueTypeUnits.RealCelsius ] msaxis: MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSysAxis
+            ![ "Always >= absolute zero"]
+          };
+          ldm   LocalAir  "Temperature measurements based on the Local Air Reference Frame."  {
+            maxis    Temperature_LocalAir_DegreesCelsius_MeasAxis { msaxis:  MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSysAxis
+              ![ "Temperature range in Earth atmosphere from surface through stratosphere (-70C to +70C)"]
+            };
+            maxis    Temperature_LocalAir_DegreesFahrenheit_MeasAxis { msaxis:  MeasurementSystems.TemperatureMeasurementSystem.Temperature_MeasSysAxis
+              !["Temperature range in Earth atmosphere from surface through stratosphere (-100F to +160F)"]
+            };
+          }
+        }
+        ldm   TemporalFrequency  "Logical model for the number of occurrences of a repeating event per unit time"  {
+          meas   Temporal_Frequency_Meas  "Measurement of frequency measured in Hertz with Real numbers" -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.TemporalFrequency { axis: [Temporal_Frequency_MeasAxis ] sys: MeasurementSystems.TemporalFrequencyMeasurementSystem.Temporal_Frequency_MeasSys };
+          maxis    Temporal_Frequency_MeasAxis -> FACE_Shared_Data_Model_Conceptual.Observables.Rate.TemporalFrequency {msaxis:  MeasurementSystems.TemporalFrequencyMeasurementSystem.Temporal_Frequency_MeasSysAxis
+           !["Always >= 0"]
+          };
+        }
+        ldm   TimeMeasures  {
+          ldm   CalendarTimeMeasures  {
+            ldm   UTC_Measures  {
+              meas   Date_GregorianDate_Meas  "Gregorian calendar date measurement. Like UTC Time Q,E but without time of day components" -> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { axis: [Date_GregorianDate_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalOffset_UTC_MeasSys };
+              //meas   Time_NATO4586Time_Meas  "Measurement describing a instant in time as the number of seconds that have elapsed since the NATO STANAG 4586 Epoch Time (00:00:00 Coordinated Universal Time (UTC) Q,ESaturday Q,E1 January 2000)."-> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { axis: [Time_NATO4586Time_MeasAxis] sys: Time_NATO4586UTC_MeasSys };
+              meas   Time_LocalTime_Meas  "Local calendar date and time in a time zone per the UTC standard Q,E using Gregorian calendar days (vs. Julian day number) and an hr:min offset from UTC" -> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime {axis: [Time_LocalTime_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalOffset_UTC_MeasSys };
+              meas   Time_ISO8601Basic_Meas  "A date-time expressed as a text string conforming to the ISO8601 standard's basic format (no separators between time and date components)"-> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { axis: [Time_ISO8601Basic_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalOffset_UTC_MeasSys };
+              meas   Time_ISO8601Extended_Meas  "A date-time expressed as a text string conforming to the ISO8601 standard's extended format (hyphens between date components Q,E colons between time components)"-> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { axis: [Time_ISO8601Extended_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalOffset_UTC_MeasSys };
+              meas   Time_UTC_Meas  "Date and time per the UTC standard using Gregorian calendar days (vs. Julian day number). The measure does not include a local time offset." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime {axis: [Time_UTC_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalOffset_UTC_MeasSys };
+              meas   Time_TimeOfDay_UTC_Meas  "A time in a specific calendar day indicating the number of hours Q,Eminutes Q,Eand seconds since the day start per the UTC standard"-> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { axis: [Time_TimeOfDay_UTC_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.UTC_TimeOfDayMeasurementSystem.Time_TimeOfDay_UTC_MeasSys };
+              //maxis    Time_NATO4586Time_MeasAxis  "Measurement axis for NATO STANAG 4586 time duration in integer seconds"-> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime  { msaxis: [ Time_NATO4586_UTC_MeasSysAxis ] };
+              maxis    Date_GregorianDate_MeasAxis  "Measurement axis for Gregorian date. Same as UTCTimeAxis Q,E but without time of day components." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { vtu: [ ValueTypeUnits.UTC_GregorianYear ValueTypeUnits.UTC_MonthOfGregorianYear ValueTypeUnits.UTC_DayOfGregorianMonth] msaxis: MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalTime_UTC_MeasSysAxis   };
+              maxis    Time_LocalTime_MeasAxis  "Measurement axis for UTC time with local time offset"-> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { msaxis:  MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalTime_UTC_MeasSysAxis   };
+              maxis    Time_ISO8601Basic_MeasAxis  "Measurement axis to represent date-time expressed as a text string conforming to the ISO8601 standard's basic format." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { vtu: [ ValueTypeUnits.StringISO8601Basic ] msaxis:  MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalTime_UTC_MeasSysAxis
+                !["Constrained per ISO8601 Time Basic"]
+              };
+              maxis    Time_ISO8601Extended_MeasAxis  "Measurement axis to represent date-time expressed as a text string conforming to the ISO8601 standard extended format" -> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { vtu: [ ValueTypeUnits.StringISO8601Extended] msaxis:  MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalTime_UTC_MeasSysAxis
+                !["Constrained per ISO8601 Time Extended"]
+              };
+              maxis    Time_UTC_MeasAxis  "Measurement axis for UTC time" -> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { vtu: [ValueTypeUnits.UTC_DayOfGregorianMonth ValueTypeUnits.UTC_MonthOfGregorianYear ValueTypeUnits.UTC_GregorianYear ValueTypeUnits.UTC_HourOfGregorianDay ValueTypeUnits.UTC_MinuteOfHour ValueTypeUnits.UTC_SecondOfMinute] msaxis:  MeasurementSystems.TimeMeasurementSystem.UTC_MeasurementSystem.Time_LocalTime_UTC_MeasSysAxis   };
+              maxis    Time_TimeOfDay_UTC_MeasAxis  "Measurement axis for time offset since the start of a UTC/Gregorian calendar day Q,E represented with HourOfDay Q,E MinuteOfHour Q,E and SecondOfMinute components" -> FACE_Shared_Data_Model_Conceptual.Observables.Time.CalendarTime { vtu: [ValueTypeUnits.UTC_HourOfGregorianDay ValueTypeUnits.UTC_MinuteOfHour ValueTypeUnits.UTC_SecondOfMinute] msaxis: MeasurementSystems.TimeMeasurementSystem.UTC_TimeOfDayMeasurementSystem.Time_TimeOfDay_UTC_MeasSysAxis
+                !["This measurement represents an instant within a calendar day"]
+              };
+            }
+          }
+          ldm   TimeDurationMeasures  {
+            //meas   Time_Posix_Meas  "Measurement describing a instant in time as the number of seconds that have elapsed since the Unix Epoch Time (00:00:00 Coordinated Universal Time (UTC) Q,EThursday Q,E1 January 1970) Q,Enot counting leap seconds." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration { axis: [Time_Posix_MeasAxis] sys: Time_Posix_MeasSys };
+            meas   Time_Duration_IntegerHours_Meas  "The time duration to or from a specific reference time in hours." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration { axis: [Time_Duration_IntegerHours_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSys};
+            meas   Time_Duration_IntegerMinutes_Meas  "The time duration to or from a specific reference time in minutes." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration {axis: [Time_Duration_IntegerMinutes_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSys};
+            meas   Time_Duration_IntegerSeconds_Meas  "The time duration to or from a specific reference time in seconds." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration { axis: [Time_Duration_IntegerSeconds_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSys};
+            meas   Time_Duration_IntegerMicroseconds_Meas  "The time duration to or from a specific reference time in microseconds."-> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration { axis: [Time_Duration_IntegerMicroseconds_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSys};
+            meas   Time_Duration_IntegerMilliseconds_Meas  "The time duration to or from a specific reference time in milliseconds." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration {axis: [Time_Duration_IntegerMilliseconds_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSys};
+            meas   Time_Duration_IntegerNanoseconds_Meas  "The time duration to or from a specific reference time in nanoseconds." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration {axis: [Time_Duration_IntegerNanoseconds_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSys};
+            meas   Time_Duration_RealSeconds_Meas  "Measure of time duration as real with microsecond precision." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration {axis: [Time_Duration_RealSeconds_MeasAxis] sys: MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSys};
+            //maxis    Time_Posix_MeasAxis  "Measurement axis for POSIX/Unix time duration in integer seconds" -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration {msaxis:  Time_Posix_MeasSysAxis   };
+            maxis    Time_Duration_IntegerHours_MeasAxis  "Measurement axis for time duration in integer hours." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration { vtu: [ ValueTypeUnits.IntegerHours ] msaxis:  MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSysAxis  };
+            maxis    Time_Duration_IntegerMinutes_MeasAxis  "Measurement axis for time duration in integer minutes."-> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration { vtu: [ ValueTypeUnits.IntegerMinutes ] msaxis:  MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSysAxis  };
+            maxis    Time_Duration_IntegerSeconds_MeasAxis  "Measurement axis for time duration in integer seconds." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration {msaxis:  MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSysAxis  };
+            maxis    Time_Duration_IntegerMicroseconds_MeasAxis  "Measurement axis for time duration in integer microseconds."-> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration { vtu: [ValueTypeUnits.IntegerMicroseconds] msaxis:  MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSysAxis  };
+            maxis    Time_Duration_IntegerMilliseconds_MeasAxis  "Measurement axis for time duration in integer milliseconds." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration {vtu: [ValueTypeUnits.IntegerMilliseconds] msaxis:  MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSysAxis  };
+            maxis    Time_Duration_IntegerNanoseconds_MeasAxis  "Measurement axis for time duration in integer nanoseconds." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration {vtu: [ValueTypeUnits.IntegerNanoseconds] msaxis:  MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSysAxis  };
+            maxis    Time_Duration_RealSeconds_MeasAxis  "Time duration measurement axis for measure in real seconds." -> FACE_Shared_Data_Model_Conceptual.Observables.Time.Duration { vtu: [ ValueTypeUnits.RealSeconds ] msaxis:  MeasurementSystems.TimeMeasurementSystem.TimeDurationMeasurementSystem.Time_Duration_MeasSysAxis  };
+          }
+        }
+//         ldm   VolumeMeasures  {
+//          meas   Volume_Meas  "Measurement to hold values of volume." -> FACE_Shared_Data_Model_Conceptual.Observables.Volume.ScalarVolume { axis: [Volume_MeasAxis] sys: Volume_MeasSys };
+//          maxis    Volume_MeasAxis  "Measurement axis to hold values of volume."-> FACE_Shared_Data_Model_Conceptual.Observables.Volume.ScalarVolume { msaxis:  `  };
+//        }
+
+      }
+
+        ldm Enumerations {
+         enum AbstractDiscreteSet "Set of discrete states for the AbstractDiscreteSetMeasurementSystemAxis that has one &quot;dummy&quot; state for metamodel conformance. This set must be overridden on real Measurement's MeasurementAxis with the actual set of states used by the measurement." {
+          [
+          	( AbstractState )
+          ];
+         }
+		}
+
+
+
+}
+
+
+
+
+
+
