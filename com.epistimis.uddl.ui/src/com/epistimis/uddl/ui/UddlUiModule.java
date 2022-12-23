@@ -4,6 +4,11 @@
 package com.epistimis.uddl.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
+import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
+
+import com.epistimis.uddl.ui.hover.UddlEObjectDocumentationProvider;
+import com.epistimis.uddl.ui.hover.UddlEObjectHoverProvider;
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -13,4 +18,12 @@ public class UddlUiModule extends AbstractUddlUiModule {
 	public UddlUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
+	
+	  public Class<? extends IEObjectHoverProvider> bindIEObjectHoverProvider() {
+	        return UddlEObjectHoverProvider.class;
+	    }
+	 
+	    public Class<? extends IEObjectDocumentationProvider> bindIEObjectDocumentationProviderr() {
+	        return UddlEObjectDocumentationProvider.class;
+	    }
 }
