@@ -3,10 +3,117 @@
  */
 package com.epistimis.uddl.ui.contentassist;
 
+import com.epistimis.uddl.uddl.ConceptualComposition;
+import com.epistimis.uddl.uddl.ConceptualEntity;
+import com.epistimis.uddl.uddl.LogicalComposition;
+import com.epistimis.uddl.uddl.LogicalEntity;
+import com.epistimis.uddl.uddl.UddlPackage;
+import com.google.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.CrossReference;
+import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.IScopeProvider;
+import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
  * on how to customize the content assistant.
  */
 public class UddlProposalProvider extends AbstractUddlProposalProvider {
+	
+	@Inject IQualifiedNameProvider qnp;
+	@Inject IScopeProvider sp;
+	
+	private static String componentFormatString = " %s[%d:%d] \"%s\" -> %s;\n";
+	private static String dummyType = "__ReplaceMe__";
+	private static String defaultComment = "// Replace "+ dummyType + " with the LogicalComposableElement type for each realization\n";
+	private static String proposalPrefix = "(Default) ";
+	private static String proposalSuffix = "";
+	private static String realizeAll = "<<Default Realize All>>";
+	private List<ConceptualComposition> getRealizedCCs(LogicalEntity lentity) {
+		// Check all the existing compositions - don't suggest those
+		EList<LogicalComposition> lcs = lentity.getComposition();
+		List<ConceptualComposition> realizedCCs = new ArrayList<ConceptualComposition>();
+		for (LogicalComposition lc: lcs) {
+			ConceptualComposition cc = lc.getRealizes();
+			if (cc != null) {
+				realizedCCs.add(cc);				
+			}
+		}
+		return realizedCCs;
+	}
+	
+	@Override
+	public void complete_LogicalComposition(EObject obj, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		// Get all the standard stuff first
+		super.complete_LogicalComposition(obj, ruleCall, context, acceptor);
+		// Now add customization here
+		// When doing this, propose that all ConceptualCompositions be realized - but only those that 
+		LogicalEntity lentity = (LogicalEntity) obj;
+		List<ConceptualComposition> realizedCCs = getRealizedCCs(lentity);
+		ConceptualEntity centity = lentity.getRealizes();
+		if (centity != null) {
+			String result = defaultComment;
+			EList<ConceptualComposition> ccs = centity.getComposition();
+			for (ConceptualComposition cc: ccs) {
+				if (!realizedCCs.contains(cc)) {
+					// If this one isn't already realized, then add it to the proposal
+					String oneRealizedCC = String.format(dummyType + componentFormatString,cc.getRolename(),cc.getLowerBound(),cc.getUpperBound(),cc.getDescription(),qnp.getFullyQualifiedName(cc).toString());
+					acceptor.accept(createCompletionProposal(oneRealizedCC,proposalPrefix + cc.getRolename() + proposalSuffix,null,context));
+					result += oneRealizedCC;				
+				}				
+			}
+			/**
+			 * Only do the "all" if nothing has been done yet
+			 */
+			if (realizedCCs.isEmpty()) {
+				acceptor.accept(createCompletionProposal(result,realizeAll,null,context));
+			}
+		}		
+	}
+
+	@Override
+	public void completeLogicalComposition_Rolename(EObject obj, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.completeLogicalComposition_Rolename(obj, assignment, context, acceptor);
+		
+		// Pick out the roles from the list of unrealized ConceptualCompositions
+		LogicalEntity lentity = (LogicalEntity) obj.eContainer();
+		List<ConceptualComposition> realizedCCs = getRealizedCCs(lentity);
+		ConceptualEntity centity = lentity.getRealizes();
+		if (centity != null) {
+			EList<ConceptualComposition> ccs = centity.getComposition();
+			for (ConceptualComposition cc: ccs) {
+				if (!realizedCCs.contains(cc)) {
+					// If this one isn't already realized, then add it to the proposal
+					String oneRealizedCC = String.format(componentFormatString,cc.getRolename(),cc.getLowerBound(),cc.getUpperBound(),cc.getDescription(),qnp.getFullyQualifiedName(cc).toString());
+					acceptor.accept(createCompletionProposal(oneRealizedCC,proposalPrefix + cc.getRolename() + proposalSuffix,null,context));
+				}				
+			}
+		}
+	}
+
+
+	@Override
+	public void completeLogicalComposition_Realizes(EObject obj, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		LogicalEntity lentity = (LogicalEntity) obj.eContainer();
+		List<ConceptualComposition> realizedCCs = getRealizedCCs(lentity);
+		ConceptualEntity centity = lentity.getRealizes();
+		for (ConceptualComposition c: centity.getComposition()) {
+			if (!realizedCCs.contains(c)) {
+				acceptor.accept(createCompletionProposal(qnp.getFullyQualifiedName(c).toString(), proposalPrefix + c.getRolename()+ proposalSuffix,null,context));
+			}
+		}
+	}
 }
