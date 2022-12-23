@@ -1,5 +1,6 @@
 package com.epistimis.uddl;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -21,6 +22,28 @@ import com.epistimis.uddl.uddl.PlatformStruct;
 import com.epistimis.uddl.uddl.PlatformStructMember;
 
 public class UddlQNP  extends DefaultDeclarativeQualifiedNameProvider {
+	
+	/**
+	 * Determine the QualifiedName of obj relative to ctx
+	 * @param obj
+	 * @param ctx
+	 * @return
+	 */
+	public QualifiedName relativeQualifiedName(EObject obj, EObject ctx) {
+		QualifiedName oName = getFullyQualifiedName(obj);
+		QualifiedName ctxName = getFullyQualifiedName(ctx);
+		
+		int maxSegsToCompare = Math.min(oName.getSegmentCount(), ctxName.getSegmentCount());
+		int skipSegs = -1;
+		for (int i = 0; i < maxSegsToCompare; i++) {
+			if (!oName.getSegment(i).equals(ctxName.getSegment(i))) {
+				skipSegs = i;
+				break;
+			}
+		}
+		// Return only the name back to the common ancestor 
+		return oName.skipFirst(skipSegs);		
+	}
 
 	/* Conceptual */
 	public static QualifiedName qualifiedName(ConceptualCharacteristic obj) {
