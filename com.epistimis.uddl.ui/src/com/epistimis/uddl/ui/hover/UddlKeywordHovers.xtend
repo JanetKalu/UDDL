@@ -1,15 +1,16 @@
 package com.epistimis.uddl.ui.hover
 
-/**
- * From blog post
- * https://blogs.itemis.com/en/xtext-usability-hovers-on-keywords
- * 
- * Just update this file with keyword hover text. 
- */
 import com.google.inject.Inject
 import com.epistimis.uddl.services.UddlGrammarAccess
 import org.eclipse.xtext.Keyword
 
+/**
+ * From blog post
+ * https://blogs.itemis.com/en/xtext-usability-hovers-on-keywords
+ * Alternatively, see https://ckulla.wordpress.com/2011/02/06/hover-support-in-xtext-2-0/
+ * 
+ * Just update this file with keyword hover text. 
+ */
 class UddlKeywordHovers {
 	@Inject UddlGrammarAccess ga;
 	
