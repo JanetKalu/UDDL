@@ -7,6 +7,8 @@ import com.epistimis.uddl.uddl.ConceptualComposition;
 import com.epistimis.uddl.uddl.ConceptualEntity;
 import com.epistimis.uddl.uddl.LogicalComposition;
 import com.epistimis.uddl.uddl.LogicalEntity;
+import com.epistimis.uddl.uddl.PlatformComposition;
+import com.epistimis.uddl.uddl.PlatformEntity;
 import com.epistimis.uddl.uddl.UddlPackage;
 import com.google.inject.Inject;
 
@@ -42,6 +44,9 @@ public class UddlProposalProvider extends AbstractUddlProposalProvider {
 	private static String proposalPrefix = "(Default) ";
 	private static String proposalSuffix = "";
 	private static String realizeAll = "<<Default Realize All>>";
+	
+	
+	/** Logical -> Conceptual */
 	private List<ConceptualComposition> getRealizedCCs(LogicalEntity lentity) {
 		// Check all the existing compositions - don't suggest those
 		EList<LogicalComposition> lcs = lentity.getComposition();
@@ -116,4 +121,81 @@ public class UddlProposalProvider extends AbstractUddlProposalProvider {
 			}
 		}
 	}
+	
+	/** Platform -> Logical */
+	private List<LogicalComposition> getRealizedCCs(PlatformEntity pentity) {
+		// Check all the existing compositions - don't suggest those
+		EList<PlatformComposition> pcs = pentity.getComposition();
+		List<LogicalComposition> realizedCCs = new ArrayList<LogicalComposition>();
+		for (PlatformComposition pc: pcs) {
+			LogicalComposition cc = pc.getRealizes();
+			if (cc != null) {
+				realizedCCs.add(cc);				
+			}
+		}
+		return realizedCCs;
+	}
+
+	@Override
+	public void complete_PlatformComposition(EObject obj, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		// Get all the standard stuff first
+		super.complete_LogicalComposition(obj, ruleCall, context, acceptor);
+		// Now add customization here
+		// When doing this, propose that all ConceptualCompositions be realized - but only those that 
+		PlatformEntity pentity = (PlatformEntity) obj;
+		List<LogicalComposition> realizedCCs = getRealizedCCs(pentity);
+		LogicalEntity lentity = pentity.getRealizes();
+		if (lentity != null) {
+			String result = defaultComment;
+			EList<LogicalComposition> ccs = lentity.getComposition();
+			for (LogicalComposition cc: ccs) {
+				if (!realizedCCs.contains(cc)) {
+					// If this one isn't already realized, then add it to the proposal
+					String oneRealizedCC = String.format(dummyType + componentFormatString,cc.getRolename(),cc.getLowerBound(),cc.getUpperBound(),cc.getDescription(),qnp.getFullyQualifiedName(cc).toString());
+					acceptor.accept(createCompletionProposal(oneRealizedCC,proposalPrefix + cc.getRolename() + proposalSuffix,null,context));
+					result += oneRealizedCC;				
+				}				
+			}
+			/**
+			 * Only do the "all" if nothing has been done yet
+			 */
+			if (realizedCCs.isEmpty()) {
+				acceptor.accept(createCompletionProposal(result,realizeAll,null,context));
+			}
+		}		
+	}
+
+	@Override
+	public void completePlatformComposition_Rolename(EObject obj, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.completeLogicalComposition_Rolename(obj, assignment, context, acceptor);
+		
+		// Pick out the roles from the list of unrealized ConceptualCompositions
+		PlatformEntity pentity = (PlatformEntity) obj.eContainer();
+		List<LogicalComposition> realizedCCs = getRealizedCCs(pentity);
+		LogicalEntity lentity = pentity.getRealizes();
+		if (lentity != null) {
+			EList<LogicalComposition> ccs = lentity.getComposition();
+			for (LogicalComposition cc: ccs) {
+				if (!realizedCCs.contains(cc)) {
+					// If this one isn't already realized, then add it to the proposal
+					String oneRealizedCC = String.format(componentFormatString,cc.getRolename(),cc.getLowerBound(),cc.getUpperBound(),cc.getDescription(),qnp.getFullyQualifiedName(cc).toString());
+					acceptor.accept(createCompletionProposal(oneRealizedCC,proposalPrefix + cc.getRolename() + proposalSuffix,null,context));
+				}				
+			}
+		}
+	}
+
+
+	@Override
+	public void completePlatformComposition_Realizes(EObject obj, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		PlatformEntity pentity = (PlatformEntity) obj.eContainer();
+		List<LogicalComposition> realizedCCs = getRealizedCCs(pentity);
+		LogicalEntity lentity = pentity.getRealizes();
+		for (LogicalComposition c: lentity.getComposition()) {
+			if (!realizedCCs.contains(c)) {
+				acceptor.accept(createCompletionProposal(qnp.getFullyQualifiedName(c).toString(), proposalPrefix + c.getRolename()+ proposalSuffix,null,context));
+			}
+		}
+	}
+
 }
