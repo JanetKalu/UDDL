@@ -4,7 +4,10 @@
 package com.epistimis.uddl;
 
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
+
+import com.epistimis.uddl.scoping.UddlResourceDescriptionsStrategy;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -17,5 +20,11 @@ public class UddlRuntimeModule extends AbstractUddlRuntimeModule {
 		return UddlQNP.class;
 	}
 
+	/** Enable this if there are performance issues with name resolution. And then look at the strategy to see what should
+	 * be excluded from the index
+	 * */
+//	public  Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
+//		return UddlResourceDescriptionsStrategy.class;
+//	}
 
 }
