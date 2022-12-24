@@ -3,6 +3,14 @@ import  '../../../../../model/generated/Uddl.ecore'
 
 package uddl
 
+  context UddlElement
+  
+   /**
+	 * Declare a helper operation to map an ok/warning verdict to ok/error.
+	 */
+	def: asError(verdict : Boolean) : Boolean = if verdict then true else null endif
+  
+
   context ConceptualComposableElement
     /*
      * Helper method that determines if a ConceptualComposableElement processes an SCD
@@ -26,7 +34,6 @@ package uddl
         strLower = 'ethnicity' or
         strLower = 'race' or
         strLower = 'religion' or
-        strLower = 'bitfield' or
         strLower = 'philosophy' or	
         strLower = 'politics' or
         strLower = 'union' or
@@ -159,7 +166,7 @@ package uddl
 			let specialProcessed = self.composition->collect(realizes.processesSpecialCategoryOfData()) in
 			 specialProcessed->includes(true)
  
-		inv noSpecialCategoryDataUsed: 
-			 not self.processesSpecialCategoryOfData() 
+		inv noSpecialCategoryDataUsed('PlatformEntity '+ self.name + ' uses a Special Category of Data. Remove that usage to continue'): 
+			 asError(not self.processesSpecialCategoryOfData()) 
 			   
 endpackage

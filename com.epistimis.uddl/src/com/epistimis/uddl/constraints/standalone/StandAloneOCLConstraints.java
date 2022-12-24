@@ -58,7 +58,7 @@ public class StandAloneOCLConstraints
                 builder.setEntityResolver(new DefaultHandler());
                 final Document doc = builder.parse(pluginXmlStream);
                 doc.getDocumentElement().normalize();
-                final File tempOclResourceFolder = Files.createTempDirectory("Face30DataModelOcl", (FileAttribute<?>[])new FileAttribute[0]).toFile();
+                final File tempOclResourceFolder = Files.createTempDirectory("UddlDataModelOcl", (FileAttribute<?>[])new FileAttribute[0]).toFile();
                 tempOclResourceFolder.deleteOnExit();
                 for (Node node = doc.getFirstChild(); node != null; node = node.getNextSibling()) {
                     if (node.getNodeType() == 1) {

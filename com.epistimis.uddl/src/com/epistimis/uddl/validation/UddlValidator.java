@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.ocl.xtext.completeocl.validation.CompleteOCLEObjectValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.EValidatorRegistrar;
 
 import com.epistimis.uddl.CLPExtractors;
 import com.epistimis.uddl.uddl.ConceptualCharacteristic;
@@ -35,6 +38,17 @@ public class UddlValidator extends AbstractUddlValidator {
 //					INVALID_NAME);
 //		}
 //	}
+	
+    @Override
+    public void register(EValidatorRegistrar registrar) {
+        super.register(registrar);
+        UddlPackage ePackage = UddlPackage.eINSTANCE;
+        URI oclURI = URI.createPlatformResourceURI(
+            "/com.epistimis.uddl/src/com/epistimis/uddl/constraints/specialCategoriesOfData.ocl", true);
+        registrar.register(ePackage,
+            new CompleteOCLEObjectValidator(ePackage, oclURI));
+    }
+    
 	protected static String ISSUE_CODE_PREFIX = "com.epistimis.uddl.";
 	public static String ENTITY_NEEDS_2_ELEMENTS = ISSUE_CODE_PREFIX + "EntityNeeds2Elements";
 	
