@@ -5,7 +5,7 @@ package uddl
 
   context ConceptualComposableElement
     /*
-     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     * Helper method that determines if a ConceptualComposableElement processes an SCD
      */
     def: processesSpecialCategoryOfData() : Boolean =
       if self.oclIsTypeOf(ConceptualObservable) then
@@ -42,11 +42,11 @@ package uddl
      */
     def: processesSpecialCategoryOfData() : Boolean =
 		let specialProcessed = self.composition->collect(type.processesSpecialCategoryOfData()) in
-		not specialProcessed->includes(true)
+		 specialProcessed->includes(true)
   
   context ConceptualComposition
     /*
-     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     * Helper method that determines if a PlatformDataType realizes an SCD
      */
     def: processesSpecialCategoryOfData() : Boolean =
       if self.type = null then
@@ -57,7 +57,7 @@ package uddl
   
   context LogicalComposableElement
     /*
-     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     * Helper method that determines if a LogicalComposableElement realizes an SCD
      */
     def: processesSpecialCategoryOfData() : Boolean =
       if self.oclIsTypeOf(LogicalMeasurement) then
@@ -74,12 +74,12 @@ package uddl
      */
     def: processesSpecialCategoryOfData() : Boolean =
 		let specialProcessed = self.composition->collect(realizes.processesSpecialCategoryOfData()) in
-		not specialProcessed->includes(true)
+		 specialProcessed->includes(true)
 
  		
    context LogicalComposition
     /*
-     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     * Helper method that determines if a LogicalComposition realizes an SCD
      */
     def: processesSpecialCategoryOfData() : Boolean =
       if self.realizes = null then
@@ -91,7 +91,7 @@ package uddl
  
     context LogicalMeasurement
 	    /*
-	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     * Helper method that determines if a LogicalMeasurement realizes an SCD
 	     */
 	    def: processesSpecialCategoryOfData() : Boolean =
 	      if self.realizes = null then
@@ -102,7 +102,7 @@ package uddl
 	 
      context LogicalMeasurementAxis
 	    /*
-	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     * Helper method that determines if a LogicalMeasurementAxis realizes an SCD
 	     */
 	    def: processesSpecialCategoryOfData() : Boolean =
 	      if self.realizes = null then
@@ -113,7 +113,7 @@ package uddl
 
      context PlatformComposableElement
 	    /*
-	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     * Helper method that determines if a PlatformComposableElement realizes an SCD
 	     */
 	    def: processesSpecialCategoryOfData() : Boolean =
 	      if self.oclIsTypeOf(PlatformDataType) then
@@ -122,18 +122,9 @@ package uddl
 	        self.oclAsType(PlatformEntity).processesSpecialCategoryOfData()
 	      endif
   
-    context PlatformEntity
-	    /*
-	     * Helper method that determines if a LogicalEntity realizes an SCD
-	     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
-	     */
-	    def: processesSpecialCategoryOfData() : Boolean =
-			let specialProcessed = self.composition->collect(realizes.processesSpecialCategoryOfData()) in
-			not specialProcessed->includes(true)
- 
    context PlatformComposition
 	    /*
-	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     * Helper method that determines if a PlatformComposition realizes an SCD
 	     */
 	    def: processesSpecialCategoryOfData() : Boolean =
 	      if self.realizes = null then
@@ -144,7 +135,7 @@ package uddl
  
     context PlatformDataType
 	    /*
-	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     * Helper method that determines if a PlatformDataType realizes an SCD
 	     */
 	    def: processesSpecialCategoryOfData() : Boolean =
 	      if self.realizes = null then
@@ -159,5 +150,16 @@ package uddl
 	        endif
 	      endif
      
-    
+    context PlatformEntity
+	    /*
+	     * Helper method that determines if a PlatformEntity realizes an SCD
+	     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
+	     */
+	    def: processesSpecialCategoryOfData() : Boolean =
+			let specialProcessed = self.composition->collect(realizes.processesSpecialCategoryOfData()) in
+			 specialProcessed->includes(true)
+ 
+		inv noSpecialCategoryDataUsed: 
+			 not self.processesSpecialCategoryOfData() 
+			   
 endpackage
