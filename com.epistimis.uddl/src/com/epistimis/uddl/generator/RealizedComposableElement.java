@@ -11,7 +11,7 @@ import com.epistimis.uddl.uddl.PlatformEntity;
 
 public class RealizedComposableElement {
 
-	private static Map<PlatformComposableElement,RealizedComposableElement> allComposableElements = new HashMap();
+	public static Map<PlatformComposableElement,RealizedComposableElement> allComposableElements = new HashMap<PlatformComposableElement, RealizedComposableElement>();
 
 	public RealizedComposableElement(PlatformComposableElement pce) {
 		allComposableElements.put(pce, this);
@@ -27,7 +27,13 @@ public class RealizedComposableElement {
 					PlatformComposableElement type = rc.getType();
 					RealizedComposableElement realizedType = allComposableElements.get(type);
 					if (realizedType == null) {
-						System.out.println("Could not find realization for " + type.getName());
+						if (type != null) {
+							System.out.println("Could not find realization for " + type.getName());
+						}
+						else {
+							System.out.println("Could not find realization for null type for " + rc.getRolename() + " of " +re.getName());
+							
+						}
 					}
 					rc.setRealizedType(realizedType);
 				}

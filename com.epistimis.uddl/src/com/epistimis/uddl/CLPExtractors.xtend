@@ -20,7 +20,7 @@ import com.epistimis.uddl.uddl.PlatformParticipant;
  * @author stevehickman
  *
  */
-public abstract class CLPExtractors {
+abstract class CLPExtractors {
 
 	
 	def dispatch static ConceptualEntity getSpecializes(ConceptualEntity ent) {
