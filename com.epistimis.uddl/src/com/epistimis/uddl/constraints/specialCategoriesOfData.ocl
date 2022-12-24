@@ -1,0 +1,163 @@
+import  '../../../../../model/generated/Uddl.ecore'
+
+
+package uddl
+
+  context ConceptualComposableElement
+    /*
+     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+      if self.oclIsTypeOf(ConceptualObservable) then
+        self.oclAsType(ConceptualObservable).processesSpecialCategoryOfData()
+      else -- ConceptualParticipantPathNode
+        self.oclAsType(ConceptualEntity).processesSpecialCategoryOfData()
+      endif
+  
+
+  context ConceptualObservable
+    /*
+     * Helper method that determines if an Observable is a SpecialCategory of Data
+     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+      let strLower: String = self.name.toLowerCase() in
+        strLower = 'health' or
+        strLower = 'ethnicity' or
+        strLower = 'race' or
+        strLower = 'religion' or
+        strLower = 'bitfield' or
+        strLower = 'philosophy' or	
+        strLower = 'politics' or
+        strLower = 'union' or
+        strLower = 'genetic' or
+        strLower = 'biometric' or
+        strLower = 'sexual_activity' or
+        strLower = 'sexual_orientation'
+  
+  context ConceptualEntity
+    /*
+     * Helper method that determines if an Observable is a SpecialCategory of Data
+     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+		let specialProcessed = self.composition->collect(type.processesSpecialCategoryOfData()) in
+		not specialProcessed->includes(true)
+  
+  context ConceptualComposition
+    /*
+     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+      if self.type = null then
+        false
+      else -- 
+        self.type.processesSpecialCategoryOfData()
+      endif
+  
+  context LogicalComposableElement
+    /*
+     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+      if self.oclIsTypeOf(LogicalMeasurement) then
+        self.oclAsType(LogicalMeasurement).processesSpecialCategoryOfData()
+      else -- ConceptualParticipantPathNode
+        self.oclAsType(LogicalEntity).processesSpecialCategoryOfData()
+      endif
+
+		  
+  context LogicalEntity
+    /*
+     * Helper method that determines if a LogicalEntity realizes an SCD
+     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+		let specialProcessed = self.composition->collect(realizes.processesSpecialCategoryOfData()) in
+		not specialProcessed->includes(true)
+
+ 		
+   context LogicalComposition
+    /*
+     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+      if self.realizes = null then
+        self.type.processesSpecialCategoryOfData()
+      else -- 
+        self.realizes.processesSpecialCategoryOfData()
+      endif
+
+ 
+    context LogicalMeasurement
+	    /*
+	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     */
+	    def: processesSpecialCategoryOfData() : Boolean =
+	      if self.realizes = null then
+	        false
+	      else -- 
+	        self.realizes.processesSpecialCategoryOfData()
+	      endif
+	 
+     context LogicalMeasurementAxis
+	    /*
+	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     */
+	    def: processesSpecialCategoryOfData() : Boolean =
+	      if self.realizes = null then
+	        false
+	      else -- 
+	        self.realizes.processesSpecialCategoryOfData()
+	      endif
+
+     context PlatformComposableElement
+	    /*
+	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     */
+	    def: processesSpecialCategoryOfData() : Boolean =
+	      if self.oclIsTypeOf(PlatformDataType) then
+	        self.oclAsType(PlatformDataType).processesSpecialCategoryOfData()
+	      else -- 
+	        self.oclAsType(PlatformEntity).processesSpecialCategoryOfData()
+	      endif
+  
+    context PlatformEntity
+	    /*
+	     * Helper method that determines if a LogicalEntity realizes an SCD
+	     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
+	     */
+	    def: processesSpecialCategoryOfData() : Boolean =
+			let specialProcessed = self.composition->collect(realizes.processesSpecialCategoryOfData()) in
+			not specialProcessed->includes(true)
+ 
+   context PlatformComposition
+	    /*
+	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     */
+	    def: processesSpecialCategoryOfData() : Boolean =
+	      if self.realizes = null then
+	        self.type.processesSpecialCategoryOfData()
+	      else -- 
+	        self.realizes.processesSpecialCategoryOfData()
+	      endif
+ 
+    context PlatformDataType
+	    /*
+	     * Helper method that gets the ConceptualCharacteristic projected by a ConceptualPathNode.
+	     */
+	    def: processesSpecialCategoryOfData() : Boolean =
+	      if self.realizes = null then
+	        false
+	      else -- 
+	        if self.realizes.oclIsTypeOf(LogicalMeasurement) then
+	        	self.realizes.oclAsType(LogicalMeasurement).processesSpecialCategoryOfData()
+	        elseif self.realizes.oclIsTypeOf(LogicalMeasurementAxis) then
+	        	self.realizes.oclAsType(LogicalMeasurementAxis).processesSpecialCategoryOfData()
+	        else 
+	        	false
+	        endif
+	      endif
+     
+    
+endpackage
