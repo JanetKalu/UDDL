@@ -3,31 +3,25 @@
  */
 package com.epistimis.uddl.ui.contentassist;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.scoping.IScopeProvider;
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
+
 import com.epistimis.uddl.uddl.ConceptualComposition;
 import com.epistimis.uddl.uddl.ConceptualEntity;
 import com.epistimis.uddl.uddl.LogicalComposition;
 import com.epistimis.uddl.uddl.LogicalEntity;
 import com.epistimis.uddl.uddl.PlatformComposition;
 import com.epistimis.uddl.uddl.PlatformEntity;
-import com.epistimis.uddl.uddl.UddlPackage;
 import com.google.inject.Inject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.xtext.Assignment;
-import org.eclipse.xtext.CrossReference;
-import org.eclipse.xtext.RuleCall;
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.IScopeProvider;
-import org.eclipse.xtext.scoping.Scopes;
-import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
-import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
@@ -40,7 +34,7 @@ public class UddlProposalProvider extends AbstractUddlProposalProvider {
 	
 	private static String componentFormatString = " %s[%d:%d] \"%s\" -> %s;\n";
 	private static String dummyType = "__ReplaceMe__";
-	private static String defaultComment = "// Replace "+ dummyType + " with the LogicalComposableElement type for each realization\n";
+	private static String defaultComment = "// Replace "+ dummyType + " with the LogicalComposableElement type for each composition\n";
 	private static String proposalPrefix = "(Default) ";
 	private static String proposalSuffix = "";
 	private static String realizeAll = "<<Default Realize All>>";

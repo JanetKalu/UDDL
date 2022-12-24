@@ -18,7 +18,7 @@ import org.eclipse.xtext.util.Tuples;
 /** Inspired by {@link org.eclipse.xtext.resource.EObjectAtOffsetHelper} */
 public class KeywordAtOffsetHelper {
 
-	  public Pair resolveKeywordAt(XtextResource resource, int offset) {
+	  public Pair<EObject, IRegion> resolveKeywordAt(XtextResource resource, int offset) {
 		    IParseResult parseResult = resource.getParseResult();
 		    if (parseResult != null) {
 		      ILeafNode leaf = NodeModelUtils.findLeafNodeAtOffset(parseResult.getRootNode(), offset);

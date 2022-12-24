@@ -36,6 +36,10 @@ import static com.epistimis.uddl.uddl.UddlPackage.Literals.*
 import com.epistimis.uddl.uddl.LogicalMeasurementSystem
 import com.epistimis.uddl.uddl.LogicalReferencePoint
 import com.epistimis.uddl.uddl.LogicalReferencePointPart
+import com.epistimis.uddl.uddl.ConceptualComposition
+import com.epistimis.uddl.uddl.ConceptualParticipant
+import com.epistimis.uddl.uddl.PlatformComposition
+import com.epistimis.uddl.uddl.PlatformParticipant
 
 class UddlFormatter extends AbstractFormatter2 {
 
@@ -60,21 +64,6 @@ class UddlFormatter extends AbstractFormatter2 {
 	 *
 	 *
 	 */
-//	protected <O extends EObject> void formatObjOpen(O obj, IFormattableDocument doc) {
-//		obj.
-//
-//	}
-//	protected <O extends EObject> void formatObjClose(O obj, IFormattableDocument doc) {
-//
-//	}
-//
-//	protected <L extends EList<EObject>> void formatList(L list, IFormattableDocument doc) {
-//
-//	}
-//
-//	protected  <C extends EObject> void formatContainer(C container, IFormattableDocument doc) {
-//
-//	}
 
 	/** General functions */
 	def void objOpen(EObject obj, extension IFormattableDocument document) {
@@ -211,12 +200,6 @@ class UddlFormatter extends AbstractFormatter2 {
 		obj.formatEntity(document)
 	}
 
-	def dispatch void format(ConceptualCharacteristic obj, extension IFormattableDocument document) {
-		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__ROLENAME ),document);
-		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__DESCRIPTION ),document);
-		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__SPECIALIZES ),document);
-	}
-
 	def dispatch void format(ConceptualAssociation obj, extension IFormattableDocument document) {
 		obj.formatEntity(document)
 
@@ -224,6 +207,21 @@ class UddlFormatter extends AbstractFormatter2 {
 			c.format
 			c.append[setNewLines(1, 1, 2)]
 		}
+	}
+
+	def dispatch void formatCharacteristic(ConceptualCharacteristic obj, extension IFormattableDocument document) {
+		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__ROLENAME ),document);
+		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__DESCRIPTION ),document);
+		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_CHARACTERISTIC__SPECIALIZES ),document);
+	}
+
+	def dispatch void format(ConceptualComposition obj, extension IFormattableDocument document) {
+		obj.formatCharacteristic(document);
+	}
+	def dispatch void format(ConceptualParticipant obj, extension IFormattableDocument document) {
+		obj.formatCharacteristic(document);
+		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_PARTICIPANT__SOURCE_LOWER_BOUND ),document);
+		formatAttributeElement(obj.regionFor.feature(CONCEPTUAL_PARTICIPANT__SOURCE_UPPER_BOUND ),document);
 	}
 
 	/** Logical  */
@@ -351,10 +349,20 @@ class UddlFormatter extends AbstractFormatter2 {
 
 	}
 
-	def dispatch void format(PlatformCharacteristic obj, extension IFormattableDocument document) {
+	def dispatch void formatCharacteristic(PlatformCharacteristic obj, extension IFormattableDocument document) {
 		formatAttributeElement(obj.regionFor.feature(PLATFORM_CHARACTERISTIC__ROLENAME ),document);
 		formatAttributeElement(obj.regionFor.feature(PLATFORM_CHARACTERISTIC__DESCRIPTION ),document);
 		formatAttributeElement(obj.regionFor.feature(PLATFORM_CHARACTERISTIC__SPECIALIZES ),document);
+	}
+
+
+	def dispatch void format(PlatformComposition obj, extension IFormattableDocument document) {
+		obj.formatCharacteristic(document);
+	}
+	def dispatch void format(PlatformParticipant obj, extension IFormattableDocument document) {
+		obj.formatCharacteristic(document);
+		formatAttributeElement(obj.regionFor.feature(PLATFORM_PARTICIPANT__SOURCE_LOWER_BOUND ),document);
+		formatAttributeElement(obj.regionFor.feature(PLATFORM_PARTICIPANT__SOURCE_UPPER_BOUND ),document);
 	}
 
 	def dispatch void format(PlatformAssociation obj, extension IFormattableDocument document) {
