@@ -3,27 +3,12 @@
  */
 package com.epistimis.uddl.scoping;
 
-import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.resource.IEObjectDescription;
 //import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.Scopes;
-import org.eclipse.xtext.scoping.impl.FilteringScope;
 
-import com.epistimis.uddl.uddl.ConceptualAssociation;
-import com.epistimis.uddl.uddl.ConceptualComposition;
-import com.epistimis.uddl.uddl.ConceptualEntity;
-import com.epistimis.uddl.uddl.LogicalAssociation;
-import com.epistimis.uddl.uddl.LogicalEntity;
-import com.epistimis.uddl.uddl.PlatformAssociation;
-import com.epistimis.uddl.uddl.PlatformEntity;
 import com.epistimis.uddl.uddl.UddlPackage;
-import com.google.common.base.Objects;
 
 /**
  * This class contains custom scoping description.

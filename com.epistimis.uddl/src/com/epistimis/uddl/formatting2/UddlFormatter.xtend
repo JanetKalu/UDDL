@@ -3,12 +3,13 @@
  */
 package com.epistimis.uddl.formatting2
 
-import com.epistimis.uddl.services.UddlGrammarAccess
 import com.epistimis.uddl.uddl.ConceptualAssociation
 import com.epistimis.uddl.uddl.ConceptualCharacteristic
+import com.epistimis.uddl.uddl.ConceptualComposition
 import com.epistimis.uddl.uddl.ConceptualDataModel
 import com.epistimis.uddl.uddl.ConceptualElement
 import com.epistimis.uddl.uddl.ConceptualEntity
+import com.epistimis.uddl.uddl.ConceptualParticipant
 import com.epistimis.uddl.uddl.DataModel
 import com.epistimis.uddl.uddl.LogicalAssociation
 import com.epistimis.uddl.uddl.LogicalCharacteristic
@@ -18,14 +19,18 @@ import com.epistimis.uddl.uddl.LogicalDataModel
 import com.epistimis.uddl.uddl.LogicalElement
 import com.epistimis.uddl.uddl.LogicalEntity
 import com.epistimis.uddl.uddl.LogicalEnumerated
+import com.epistimis.uddl.uddl.LogicalMeasurementSystem
 import com.epistimis.uddl.uddl.LogicalParticipant
+import com.epistimis.uddl.uddl.LogicalReferencePoint
+import com.epistimis.uddl.uddl.LogicalReferencePointPart
 import com.epistimis.uddl.uddl.LogicalValueTypeUnit
 import com.epistimis.uddl.uddl.PlatformAssociation
 import com.epistimis.uddl.uddl.PlatformCharacteristic
+import com.epistimis.uddl.uddl.PlatformComposition
 import com.epistimis.uddl.uddl.PlatformDataModel
 import com.epistimis.uddl.uddl.PlatformElement
 import com.epistimis.uddl.uddl.PlatformEntity
-import com.google.inject.Inject
+import com.epistimis.uddl.uddl.PlatformParticipant
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
@@ -33,13 +38,8 @@ import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.formatting2.regionaccess.ISemanticRegion
 
 import static com.epistimis.uddl.uddl.UddlPackage.Literals.*
-import com.epistimis.uddl.uddl.LogicalMeasurementSystem
-import com.epistimis.uddl.uddl.LogicalReferencePoint
-import com.epistimis.uddl.uddl.LogicalReferencePointPart
-import com.epistimis.uddl.uddl.ConceptualComposition
-import com.epistimis.uddl.uddl.ConceptualParticipant
-import com.epistimis.uddl.uddl.PlatformComposition
-import com.epistimis.uddl.uddl.PlatformParticipant
+import com.google.inject.Inject
+import com.epistimis.uddl.services.UddlGrammarAccess
 
 class UddlFormatter extends AbstractFormatter2 {
 

@@ -4,10 +4,6 @@
 package com.epistimis.uddl;
 
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
-import org.eclipse.xtext.scoping.IGlobalScopeProvider;
-
-import com.epistimis.uddl.scoping.UddlResourceDescriptionsStrategy;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.

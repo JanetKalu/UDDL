@@ -29,7 +29,7 @@ public class Main {
 		}
 		Injector injector = new UddlStandaloneSetup().createInjectorAndDoEMFRegistration();
 
-		Injector queryInjector = new UddlStandaloneSetup().createInjectorAndDoEMFRegistration();
+		//Injector queryInjector = new UddlStandaloneSetup().createInjectorAndDoEMFRegistration();
 		Main main = injector.getInstance(Main.class);
 		main.runGenerator(args);
 	}
@@ -51,7 +51,8 @@ public class Main {
 		ResourceSet set = resourceSetProvider.get();
 		for (String arg: args) {
 			// Load the resource
-			Resource resource = set.getResource(URI.createFileURI(arg), true);
+			//Resource resource = 
+					set.getResource(URI.createFileURI(arg), true);
 		}
 
 		/**

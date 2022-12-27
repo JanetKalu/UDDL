@@ -3,18 +3,14 @@
  */
 package com.epistimis.uddl.generator
 
-import com.epistimis.uddl.uddl.DataModel
 import com.epistimis.uddl.uddl.PlatformAssociation
 import com.epistimis.uddl.uddl.PlatformComposableElement
 import com.epistimis.uddl.uddl.PlatformDataType
 import com.epistimis.uddl.uddl.PlatformEntity
-//import com.epstimis.uddl.query.query.SelectedEntity
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import com.epistimis.uddl.uddl.ConceptualView
-import com.google.inject.Inject
 
 /**
  * Generates code from your model files on save.
@@ -76,10 +72,10 @@ class UddlGenerator extends AbstractGenerator {
 	 * The direction of the cardinality is based on which side uses a characteristic vs. a type. Characteristic to characteristic is also possible.
 	 * We start with the SELECT
 	 */
-			val dataModels = resource.allContents.toIterable.filter(DataModel)
-			val views = resource.allContents.toIterable.filter(ConceptualView)
+			// val dataModels = resource.allContents.toIterable.filter(DataModel)
+			// val views = resource.allContents.toIterable.filter(ConceptualView)
 			// SelectedEntities will be in the resource created from the query contents
-	 		//val selectedEntities = resource.allContents.toIterable.filter(SelectedEntity);
+	 		// val selectedEntities = resource.allContents.toIterable.filter(SelectedEntity);
 
 //	 		for (SelectedEntity entity: selectedEntities) {
 //				// Need to find all the Entities that could be

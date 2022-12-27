@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.epistimis.uddl.uddl.PlatformComposableElement;
-import com.epistimis.uddl.uddl.PlatformComposition;
-import com.epistimis.uddl.uddl.PlatformEntity;
 
 
 public class RealizedComposableElement {
