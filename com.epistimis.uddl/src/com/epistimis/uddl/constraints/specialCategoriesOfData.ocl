@@ -1,5 +1,17 @@
 import  '../../../../../model/generated/Uddl.ecore'
 
+    /*
+     * Implements checking for Special Categories of Data.
+     * as of 2022-12-24, this has a simple rule that just checks to see if any observables of the specified names are used.
+     * 
+     * TODO: We really only care about the ones that are realized. There may be ones that are in the ConceptualEntity that aren't realized by 
+     * the time we get to the Platform level. Clean this up to check only that.
+     * 
+     * TODO: The invariant here simply checks for usage. The invariant really needs to check a DataUsageRequest to see the purpose. Should also check 
+     * for jurisdiction specifics and possibly other conditions.
+     * 
+     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
+     */
 
 package uddl
 
@@ -44,8 +56,7 @@ package uddl
   
   context ConceptualEntity
     /*
-     * Helper method that determines if an Observable is a SpecialCategory of Data
-     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
+     * Helper method that determines if an ConceptualEntity includes an SCD
      */
     def: processesSpecialCategoryOfData() : Boolean =
 		let specialProcessed = self.composition->collect(type.processesSpecialCategoryOfData()) in
@@ -53,7 +64,7 @@ package uddl
   
   context ConceptualComposition
     /*
-     * Helper method that determines if a PlatformDataType realizes an SCD
+      * Helper method that determines if a ConceptualComposition uses an SCD
      */
     def: processesSpecialCategoryOfData() : Boolean =
       if self.type = null then
@@ -62,6 +73,28 @@ package uddl
         self.type.processesSpecialCategoryOfData()
       endif
   
+  context ConceptualParticipant
+    /*
+     * Helper method that determines if a ConceptualParticipant uses an SCD
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+      if self.type = null then
+        false
+      else -- 
+        self.type.processesSpecialCategoryOfData()
+      endif
+
+ 
+   context ConceptualAssociation
+    /* 
+     * Helper method that determines if an ConceptualAssociation includes an SCD
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+		let specialCompProcessed = self.composition->collect(type.processesSpecialCategoryOfData()),
+			specialPartProcessed = self.participant->collect(type.processesSpecialCategoryOfData())
+		 in
+		 specialCompProcessed->includes(true) or specialPartProcessed->includes(true)
+    
   context LogicalComposableElement
     /*
      * Helper method that determines if a LogicalComposableElement realizes an SCD
@@ -77,7 +110,6 @@ package uddl
   context LogicalEntity
     /*
      * Helper method that determines if a LogicalEntity realizes an SCD
-     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
      */
     def: processesSpecialCategoryOfData() : Boolean =
 		let specialProcessed = self.composition->collect(realizes.processesSpecialCategoryOfData()) in
@@ -95,6 +127,26 @@ package uddl
         self.realizes.processesSpecialCategoryOfData()
       endif
 
+   context LogicalParticipant
+    /*
+     * Helper method that determines if a LogicalParticipant uses an SCD
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+      if self.realizes = null then
+        self.type.processesSpecialCategoryOfData()
+      else -- 
+        self.realizes.processesSpecialCategoryOfData()
+      endif
+ 
+   context LogicalAssociation
+    /*
+     * Helper method that determines if an LogicalAssociation includes an SCD
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+		let specialCompProcessed = self.composition->collect(type.processesSpecialCategoryOfData()),
+			specialPartProcessed = self.participant->collect(type.processesSpecialCategoryOfData())
+		 in
+		 specialCompProcessed->includes(true) or specialPartProcessed->includes(true)
  
     context LogicalMeasurement
 	    /*
@@ -160,13 +212,38 @@ package uddl
     context PlatformEntity
 	    /*
 	     * Helper method that determines if a PlatformEntity realizes an SCD
-	     * See https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/special-category-data/
 	     */
 	    def: processesSpecialCategoryOfData() : Boolean =
 			let specialProcessed = self.composition->collect(realizes.processesSpecialCategoryOfData()) in
 			 specialProcessed->includes(true)
  
 		inv noSpecialCategoryDataUsed('PlatformEntity '+ self.name + ' uses a Special Category of Data. Remove that usage to continue'): 
+			 asError(not self.processesSpecialCategoryOfData()) 
+
+
+
+   context PlatformParticipant
+    /*
+     * Helper method that determines if a PlatformParticipant uses an SCD
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+      if self.realizes = null then
+        self.type.processesSpecialCategoryOfData()
+      else -- 
+        self.realizes.processesSpecialCategoryOfData()
+      endif
+ 
+   context PlatformAssociation
+    /*
+     * Helper method that determines if an PlatformAssociation includes an SCD
+     */
+    def: processesSpecialCategoryOfData() : Boolean =
+		let specialCompProcessed = self.composition->collect(type.processesSpecialCategoryOfData()),
+			specialPartProcessed = self.participant->collect(type.processesSpecialCategoryOfData())
+		 in
+		 specialCompProcessed->includes(true) or specialPartProcessed->includes(true)
+
+		inv noSpecialCategoryDataUsed('PlatformAssociation '+ self.name + ' uses a Special Category of Data. Remove that usage to continue'): 
 			 asError(not self.processesSpecialCategoryOfData()) 
 			   
 endpackage
