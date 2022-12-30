@@ -1,0 +1,66 @@
+import  '../../../../../model/generated/Uddl.ecore'
+/**
+ * This contains more general capability for the EXTENSIONS at the logical level
+ */
+
+package uddl 
+
+  context UddlElement
+  
+   /**
+	 * Declare a helper operation to map an ok/warning verdict to ok/error.
+	 */
+	def: asError(verdict : Boolean) : Boolean = if verdict then true else null endif
+
+  context LogicalEnumerated
+    /*
+     * Helper method - flattens the hierarchy. Can't just use 'flatten' because it expects a collection only , not objects that include collections
+     * as members.
+	 *
+	 *	NOTE: Should this include 'self' at this level because the enum name is not itself a label? This is different than a LogicalEnumeratedSet, where the 
+	 *	name of the set is included. Including it (which we do here) does insure that there is no duplication, which would be confusing
+	 * 
+	 */
+   	 def: flattenLabels(): Collection(LogicalEnumeratedBase) =
+   	    self.label->closure(e: LogicalEnumeratedBase | if e.oclIsTypeOf(LogicalEnumeratedSet) then e.oclAsType(LogicalEnumeratedSet).label else Bag{e} endif)
+   	    	->including(self.oclAsType(LogicalEnumeratedBase))
+   	    	-- While not absolutely required, sorting this makes it easier to identify duplicates
+   	    	-- ->sortedBy(e|e.name)
+   
+
+	-- If there are duplicates, can use this function to order them - then print out their names
+	 def: sortedContents(): Collection(LogicalEnumeratedBase) =
+	 	self.label->closure(e: LogicalEnumeratedBase | if e.oclIsTypeOf(LogicalEnumeratedSet) then e.oclAsType(LogicalEnumeratedSet).label else Bag{e} endif)->sortedBy(e|e.name)
+	 
+
+     inv enumerationLabelNameUniqueDrillDown('Enumeration labels must be unique within the entire enumeration hierarchy. '+ self.name + ' contains a duplicate. Remove duplicate(s) to continue'):
+     	asError(self.flattenLabels()->isUnique(name))
+    
+  context LogicalEnumeratedBase
+     /*
+     * Helper method that reroutes based on derived type
+     */      
+    def: flattenLabels(): Collection(LogicalEnumeratedBase) =
+      if self.oclIsTypeOf(LogicalEnumeratedSet) then
+        self.oclAsType(LogicalEnumeratedSet).flattenLabels()
+      else -- 
+        self.oclAsType(LogicalEnumerationLabel).flattenLabels()
+      endif    	
+ 
+      
+  context LogicalEnumeratedSet
+  /**
+   * Helper method that flattens set contents
+   */  
+   	 def: flattenLabels(): Collection(LogicalEnumeratedBase) =
+  	    self.label->closure(e: LogicalEnumeratedBase | if e.oclIsTypeOf(LogicalEnumeratedSet) then e.oclAsType(LogicalEnumeratedSet).label else Bag{e} endif)->including(self.oclAsType(LogicalEnumeratedBase))
+ 
+   	 	
+  context LogicalEnumerationLabel
+    /*
+     * Helper method - end of recursion 
+     */    	 
+   	def: flattenLabels(): Bag(LogicalEnumeratedBase) =
+   		Bag{self.oclAsType(LogicalEnumeratedBase)}
+  
+ endpackage

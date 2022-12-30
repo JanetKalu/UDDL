@@ -28,35 +28,34 @@ import com.epistimis.uddl.uddl.UddlPackage;
  */
 public class UddlValidator extends AbstractUddlValidator {
 	
-//	public static final String INVALID_NAME = "invalidName";
-//
-//	@Check
-//	public void checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.getName().charAt(0))) {
-//			warning("Name should start with a capital",
-//					UddlPackage.Literals.GREETING__NAME,
-//					INVALID_NAME);
-//		}
-//	}
+	protected static String ISSUE_CODE_PREFIX = "com.epistimis.uddl.";
+	public static String ENTITY_NEEDS_2_ELEMENTS = ISSUE_CODE_PREFIX + "EntityNeeds2Elements";
 	
+	private void loadAndRegister(EValidatorRegistrar registrar, String resourceAddress) {
+	       UddlPackage ePackage = UddlPackage.eINSTANCE;
+	        URI oclURI = URI.createPlatformResourceURI(
+	        		resourceAddress, true);
+	        registrar.register(ePackage,
+	            new CompleteOCLEObjectValidator(ePackage, oclURI));
+	}
     @Override
     public void register(EValidatorRegistrar registrar) {
         super.register(registrar);
-        UddlPackage ePackage = UddlPackage.eINSTANCE;
-        URI oclURI = URI.createPlatformResourceURI(
-            "/com.epistimis.uddl/src/com/epistimis/uddl/constraints/specialCategoriesOfData.ocl", true);
-        registrar.register(ePackage,
-            new CompleteOCLEObjectValidator(ePackage, oclURI));
+        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/uddl.ocl");
+        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/datamodel.ocl");
+        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/conceptual.ocl");
+        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/logical.ocl");
+        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/platform.ocl");
+        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/specialCategoriesOfData.ocl");
+        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/logicalExtensions.ocl");
     }
     
-	protected static String ISSUE_CODE_PREFIX = "com.epistimis.uddl.";
-	public static String ENTITY_NEEDS_2_ELEMENTS = ISSUE_CODE_PREFIX + "EntityNeeds2Elements";
 	
 	/**
 	 * Structures must have more than 1 member - but they can be inherited - so check entire specialization hierarchy
 	 * for:
 	 * (C/L/P)Entity
-	 * 
+	 * TODO: Actually, since participants are for Associations, there must be at least 2 Participants also
 	 * Also -must check both composition and participant lists - The net across all of them must be at least 2
 	 */
 	
@@ -69,6 +68,7 @@ public class UddlValidator extends AbstractUddlValidator {
 		
 		List<Characteristic> results = new ArrayList<>();
 		if (CLPExtractors.getSpecializes(ent) != null) {
+			// If this specializes, then recursively get everything from what it specializes
 			Entity ce = (Entity)ent;
 			results.addAll(getEntityCharacteristics(ce));
 		}
