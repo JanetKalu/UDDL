@@ -16,6 +16,8 @@ DataModel:
 
 // A few generic rules
 terminal fragment DEC:  ('0'..'9')+;
+
+// TODO: This needs code to process the +|- when creating int or float?
 @Override
 terminal INT returns ecore::EInt:  ('+'|'-')? DEC;
 //LONG returns ecore::ELong: INT ("L"|"l");
@@ -207,7 +209,7 @@ LogicalValueType:
 	LogicalNumeric |
 	LogicalCharacter |
 	LogicalString |
-	LogicalEnumerated
+	LogicalEnumeratedBase // EXTENSION
 ;
 
 LogicalString: 					'str' 	name=ID (description=STRING)? ';' 	;
@@ -231,16 +233,21 @@ LogicalEnumerated:
 	'enum' 	name=ID (description=STRING)? 
 		('stdRef:' standardReference=STRING)?
 		'['
-		label+=(LogicalEnumerationLabel | LogicalEnumeratedSet) (',' label+=(LogicalEnumerationLabel| LogicalEnumeratedSet))* ','?
+		label+=(LogicalEnumerationLabel | LogicalEnumeratedSet) ','? (label+=(LogicalEnumerationLabel| LogicalEnumeratedSet) ','?)*
 		']'
 		';'
 		;
 
 /**EXTENSION: allowing label to be a LogicalEnumeratedSet enables taxonomy definitions via enumerations  */
+LogicalEnumeratedBase:
+	LogicalEnumeratedSet |
+	LogicalEnumerationLabel |
+	LogicalEnumerated
+;
 LogicalEnumeratedSet:
 		'(' name=ID (description=STRING)? 
 		'['
-		label+=(LogicalEnumerationLabel | LogicalEnumeratedSet) (',' label+=(LogicalEnumerationLabel| LogicalEnumeratedSet))* ','?
+		label+=(LogicalEnumerationLabel | LogicalEnumeratedSet) ','? (label+=(LogicalEnumerationLabel| LogicalEnumeratedSet) ','?)*
 		'])'
 		;
 
@@ -648,13 +655,13 @@ PlatformView:
 ;
 
 PlatformQuery:
-	'lquery' name=ID  (description=STRING)? ('->' realizes=[LogicalQuery|QN])? '{'
+	'pquery' name=ID  (description=STRING)? ('->' realizes=[LogicalQuery|QN])? '{'
 		'spec:' specification=STRING
 		'};'
 ;
 
 PlatformCompositeQuery:
-	'lcquery' name=ID  (description=STRING)? ('->' realizes=[LogicalQuery|QN])? '{'
+	'pcquery' name=ID  (description=STRING)? ('->' realizes=[LogicalQuery|QN])? '{'
 		isUnion?='isUnion'
 		composition+=PlatformQueryComposition
 		'};'
