@@ -20,7 +20,7 @@ public class UddlRuntimeModule extends AbstractUddlRuntimeModule {
 	 * be excluded from the index
 	 * */
 //	public  Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
-//		return UddlResourceDescriptionsStrategy.class;
+//		return UddlResourceDescriptionStrategy.class;
 //	}
 
 }
