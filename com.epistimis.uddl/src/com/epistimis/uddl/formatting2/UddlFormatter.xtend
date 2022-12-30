@@ -94,6 +94,12 @@ class UddlFormatter extends AbstractFormatter2 {
 		obj.regionFor.keyword('};').surround[noSpace].append[newLine];
 	}
 
+	def void formatSubobj(EObject obj, extension IFormattableDocument document) {
+		val open = obj.regionFor.keyword("(")
+		val close = obj.regionFor.keyword(")")
+		open.prepend[newLine]
+		interior(open, close)[indent]
+	}
 	def void formatListContainer(EObject obj, EList<EObject> contents, extension IFormattableDocument document) {
 		obj.regionFor.keyword("[").surround[oneSpace];
 		obj.regionFor.keyword("]").surround[oneSpace];
@@ -124,6 +130,7 @@ class UddlFormatter extends AbstractFormatter2 {
 	/** Model specific functions */
 	def dispatch void format(DataModel dataModel, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc.
+		dataModel.formatContainer(document)
 		for (conceptualDataModel : dataModel.cdm) {
 			conceptualDataModel.format
 		}
@@ -311,6 +318,7 @@ class UddlFormatter extends AbstractFormatter2 {
 	}
 
 	def dispatch void format(LogicalReferencePointPart obj, extension IFormattableDocument document) {
+		obj.formatSubobj(document)
 		obj.regionFor.feature(LOGICAL_REFERENCE_POINT_PART__AXIS).surround[oneSpace]
 		obj.regionFor.feature(LOGICAL_REFERENCE_POINT_PART__VALUE).surround[oneSpace]
 		obj.regionFor.feature(LOGICAL_REFERENCE_POINT_PART__VALUE_TYPE_UNIT).surround[oneSpace]
