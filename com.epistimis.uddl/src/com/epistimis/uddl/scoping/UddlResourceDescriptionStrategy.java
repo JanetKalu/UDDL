@@ -12,9 +12,9 @@ import com.epistimis.uddl.uddl.PlatformPathNode;
 import com.google.inject.Singleton;
 
 @Singleton
-public class UddlResourceDescriptionsStrategy extends DefaultResourceDescriptionStrategy {
+public class UddlResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy {
 
-	public UddlResourceDescriptionsStrategy() {
+	public UddlResourceDescriptionStrategy() {
 		// TODO Auto-generated constructor stub
 	}
 
