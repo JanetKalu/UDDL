@@ -14,6 +14,9 @@ import com.epistimis.uddl.uddl.PlatformAssociation;
 import com.epistimis.uddl.uddl.PlatformComposition;
 import com.epistimis.uddl.uddl.PlatformEntity;
 import com.epistimis.uddl.uddl.PlatformParticipant;
+import com.epistimis.uddl.uddl.ConceptualQuery
+import com.epistimis.uddl.uddl.LogicalQuery
+import com.epistimis.uddl.uddl.PlatformQuery
 
 /**
  * This is a set of methods that extract values from instances for use with templated methods
@@ -73,6 +76,26 @@ abstract class CLPExtractors {
 	}
 	def dispatch static EList<PlatformParticipant> getParticipant(PlatformAssociation ent) {
 		return ent.getParticipant();
+	}
+
+	def dispatch static String getSpecification(ConceptualQuery ent) {
+		return ent.specification;
+	}
+	def dispatch static String getSpecification(LogicalQuery ent) {
+		return ent.specification;
+	}
+	def dispatch static String getSpecification(PlatformQuery ent) {
+		return ent.specification;
+	}
+
+	def dispatch static Class getClassForQuery(ConceptualQuery ent) {
+		return typeof(ConceptualEntity);
+	}
+	def dispatch static Class getClassForQuery(LogicalQuery ent) {
+		return typeof(LogicalEntity);
+	}
+	def dispatch static Class getClassForQuery(PlatformQuery ent) {
+		return typeof(PlatformEntity);
 	}
 
 }

@@ -2,7 +2,6 @@ package com.epistimis.uddl.ui.hover;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.internal.text.html.HTMLPrinter;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.hover.html.XtextBrowserInformationControlInput;

@@ -11,53 +11,53 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import com.epistimis.uddl.uddl.DataModel
+import com.epistimis.uddl.uddl.ConceptualView
+import com.epistimis.uddl.query.query.SelectedEntity
 
 /**
  * Generates code from your model files on save.
- *
+ * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class UddlGenerator extends AbstractGenerator {
 
-	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 
-	/**
-	 * The first version of the generator will work directly from PlatformEntity - without queries. This will only collect all the realization
-	 * info from a PlatformEntity -> LogicalEntity -> ConceptualEntity to determine what to generate.
-	 */
-
-
+		/**
+		 * The first version of the generator will work directly from PlatformEntity - without queries. This will only collect all the realization
+		 * info from a PlatformEntity -> LogicalEntity -> ConceptualEntity to determine what to generate.
+		 */
 		val elements = resource.allContents.toIterable.filter(PlatformComposableElement);
 
-	/**
-	 * Collect, for each pentity, all the realization info for each PlatformComposition it contains
-	 */
-	for (PlatformComposableElement elem: elements) {
 		/**
-		 * Some of these will be PlatformParticipants
+		 * Collect, for each pentity, all the realization info for each PlatformComposition it contains
 		 */
-		 if (elem instanceof PlatformAssociation) {
-		 	new RealizedAssociation(elem);
-		 } else if (elem instanceof PlatformDataType) {
-		 	new RealizedDataType(elem);
-		 } else if (elem instanceof PlatformEntity) {
-		 	new RealizedEntity(elem);
-		 }
-	}
-	/**
-	 * Now go back and link all the PlatformEntity types
-	 *
-	 */
-	 RealizedComposableElement.linkTypes();
+		for (PlatformComposableElement elem : elements) {
+			/**
+			 * Some of these will be PlatformParticipants
+			 */
+			if (elem instanceof PlatformAssociation) {
+				new RealizedAssociation(elem);
+			} else if (elem instanceof PlatformDataType) {
+				new RealizedDataType(elem);
+			} else if (elem instanceof PlatformEntity) {
+				new RealizedEntity(elem);
+			}
+		}
+		/**
+		 * Now go back and link all the PlatformEntity types
+		 * 
+		 */
+		RealizedComposableElement.linkTypes();
 
-	val gen1 = new CppDataStructureGenerator(RealizedComposableElement.allComposableElements);
-	gen1.doGenerate(resource,fsa, context);
+		val gen1 = new CppDataStructureGenerator(RealizedComposableElement.allComposableElements);
+		gen1.doGenerate(resource, fsa, context);
 
 	/**
 	 * Generating code from UDDL means generating data structures. To generate data structures we need to process both the UDDL and
 	 * any queries/templates used.
-	 *
+	 * 
 	 * To process a query, we must first parse the query string (from a C/L/P Query specification).
 	 * 1) Identify all the SelectedEntity in the QueryStatement.  From those, identify the Entities referenced and map those to instances
 	 * in the model. Note that we have to use scoping rules to find entities, working outward from where the Query was located in the model.
@@ -72,20 +72,14 @@ class UddlGenerator extends AbstractGenerator {
 	 * The direction of the cardinality is based on which side uses a characteristic vs. a type. Characteristic to characteristic is also possible.
 	 * We start with the SELECT
 	 */
-			// val dataModels = resource.allContents.toIterable.filter(DataModel)
-			// val views = resource.allContents.toIterable.filter(ConceptualView)
-			// SelectedEntities will be in the resource created from the query contents
-	 		// val selectedEntities = resource.allContents.toIterable.filter(SelectedEntity);
-
+//	 val dataModels = resource.allContents.toIterable.filter(DataModel)
+//	 val views = resource.allContents.toIterable.filter(ConceptualView)
+//	 //SelectedEntities will be in the resource created from the query contents
+//	 val selectedEntities = resource.allContents.toIterable.filter(SelectedEntity);
 //	 		for (SelectedEntity entity: selectedEntities) {
 //				// Need to find all the Entities that could be
 //
 //	 		}
-
-
 	}
-
-
-
 
 }
