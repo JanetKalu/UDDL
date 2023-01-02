@@ -36,6 +36,7 @@ import com.epistimis.uddl.uddl.PlatformUnsignedInteger
 import com.epistimis.uddl.uddl.PlatformBoundedString
 import com.epistimis.uddl.uddl.PlatformCharArray
 import com.epistimis.uddl.UddlQNP
+import java.util.Collection
 
 /**
  * NOTE: Need to handle attribute cardinality in a general way - 2 parts of this: determining cardinality and then rendering.
@@ -46,13 +47,12 @@ import com.epistimis.uddl.UddlQNP
 
 class CppDataStructureGenerator implements IGenerator2 {
 	
-	static String DIR_DELIMITER = '/';
-	static String HEADER_EXT = ".hpp";
-	static String SRC_EXT = ".cpp";
-	static String ROOT_DIR = "cpp/";
+	static protected String DIR_DELIMITER = '/';
+	static protected String HEADER_EXT = ".hpp";
+	static protected String ROOT_DIR = "cpp/";
 	
 	@Inject
-	extension IQualifiedNameProvider qnp;
+	extension protected IQualifiedNameProvider qnp;
 
 
 	List<PlatformEntity> processedEntities;
@@ -65,24 +65,13 @@ class CppDataStructureGenerator implements IGenerator2 {
 	}
 	
 	new() {
-		allComposableElements = new HashMap();
+		initialize();
 	}
 
-	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-//		processedEntities.clear();
-//		processedPDMs.clear();
-	}
-
-	override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-//		if (processedEntities === null) {
-//			processedEntities = new ArrayList<PlatformEntity>();		
-//		}
-//		if (processedPDMs === null) {
-//			processedPDMs = new ArrayList<PlatformDataModel>();
-//		}
-	}
-
-	override doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+	def void initialize() {
+		if (allComposableElements === null) {
+			allComposableElements = new HashMap();
+		}
 		if (processedEntities === null) {
 			processedEntities = new ArrayList<PlatformEntity>();		
 		}
@@ -92,16 +81,35 @@ class CppDataStructureGenerator implements IGenerator2 {
 		if (qnp === null) {
 			qnp = new UddlQNP();
 		}
+		
+	}
+	
+	def void cleanup() {
+		allComposableElements.clear();
+		processedEntities.clear();
+		processedPDMs.clear();
+	}
+
+	override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		initialize();
+	}
+
+	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		cleanup();
+	}
+
+	override doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		initialize();
 		for (PlatformComposableElement rce: allComposableElements.keySet) {
 			if (rce instanceof PlatformEntity) {
 				val re = rce as PlatformEntity;
-				processAnEntity(fsa,re);
+				processAnEntity(re,fsa,context);
 			}
 		}
-		processedEntities.clear();
-		processedPDMs.clear();
-
+		cleanup();
 	}
+
+	
 	/**
 	 * We replace the standard delimiter with a directory delimiter as a way to generate all the directories we want
 	 */
@@ -114,6 +122,18 @@ class CppDataStructureGenerator implements IGenerator2 {
 	def String generateHeaderName(UddlElement obj) {
 		return generateDirectories(obj)+ DIR_DELIMITER + obj.name + HEADER_EXT;
 	}
+
+	
+	/** When you only want to process selected Entities (rather than all of them) call this.
+	 * This will be called from the FaceGenerator. We should have 1 of these in each language specific generator
+	 * */
+	def processEntities(Collection<PlatformEntity> entities, IFileSystemAccess2 fsa,IGeneratorContext context) {
+		initialize();
+		for (PlatformEntity entity: entities) {
+			processAnEntity(entity, fsa, context);
+		}
+		cleanup();
+	}
 	
 	/**
 	 * Processing an Entity requires both generating the file(s) for this Entity (which will require references to the headers for any referenced
@@ -124,7 +144,7 @@ class CppDataStructureGenerator implements IGenerator2 {
 	 * NOTE: processing an Entity or PDT means 2 things: 1) Has a header file been created for this? 2) Has the header for this type been included for 
 	 * current Entity (the Entity whose header is being generated)?  #1 requires a global list; #2 requires a list localized to this recursion level only
 	 */
-	def processAnEntity(IFileSystemAccess2 fsa, PlatformEntity entity) {
+	def processAnEntity(PlatformEntity entity, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		if (!processedEntities.contains(entity)) {
 			processedEntities.add(entity);
 			fsa.generateFile(ROOT_DIR + generateDirectories(entity) + HEADER_EXT,entity.compile)			
