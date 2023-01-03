@@ -57,16 +57,16 @@ public class QueryProcessor {
 //	@Inject
 //	ParseHelper<QuerySpecification> parseHelper;
 
-	// @Inject
+	@Inject
 	IndexUtilities ndxUtil;
 
-	// @Inject
+	@Inject
 	IQualifiedNameProvider qnp;
 
+	@Inject
 	IQualifiedNameConverter qnc;
 
-	public QueryProcessor(/* IResourceServiceProvider.Registry reg */IndexUtilities ndxUtil) {
-		this.ndxUtil = ndxUtil;
+	public QueryProcessor() {
 		// this.reg = reg;
 //		URI queryURI = URI.createURI(QueryPackageImpl.eNS_URI);
 
@@ -75,9 +75,6 @@ public class QueryProcessor {
 //		reg.getContentTypeToFactoryMap().put("quddl", queryRSP);
 //		queryResFactory = queryRSP.get(IResourceFactory.class);
 
-		qnp = new UddlQNP();
-		qnc = new IQualifiedNameConverter.DefaultImpl();
-		// parseHelper = new ParseHelper<QuerySpecification>();
 	}
 
 	/**
@@ -117,6 +114,7 @@ public class QueryProcessor {
 			qspec = (QuerySpecification) resource.getContents().get(0);
 
 		} catch (Exception e) {
+			// TODO: This should also check for Parse errors - like unit tests do - and print out something.
 			System.out.println("Query " + qnp.getFullyQualifiedName(query).toString() + " contains a malformed query: '"
 					+ queryText + "'");
 			// TODO Auto-generated catch block
@@ -181,47 +179,71 @@ public class QueryProcessor {
 			 */
 			switch (lod.size()) {
 			case 0: {
-				// If nothing found so far, check all visible objects
-				EObject instance = searchAllVisibleObjects(q, UddlPackage.eINSTANCE.getPlatformEntity(), entityName);
-				if (instance == null) {
-					System.out.println("No Entities found for name: " + entityName + " from Query " + queryFQN);
-				} else {
-					chosenEntities.add((PlatformEntity) instance);
+					// If nothing found so far, check all visible objects
+					List<IEObjectDescription> globalDescs = searchAllVisibleObjects(q, UddlPackage.eINSTANCE.getPlatformEntity(), entityName);
+					switch (globalDescs.size()) {
+					case 0:
+						System.out.println("No Entities found for name: " + entityName + " from Query " + queryFQN);
+						break;
+					case 1:
+						chosenEntities.add((PlatformEntity) objectFromDescription(resource,globalDescs.get(0)));
+						break;
+					default:
+						/** found multiple - so print out their names */
+						listNameCollisions(queryFQN,entityName,globalDescs);
+						break;
+					}
 				}
-			}
 				break;
 			case 1:
 				IEObjectDescription description = lod.get(0);
-				EObject instance = description.getEObjectOrProxy();
-				if (instance.eIsProxy()) {
-					instance = resource.getEObject(description.getEObjectURI().fragment());
-				}
-				chosenEntities.add((PlatformEntity) instance);
+				chosenEntities.add((PlatformEntity) objectFromDescription(resource,description));
 				break;
 			default:
 				/** found multiple - so print out their names */
-				System.out.println(
-						"Query " + queryFQN + " makes ambiguous reference to " + entityName + ". It could be: ");
-				for (IEObjectDescription d : descriptions) {
-					// May need to use qnp.getFullyQualifiedName(d.getEObjectOrProxy())
-					System.out.println("\t" + d.getQualifiedName().toString());
-				}
+				listNameCollisions(queryFQN,entityName,lod);
 			}
 		}
 		/* at this point we have identified all the entities */
 		return chosenEntities;
+	}
+	
+	private void listNameCollisions(String queryFQN, String entityName, List<IEObjectDescription> descriptions) {
+		System.out.println(
+				"Query " + queryFQN + " makes ambiguous reference to " + entityName + ". It could be: ");
+		for (IEObjectDescription d : descriptions) {
+			// May need to use qnp.getFullyQualifiedName(d.getEObjectOrProxy())
+			System.out.println("\t" + d.getQualifiedName().toString());
+		}
+		
+	}
+	
+	private EObject objectFromDescription(Resource res, IEObjectDescription desc) {
+		if (desc == null)
+			return null;
+		EObject o = desc.getEObjectOrProxy();
+		if (o.eIsProxy()) {
+			o = res.getResourceSet().getEObject(desc.getEObjectURI(), true);
+		}
+		return o;
 	}
 
 	/**
 	 * Taken from the book, SmallJavaLib.getSmallJavaObjectClass - and converted
 	 * from XTend to Java
 	 * 
-	 * @param context
-	 * @param type
-	 * @param name
-	 * @return
+	 * Additionally, this checks for RQNs instead of just leaf names, or FQNs
+	 * 
+	 * Also note that case doesn't matter
+	 * 
+	 * @param context - Check visibility to this object
+	 * @param type - Filter for only for instances of this type
+	 * @param name - Filter for only instances that match this RQN
+	 * @return A list of matching objects
+	 * 
+	 * TODO: 
 	 */
-	protected EObject searchAllVisibleObjects(EObject context, EClass type, String name) {
+	protected List<IEObjectDescription> searchAllVisibleObjects(EObject context, EClass type, String name) {
 		Iterable<IEObjectDescription> descriptions = ndxUtil.getVisibleEObjectDescriptions(context, type);
 
 		final Function1<IEObjectDescription, Boolean> _function = (IEObjectDescription it) -> {
@@ -241,15 +263,22 @@ public class QueryProcessor {
 			 */
 			return false;
 		};
-		IEObjectDescription desc = IterableExtensions.<IEObjectDescription>findFirst(descriptions, _function);
-		if (desc == null)
-			return null;
-		EObject o = desc.getEObjectOrProxy();
-		if (o.eIsProxy()) {
-			o = context.eResource().getResourceSet().getEObject(desc.getEObjectURI(), true);
+		Iterable<IEObjectDescription> filteredDescs = IterableExtensions.<IEObjectDescription>filter(descriptions, _function);
+		List<IEObjectDescription> lod = new ArrayList<IEObjectDescription>();
+		for (IEObjectDescription desc : filteredDescs) {
+			lod.add(desc);
 		}
-		return o;
-
+		return lod;
+//		for (IEObjectDescription desc: descs) {
+//			if (desc == null)
+//				return null;
+//			EObject o = desc.getEObjectOrProxy();
+//			if (o.eIsProxy()) {
+//				o = context.eResource().getResourceSet().getEObject(desc.getEObjectURI(), true);
+//			}
+//			found.add(o);         			
+//		}
+//		return found;
 	}
 
 	/**

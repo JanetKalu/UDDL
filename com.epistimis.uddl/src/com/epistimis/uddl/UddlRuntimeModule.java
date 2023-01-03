@@ -3,10 +3,17 @@
  */
 package com.epistimis.uddl;
 
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.scoping.IGlobalScopeProvider;
+import org.eclipse.xtext.scoping.impl.ImportUriGlobalScopeProvider;
+
+import com.epistimis.uddl.generator.QueryProcessor;
+import com.epistimis.uddl.scoping.IndexUtilities;
 
 /**
- * Use this class to register components to be used at runtime / without the Equinox extension registry.
+ * Use this class to register components to be used at runtime / without the
+ * Equinox extension registry.
  */
 public class UddlRuntimeModule extends AbstractUddlRuntimeModule {
 
@@ -16,11 +23,32 @@ public class UddlRuntimeModule extends AbstractUddlRuntimeModule {
 		return UddlQNP.class;
 	}
 
-	/** Enable this if there are performance issues with name resolution. And then look at the strategy to see what should
-	 * be excluded from the index
-	 * */
+	public Class<? extends IndexUtilities> bindIndexUtilities() {
+		return IndexUtilities.class;
+	}
+
+	public Class<? extends QueryProcessor> bindQueryProcessor() {
+		return QueryProcessor.class;
+	}
+
+	public Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
+		return IQualifiedNameConverter.DefaultImpl.class;
+	}
+
+	/**
+	 * Enable this if there are performance issues with name resolution. And then
+	 * look at the strategy to see what should be excluded from the index
+	 */
 //	public  Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
 //		return UddlResourceDescriptionStrategy.class;
+//	}
+
+	// Enable imports by uncommenting this. The default is to import anything visible in a project
+	// See section 3.3.1,3.3.2 of the Advanced XText Manual PDF
+//	@Override
+//	public
+//	Class<? extends IGlobalScopeProvider> bindIGlobalScopeProvider() {
+//		return ImportUriGlobalScopeProvider.class;
 //	}
 
 }
