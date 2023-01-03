@@ -32,6 +32,12 @@ public class UddlValidator extends AbstractUddlValidator {
 	public static String ENTITY_NEEDS_2_ELEMENTS = ISSUE_CODE_PREFIX + "EntityNeeds2Elements";
 	
 	private void loadAndRegister(EValidatorRegistrar registrar, String resourceAddress) {
+		/**
+		 * NOTE: AbstractInjectableValidator::register registers validators for the entire inheritance 
+		 * hierarchy. This does not do that for the following reason:
+		 * Each OCL file is for a specific package, so registering it for other packages doesn't make any sense.
+		 * If there is a need, manually re-register the OCL file for multiple packages.
+		 */
 	       UddlPackage ePackage = UddlPackage.eINSTANCE;
 	        URI oclURI = URI.createPlatformResourceURI(
 	        		resourceAddress, true);
@@ -41,13 +47,13 @@ public class UddlValidator extends AbstractUddlValidator {
     @Override
     public void register(EValidatorRegistrar registrar) {
         super.register(registrar);
-        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/uddl.ocl");
-        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/datamodel.ocl");
-        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/conceptual.ocl");
-        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/logical.ocl");
-        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/platform.ocl");
+//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/uddl.ocl");
+//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/datamodel.ocl");
+//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/conceptual.ocl");
+//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/logical.ocl");
+//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/platform.ocl");
         loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/specialCategoriesOfData.ocl");
-        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/logicalExtensions.ocl");
+//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/logicalExtensions.ocl");
     }
     
 	
