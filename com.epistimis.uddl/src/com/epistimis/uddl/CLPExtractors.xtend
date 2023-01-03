@@ -17,6 +17,7 @@ import com.epistimis.uddl.uddl.PlatformParticipant;
 import com.epistimis.uddl.uddl.ConceptualQuery
 import com.epistimis.uddl.uddl.LogicalQuery
 import com.epistimis.uddl.uddl.PlatformQuery
+import com.epistimis.uddl.uddl.UddlElement
 
 /**
  * This is a set of methods that extract values from instances for use with templated methods
@@ -88,13 +89,13 @@ abstract class CLPExtractors {
 		return ent.specification;
 	}
 
-	def dispatch static Class getClassForQuery(ConceptualQuery ent) {
+	def dispatch static Class<? extends UddlElement> getClassForQuery(ConceptualQuery ent) {
 		return typeof(ConceptualEntity);
 	}
-	def dispatch static Class getClassForQuery(LogicalQuery ent) {
+	def dispatch static Class<? extends UddlElement> getClassForQuery(LogicalQuery ent) {
 		return typeof(LogicalEntity);
 	}
-	def dispatch static Class getClassForQuery(PlatformQuery ent) {
+	def dispatch static Class<? extends UddlElement> getClassForQuery(PlatformQuery ent) {
 		return typeof(PlatformEntity);
 	}
 

@@ -38,12 +38,12 @@ import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.formatting2.regionaccess.ISemanticRegion
 
 import static com.epistimis.uddl.uddl.UddlPackage.Literals.*
-import com.google.inject.Inject
-import com.epistimis.uddl.services.UddlGrammarAccess
+//import com.google.inject.Inject
+//import com.epistimis.uddl.services.UddlGrammarAccess
 
 class UddlFormatter extends AbstractFormatter2 {
 
-	@Inject extension UddlGrammarAccess
+	// @Inject extension UddlGrammarAccess
 
 	/**
 	 * Several standard methods needed for formatting
