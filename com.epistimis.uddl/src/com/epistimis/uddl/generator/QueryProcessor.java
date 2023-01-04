@@ -168,11 +168,11 @@ public class QueryProcessor {
 			 * those. That will require RQNs processing.
 			 */
 			IScope searchScope = entityScope(q.eContainer());
-			Iterable<IEObjectDescription> descriptions = searchScope.getElements(qnc.toQualifiedName(entityName));
-			List<IEObjectDescription> lod = new ArrayList<IEObjectDescription>();
-			for (IEObjectDescription desc : descriptions) {
-				lod.add(desc);
-			}
+			List<IEObjectDescription> lod = IterableExtensions.<IEObjectDescription>toList(searchScope.getElements(qnc.toQualifiedName(entityName)));
+//			List<IEObjectDescription> lod = new ArrayList<IEObjectDescription>();
+//			for (IEObjectDescription desc : descriptions) {
+//				lod.add(desc);
+//			}
 
 			/**
 			 * There should be only 1 for each entityName - otherwise, we have ambiguity
@@ -180,53 +180,55 @@ public class QueryProcessor {
 			switch (lod.size()) {
 			case 0: {
 					// If nothing found so far, check all visible objects
-					List<IEObjectDescription> globalDescs = searchAllVisibleObjects(q, UddlPackage.eINSTANCE.getPlatformEntity(), entityName);
+					List<IEObjectDescription> globalDescs = ndxUtil.searchAllVisibleEObjectDescriptions(q, UddlPackage.eINSTANCE.getPlatformEntity(), entityName);
 					switch (globalDescs.size()) {
 					case 0:
 						System.out.println("No Entities found for name: " + entityName + " from Query " + queryFQN);
 						break;
 					case 1:
-						chosenEntities.add((PlatformEntity) objectFromDescription(resource,globalDescs.get(0)));
+						chosenEntities.add((PlatformEntity) IndexUtilities.objectFromDescription(resource,globalDescs.get(0)));
 						break;
 					default:
 						/** found multiple - so print out their names */
-						listNameCollisions(queryFQN,entityName,globalDescs);
+						ndxUtil.printIEObjectDescriptionNameCollisions(queryFQN,PlatformQuery.class.getName(),globalDescs);
 						break;
 					}
 				}
 				break;
 			case 1:
 				IEObjectDescription description = lod.get(0);
-				chosenEntities.add((PlatformEntity) objectFromDescription(resource,description));
+				chosenEntities.add((PlatformEntity) IndexUtilities.objectFromDescription(resource,description));
 				break;
 			default:
 				/** found multiple - so print out their names */
-				listNameCollisions(queryFQN,entityName,lod);
+				ndxUtil.printIEObjectDescriptionNameCollisions(queryFQN, PlatformQuery.class.getName(), lod);
 			}
 		}
 		/* at this point we have identified all the entities */
 		return chosenEntities;
 	}
 	
-	private void listNameCollisions(String queryFQN, String entityName, List<IEObjectDescription> descriptions) {
-		System.out.println(
-				"Query " + queryFQN + " makes ambiguous reference to " + entityName + ". It could be: ");
-		for (IEObjectDescription d : descriptions) {
-			// May need to use qnp.getFullyQualifiedName(d.getEObjectOrProxy())
-			System.out.println("\t" + d.getQualifiedName().toString());
-		}
-		
-	}
-	
-	private EObject objectFromDescription(Resource res, IEObjectDescription desc) {
-		if (desc == null)
-			return null;
-		EObject o = desc.getEObjectOrProxy();
-		if (o.eIsProxy()) {
-			o = res.getResourceSet().getEObject(desc.getEObjectURI(), true);
-		}
-		return o;
-	}
+	// Moved to IndexUtilities
+//	private void listNameCollisions(String queryFQN, String entityName, List<IEObjectDescription> descriptions) {
+//		System.out.println(
+//				"Query " + queryFQN + " makes ambiguous reference to " + entityName + ". It could be: ");
+//		for (IEObjectDescription d : descriptions) {
+//			// May need to use qnp.getFullyQualifiedName(d.getEObjectOrProxy())
+//			System.out.println("\t" + d.getQualifiedName().toString());
+//		}
+//		
+//	}
+
+	// Moved to IndexUtilities
+//	private EObject objectFromDescription(Resource res, IEObjectDescription desc) {
+//		if (desc == null)
+//			return null;
+//		EObject o = desc.getEObjectOrProxy();
+//		if (o.eIsProxy()) {
+//			o = res.getResourceSet().getEObject(desc.getEObjectURI(), true);
+//		}
+//		return o;
+//	}
 
 	/**
 	 * Taken from the book, SmallJavaLib.getSmallJavaObjectClass - and converted
@@ -244,41 +246,33 @@ public class QueryProcessor {
 	 * TODO: 
 	 */
 	protected List<IEObjectDescription> searchAllVisibleObjects(EObject context, EClass type, String name) {
-		Iterable<IEObjectDescription> descriptions = ndxUtil.getVisibleEObjectDescriptions(context, type);
-
-		final Function1<IEObjectDescription, Boolean> _function = (IEObjectDescription it) -> {
-			/**
-			 * Because the passed in name may be relative, we need to check all possible
-			 * name fragments for a match
-			 */
-			QualifiedName qn = it.getQualifiedName();
-			for (int i = qn.getSegmentCount() - 1; i >= 0; i--) {
-				String rqn = qn.skipFirst(i).toString();
-				if (name.equalsIgnoreCase(rqn)) {
-					return true;
-				}
-			}
-			/**
-			 * If we get here, there wasn't a match on this description
-			 */
-			return false;
-		};
-		Iterable<IEObjectDescription> filteredDescs = IterableExtensions.<IEObjectDescription>filter(descriptions, _function);
-		List<IEObjectDescription> lod = new ArrayList<IEObjectDescription>();
-		for (IEObjectDescription desc : filteredDescs) {
-			lod.add(desc);
-		}
-		return lod;
-//		for (IEObjectDescription desc: descs) {
-//			if (desc == null)
-//				return null;
-//			EObject o = desc.getEObjectOrProxy();
-//			if (o.eIsProxy()) {
-//				o = context.eResource().getResourceSet().getEObject(desc.getEObjectURI(), true);
+		// Commented code now in IndexUtilities
+//		Iterable<IEObjectDescription> descriptions = ndxUtil.getVisibleEObjectDescriptions(context, type);
+//
+//		final Function1<IEObjectDescription, Boolean> _function = (IEObjectDescription it) -> {
+//			/**
+//			 * Because the passed in name may be relative, we need to check all possible
+//			 * name fragments for a match
+//			 */
+//			QualifiedName qn = it.getQualifiedName();
+//			for (int i = qn.getSegmentCount() - 1; i >= 0; i--) {
+//				String rqn = qn.skipFirst(i).toString();
+//				if (name.equalsIgnoreCase(rqn)) {
+//					return true;
+//				}
 //			}
-//			found.add(o);         			
+//			/**
+//			 * If we get here, there wasn't a match on this description
+//			 */
+//			return false;
+//		};
+//		Iterable<IEObjectDescription> filteredDescs = IterableExtensions.<IEObjectDescription>filter(descriptions, _function);
+//		List<IEObjectDescription> lod = new ArrayList<IEObjectDescription>();
+//		for (IEObjectDescription desc : filteredDescs) {
+//			lod.add(desc);
 //		}
-//		return found;
+		List<IEObjectDescription> lod = ndxUtil.searchAllVisibleEObjectDescriptions(context, type, name);
+		return lod;
 	}
 
 	/**
