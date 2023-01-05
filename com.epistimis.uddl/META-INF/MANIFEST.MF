@@ -36,4 +36,6 @@ Export-Package: com.epistimis.uddl.parser.antlr,
  com.epistimis.uddl.serializer,
  com.epistimis.uddl.formatting2
 Import-Package: org.apache.log4j,
- org.eclipse.emf.ecore.resource
+ org.eclipse.emf.ecore.impl,
+ org.eclipse.emf.ecore.resource,
+ org.eclipse.jdt.annotation

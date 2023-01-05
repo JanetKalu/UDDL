@@ -3,6 +3,7 @@
  */
 package com.epistimis.uddl;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
@@ -16,6 +17,17 @@ import com.epistimis.uddl.scoping.IndexUtilities;
  * Equinox extension registry.
  */
 public class UddlRuntimeModule extends AbstractUddlRuntimeModule {
+
+	/**
+	 * Concept taken from org.eclipse.ocl.examples.pivot.tests.PivotTestCase.java
+	 * It appears that the idea is to uniquely identify the plugin. So the question is 
+	 * "Where should this identifier be?" 
+	 * 
+	 * It seemed to me that the RuntimeModule is a [Schelling point](https://en.wikipedia.org/wiki/Focal_point_(game_theory))
+	 * 
+	 * The value should be the package name. If we can dynamically determine this, so much the better.
+	 */
+	public static final @NonNull String PLUGIN_ID = "com.epistimis.uddl";
 
 	@Override
 	public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
