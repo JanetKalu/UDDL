@@ -83,8 +83,11 @@ public class UddlValidator extends AbstractUddlValidator {
      * @param localFileName - relative to the plugin root directory (not the Maven parent directory) - see examples
      * @return a properly constructed URI
      */
-	protected static @NonNull URI getInputURI(@NonNull String localFileName) {
-		String plugInPrefix = com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID + "/";
+	protected  @NonNull URI getInputURI(@NonNull String localFileName) {
+		return getInputURI(localFileName, com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
+	}
+	protected static @NonNull URI getInputURI(@NonNull String localFileName, @NonNull String  pluginId) {
+		String plugInPrefix = pluginId + "/";
 		URI plugURI = EcorePlugin.IS_ECLIPSE_RUNNING ? URI.createPlatformPluginURI(plugInPrefix, true) : URI.createPlatformResourceURI(plugInPrefix, true);
 		URI localURI = URI.createURI(localFileName.startsWith("/") ? localFileName.substring(1) : localFileName);
 		return localURI.resolve(plugURI);
