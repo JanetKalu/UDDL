@@ -8,10 +8,17 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.ocl.xtext.completeocl.validation.CompleteOCLEObjectValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
+import org.eclipse.ocl.pivot.model.OCLstdlib;
+import org.eclipse.ocl.pivot.utilities.ClassUtil;
+import org.eclipse.ocl.pivot.utilities.NameUtil;
 
 import com.epistimis.uddl.CLPExtractors;
 import com.epistimis.uddl.uddl.ConceptualCharacteristic;
@@ -34,29 +41,65 @@ public class UddlValidator extends AbstractUddlValidator {
 	private void loadAndRegister(EValidatorRegistrar registrar, String resourceAddress) {
 		/**
 		 * NOTE: AbstractInjectableValidator::register registers validators for the entire inheritance 
-		 * hierarchy. This does not do that for the following reason:
-		 * Each OCL file is for a specific package, so registering it for other packages doesn't make any sense.
+		 * hierarchy ( because of the base class implementation of getEPackages() )
+		 * 
+		 * This does not do that. Each OCL file is associated with a specific package, so it need not
+		 * be registered to others.
 		 * If there is a need, manually re-register the OCL file for multiple packages.
+		 * 
+		 * See https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.ocl.doc%2Fhelp%2FInstallation.html
+		 * for sample code
+		 * 
+		 * getInputURI replaces that example's URI creation
 		 */
 	       UddlPackage ePackage = UddlPackage.eINSTANCE;
-	        URI oclURI = URI.createPlatformResourceURI(
-	        		resourceAddress, true);
+	        URI oclURI = getInputURI(resourceAddress);
 	        registrar.register(ePackage,
 	            new CompleteOCLEObjectValidator(ePackage, oclURI));
 	}
     @Override
     public void register(EValidatorRegistrar registrar) {
         super.register(registrar);
-//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/uddl.ocl");
-//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/datamodel.ocl");
-//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/conceptual.ocl");
-//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/logical.ocl");
-//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/platform.ocl");
-        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/specialCategoriesOfData.ocl");
-//        loadAndRegister(registrar,"/com.epistimis.uddl/src/com/epistimis/uddl/constraints/logicalExtensions.ocl");
+
+        /**
+         * Registrations here are for OCL we ALWAYS want available. 
+         */
+        OCLstdlib.install();
+//        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/realizedObservables.ocl");
+//        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/specialCategoriesOfData.ocl");
+//        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/uddl.ocl");
+//        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/datamodel.ocl");
+//        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/conceptual.ocl");
+//        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/logical.ocl");
+//        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/platform.ocl");
+//        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/logicalExtensions.ocl");
     }
     
+    /**
+     * Copied from org.eclipse.ocl.examples.pivot.tests.PivotTestCase.java: getModelURI
+     * See https://eclipse.googlesource.com/ocl/org.eclipse.ocl/+/refs/heads/master/tests/org.eclipse.ocl.examples.xtext.tests/src/org/eclipse/ocl/examples/pivot/tests/PivotTestCase.java
+	 * and https://eclipse.googlesource.com/ocl/org.eclipse.ocl/+/refs/heads/master/tests/org.eclipse.ocl.examples.xtext.tests/src/org/eclipse/ocl/examples/test/xtext/PivotDocumentationExamples.java
+     * and https://eclipse.googlesource.com/ocl/org.eclipse.ocl/+/refs/heads/master/tests/org.eclipse.ocl.examples.xtext.tests/models/documentation/parsingDocumentsExample.ocl?autodive=0%2F%2F
+     * @param localFileName - relative to the plugin root directory (not the Maven parent directory) - see examples
+     * @return a properly constructed URI
+     */
+	protected static @NonNull URI getInputURI(@NonNull String localFileName) {
+		String plugInPrefix = com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID + "/";
+		URI plugURI = EcorePlugin.IS_ECLIPSE_RUNNING ? URI.createPlatformPluginURI(plugInPrefix, true) : URI.createPlatformResourceURI(plugInPrefix, true);
+		URI localURI = URI.createURI(localFileName.startsWith("/") ? localFileName.substring(1) : localFileName);
+		return localURI.resolve(plugURI);
+	}
 	
+	/**
+	 * In case we need a minimal registry (standalone runs - where we need to create the resource set as well)
+	 * See https://eclipse.googlesource.com/ocl/org.eclipse.ocl/+/refs/heads/master/tests/org.eclipse.ocl.examples.xtext.tests/src/org/eclipse/ocl/examples/test/xtext/PivotDocumentationExamples.java
+	 * @return a Package Registry for this package
+	 */
+	protected EPackage.Registry createMinimalRegistry() {
+		EPackage.Registry registry = new EPackageRegistryImpl();
+		registry.put(UddlPackage.eNS_URI, UddlPackage.eINSTANCE);
+		return registry;
+	}
 	/**
 	 * Structures must have more than 1 member - but they can be inherited - so check entire specialization hierarchy
 	 * for:
