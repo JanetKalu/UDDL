@@ -54,7 +54,16 @@ Then click **Open**. This will then populate the dialog like this:
 
 You should see the parent project and 8 nested projects. They should all be selected. Then click **Finish**. 
 
-1. The repository does not store every file that the project uses. Some need to be generated. Open /com.epistimis.uddl/src/com/epistimis/uddl/Uddl.xtext (see screenshot)
+2. The repository does not store every file that the project uses. Some need to be generated. Before you do anything else, you must make sure the build environment is properly set up. Right click on the `com.epistimis.uddl` project in the project explorer and select **Properties** from the context menu:
+![Screenshot 2023-01-15 at 8 15 32 AM](https://user-images.githubusercontent.com/120406738/212552934-e319f454-ee76-425e-ac69-535771c5e519.png)
+
+The select **Java Build Path** (you can type it in the text field at the upper left of the dialog to narrow the choices) and then select the **Libraries** tab. Under the **Classpath** choice you should see **Plug-in Dependencies**. 
+![Screenshot 2023-01-15 at 8 16 34 AM](https://user-images.githubusercontent.com/120406738/212552898-99a08014-8109-4ae1-9512-b3160c06f918.png)
+If you do not, click the **Add Library...** button to get:
+![Screenshot 2023-01-15 at 8 16 56 AM](https://user-images.githubusercontent.com/120406738/212552883-f4d887d3-526a-4c30-9b8d-b621e8f48d48.png)
+Select **Plug-in Dependencies** in the dialog, then click **Next** and **Finish**
+
+3. Open /com.epistimis.uddl/src/com/epistimis/uddl/Uddl.xtext (see screenshot)
 ![Screenshot 2023-01-14 at 5 42 21 PM](https://user-images.githubusercontent.com/120406738/212508222-bf4b4003-a1e4-4c32-b1e8-067ce2daed04.png)
 
 then right click in the edit window to bring up the context menu and select Run As -> Generate XText Artifacts
@@ -84,13 +93,13 @@ The code that formats the UDDL file can be found in
 ```
 /com.epistimis.uddl/src/com/epistimis/uddl/formatting2/UddlFormatter.xtend
 ```
-It already contains a lot of work - but it is not yet complete. Nor is the sample UDDL file.  Your task is to use what you see as an example and extend 
-the code to properly format A) Everything you see in the existing UDDL file; B) A larger UDDL file that contains at least 3 of each of the things described
-in the Uddl.xtext file.  
+It already contains a lot of work - but it is not yet complete. Nor is the sample UDDL file.  Your task is to use what you see as an example and extend the code to properly format 
+- [ ] Everything you see in the existing UDDL file; 
+- [ ] One or more larger UDDL files that contains at least 3 of each of the things described in the Uddl.xtext file.  
 
-Note that the exaxmple UDDL file you see is already partially formatted. That won't always be the case. You should create sample files that take worst case 
-formatted files (there are at least 2 worst cases - at opposite ends of the spectrum) and make sure your formatting works on them as well. You can create 
-those worst case formatted files starting from the sample file if you want.
+Note that the exaxmple UDDL file you see is already partially formatted. That won't always be the case. You should create sample files that take worst 
+case formatted files (there are at least 2 worst cases - at opposite ends of the spectrum) and make sure your formatting works on them as well. You 
+can create those worst case formatted files starting from the sample file if you want.
 
 ## What you should submit
 Take as long as you want creating test files, and updating and testing your code changes. I don't expect you to completely finish though you're certainly 
@@ -101,7 +110,10 @@ Feel free to include info on any additional research you needed to do.
 ## What I'm looking for
 
 1. Can you figure out what test files you need? And a good way to create them?
+1. Why did I say that larger UDDL files should contain at least 3 of each of the things?
+1. What are worst cases - and why are they worst cases? Are there more than 2?
 1. What code changes did you make? Do they work? What do they do? What do they look like?
 
-## ***NOTE*** I have not included with this any documentation explaining what the content of the UDDL means. It isn't necessary for the purpose of this exercise.
-Your focus is on making the file format properly.  If you do happen to figure it out, let me know what you found.
+## ***NOTE*** 
+I have not included with this any documentation explaining what the content of the UDDL means. It isn't necessary for the purpose of this exercise.
+Your focus is on making the file format properly.  If you do happen to figure out what UDDL does, let me know what you found. That's bonus points.
