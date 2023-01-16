@@ -2,6 +2,7 @@ module com.epistimis.uddl.GenerateUddl
 
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
+import org.eclipse.xtext.xtext.generator.ui.*
 
 var rootPath = ".."
 
@@ -42,6 +43,9 @@ Workflow {
 		    fragment = io.typefox.xtext2langium.Xtext2LangiumFragment {
 		        outputPath = './langium'
 		    }
+			// rename refactoring
+			fragment = refactoring.RefactorElementNameFragment2 {}
+			fragment = org.eclipse.xtext.xtext.generator.ui.codemining.CodeMiningFragment {}
 
 			serializer = {
 				generateStub = false
