@@ -1,4 +1,4 @@
-import  '../../../../../model/generated/Uddl.ecore'
+import  'platform:/resource/com.epistimis.uddl/model/generated/Uddl.ecore'
 --import 'http://www.epistimis.com/uddl/Uddl'
     /*
      * The entire process of applying OCL for data usage constraints revolves around determining what Observable is being realized by any particular Entity/Composition/Participant.
@@ -29,6 +29,12 @@ import  '../../../../../model/generated/Uddl.ecore'
      */
 
 package uddl
+  context UddlElement
+  
+   /**
+	 * Declare a helper operation to map an ok/warning verdict to ok/error.
+	 */
+	def: asError(verdict : Boolean) : Boolean = if verdict then true else null endif
 
 /**
  * This section defines constituentObservables
@@ -43,12 +49,12 @@ package uddl
     	 */
 	  def: constituentObservables(): Set(ConceptualObservable) =
 	      if self.oclIsTypeOf(ConceptualAssociation) then
-	        self.oclAsType(ConceptualAssociation).constituentObservables()
+	        self.oclAsType(ConceptualAssociation).constituentObservables()->flatten()
 	      else 
 	      	if self.oclIsTypeOf(ConceptualObservable) then
 	      		Set{self.oclAsType(ConceptualObservable)}
 	      	else 
-	        	self.oclAsType(ConceptualEntity).constituentObservables()
+	        	self.oclAsType(ConceptualEntity).constituentObservables()->flatten()
 	      	endif
 	      endif
 
@@ -64,10 +70,10 @@ package uddl
     	 * NOTE: This will recurse with the other constituentObservables() methods
     	 */
 	  def: constituentObservables(): Set(ConceptualObservable) =
-		let constituentSpecializes = self.specializes.constituentObservables() in
+		let constituentSpecializes = self.specializes.constituentObservables()->flatten() in
 			
-			self.composition->collect(constituentObservables())
-			->union(constituentSpecializes)
+			self.composition->collect(obj: ConceptualComposition | obj.constituentObservables())
+--			->union(constituentSpecializes)
 			->flatten()->asSet()
  
     context ConceptualAssociation
@@ -78,11 +84,14 @@ package uddl
     	 * NOTE: This will recurse with the other constituentObservables() methods
     	 */
 	  def: constituentObservables(): Set(ConceptualObservable) =
-		let compObs = self.composition->collect(constituentObservables())->flatten(),
-			partObs = self.participant->collect(constituentObservables())->flatten(),
-		    constituentSpecializes = self.specializes.constituentObservables() in
+		let compObs = self.composition->collect(obj: ConceptualComposition | obj.constituentObservables())->flatten()
+			,partObs = self.participant->collect(obj: ConceptualParticipant | obj.constituentObservables())->flatten()
+--		    ,constituentSpecializes = self.specializes.constituentObservables() 
+		    in
 		    	
-			compObs->union(partObs)->union(constituentSpecializes)->flatten()->asSet()
+			compObs->union(partObs)
+--			->union(constituentSpecializes)
+			->flatten()->asSet()
 
     context ConceptualCharacteristic
     	/**
@@ -93,9 +102,9 @@ package uddl
     	 */
 	  def: constituentObservables(): Set(ConceptualObservable) =
 	      if self.oclIsTypeOf(ConceptualComposition) then
-	        self.oclAsType(ConceptualComposition).constituentObservables()
+	        self.oclAsType(ConceptualComposition).constituentObservables()->flatten()
 	      else 
-	        self.oclAsType(ConceptualParticipant).constituentObservables()
+	        self.oclAsType(ConceptualParticipant).constituentObservables()->flatten()
 	      endif
 
 	context ConceptualComposition
@@ -106,7 +115,9 @@ package uddl
     	 * NOTE: This will recurse with the other constituentObservables() methods
     	 */
 	  def: constituentObservables(): Set(ConceptualObservable) =
-		self.type.constituentObservables()->union(self.specializes.constituentObservables())->flatten()->asSet()
+		self.type.constituentObservables()
+--		->union(self.specializes.constituentObservables())
+		->flatten()->asSet()
 
 
   	context ConceptualParticipant
@@ -117,7 +128,9 @@ package uddl
     	 * NOTE: This will recurse with the other constituentObservables() methods
     	 */
 	  def: constituentObservables(): Set(ConceptualObservable) =
- 		self.type.constituentObservables()->union(self.specializes.constituentObservables())->flatten()->asSet()
+ 		self.type.constituentObservables()
+-- 		->union(self.specializes.constituentObservables())
+ 		->flatten()->asSet()
   
   
   /**
@@ -130,17 +143,19 @@ package uddl
 	     * can be used for analysis
 	     */
       def: realizedConceptuals() : Sequence(OclAny) =
-		let realizedEnt = self.realizes,
-			realizedCompositions = self.composition->collect(realizes),
-			realizedSpecializes = self.specializes.realizedConceptuals()
+		let realizedEnt = self.realizes
+			,realizedCompositions = self.composition->collect(obj: LogicalComposition| obj.realizes)->flatten()
+--			,realizedSpecializes = self.specializes.realizedConceptuals()
 		 in
-		 Sequence{realizedEnt, realizedCompositions,realizedSpecializes}
+		 Sequence{realizedEnt, realizedCompositions} --,realizedSpecializes}
 
 	  def: constituentObservables(): Set(ConceptualObservable) =
-		let realizedCompositions = self.composition->collect(realizes),
-			realizedSpecializes = self.specializes.realizedConceptuals() in
-			realizedCompositions->collect(constituentObservables())->
-			union(realizedSpecializes->collect(constituentObservables()))->flatten()->asSet()
+		let realizedCompositions = self.composition->collect(obj: LogicalComposition| obj.realizes)->flatten()
+--			,realizedSpecializes = self.specializes.realizedConceptuals() 
+			in
+			realizedCompositions->collect(obj: ConceptualComposition | obj.constituentObservables())
+--			->union(realizedSpecializes->collect(constituentObservables()))
+			->flatten()->asSet()
 
 
 
@@ -150,21 +165,22 @@ package uddl
 	     * can be used for analysis
 	     */
       def: realizedConceptuals() : Sequence(OclAny) =
-		let realizedEnt = self.realizes,
-			realizedCompositions = self.composition->collect(realizes),
-			realizedParticipants = self.participant->collect(realizes),
-			realizedSpecializes = self.specializes.realizedConceptuals()
+		let realizedEnt = self.realizes
+			,realizedCompositions = self.composition->collect(realizes)
+			,realizedParticipants = self.participant->collect(realizes)
+--			,realizedSpecializes = self.specializes.realizedConceptuals()
 		 in
-		 Sequence{realizedEnt, realizedCompositions, realizedParticipants,realizedSpecializes}
+		 Sequence{realizedEnt, realizedCompositions, realizedParticipants} --,realizedSpecializes}
 
  	  def: constituentObservables(): Set(ConceptualObservable) =
-		let realizedCompositions = self.composition->collect(realizes),
-			realizedParticipants = self.participant->collect(realizes),
-			realizedSpecializes = self.specializes.realizedConceptuals() in
+		let realizedCompositions = self.composition->collect(realizes)->flatten()
+			,realizedParticipants = self.participant->collect(realizes)->flatten()
+--			,realizedSpecializes = self.specializes.realizedConceptuals() 
+			in
 			
-			realizedCompositions->collect(constituentObservables())
-			->union(realizedParticipants->collect(constituentObservables()))
-			->union(realizedSpecializes->collect(constituentObservables()))
+			realizedCompositions->collect(obj: ConceptualComposition | obj.constituentObservables())
+			->union(realizedParticipants->collect(obj: ConceptualParticipant | obj.constituentObservables()))
+--			->union(realizedSpecializes->collect(constituentObservables()))
 			->flatten()->asSet()
    
     context PlatformEntity
@@ -182,17 +198,21 @@ package uddl
 	     * 
 	     */
       def: realizedConceptuals() : Sequence(OclAny) =
-		let realizedEnt = self.realizes.realizes,
-			realizedCompositions = self.composition->collect(realizes.realizes),
-			realizedSpecializes = self.specializes.realizedConceptuals()
+		let realizedEnt = self.realizes.realizes
+			,realizedCompositions = self.composition->collect(obj: PlatformComposition| obj.realizes.realizes)->flatten()
+--			,realizedSpecializes = self.specializes.realizedConceptuals()
 		 in
-		 Sequence{realizedEnt, realizedCompositions, realizedSpecializes}
+		 Sequence{realizedEnt, realizedCompositions } -- , realizedSpecializes}
 
 	  def: constituentObservables(): Set(ConceptualObservable) =
-		let realizedCompositions = self.composition->collect(realizes.realizes),
-			realizedSpecializes = self.specializes.realizedConceptuals() in
-			realizedCompositions->collect(constituentObservables())->
-			union(realizedSpecializes->collect(constituentObservables()))->flatten()->asSet()
+		let realizedCompositions = self.composition->collect(obj: PlatformComposition| obj.realizes.realizes)->flatten()
+--			,realizedSpecializes = self.specializes.realizedConceptuals() 
+			in
+			realizedCompositions->collect(obj: ConceptualComposition | obj.constituentObservables())
+--			->union(realizedSpecializes->collect(constituentObservables()))
+			->flatten()->asSet()
+		
+	  inv noReligiousAffiliationDataUsed('PlatformEntity '+ self.name + ' uses a Religious Affiliation Data. Remove that usage to continue'): not self.constituentObservables()->collect(name.toLowerCase())->includes('religion')
 
     context PlatformAssociation
  	    /*
@@ -209,21 +229,25 @@ package uddl
          * specialize nothing, a PlatformEntity, or a PlatformAssociation. NOTE that this means knowing what a sequence con
 	     */
       def: realizedConceptuals() : Sequence(OclAny) =
-		let realizedEnt = self.realizes.realizes,
-			realizedCompositions = self.composition->collect(realizes.realizes),
-			realizedParticipants = self.participant->collect(realizes.realizes),
-			realizedSpecializes = self.specializes.realizedConceptuals()
+		let realizedEnt = self.realizes.realizes
+			,realizedCompositions = self.composition->collect(realizes.realizes)
+			,realizedParticipants = self.participant->collect(realizes.realizes)
+--			,realizedSpecializes = self.specializes.realizedConceptuals()
 		 in
-		 Sequence{realizedEnt, realizedCompositions, realizedParticipants,realizedSpecializes}
+		 Sequence{realizedEnt, realizedCompositions, realizedParticipants} --,realizedSpecializes}
 
 	  def: constituentObservables(): Set(ConceptualObservable) =
-		let realizedCompositions = self.composition->collect(realizes.realizes),
-			realizedParticipants = self.participant->collect(realizes.realizes),
-			realizedSpecializes = self.specializes.realizedConceptuals() in
+		let realizedCompositions = self.composition->collect(realizes.realizes)->flatten()
+			,realizedParticipants = self.participant->collect(realizes.realizes)->flatten()
+--			,realizedSpecializes = self.specializes.realizedConceptuals() 
+			in
 			
-			realizedCompositions->collect(constituentObservables())
-			->union(realizedParticipants->collect(constituentObservables()))
-			->union(realizedSpecializes->collect(constituentObservables()))
+			realizedCompositions->collect(obj: ConceptualComposition | obj.constituentObservables())
+			->union(realizedParticipants->collect(obj: ConceptualParticipant | obj.constituentObservables()))
+--			->union(realizedSpecializes->collect(obj: Sequence{PlatformEntity | obj.constituentObservables()))
 			->flatten()->asSet()
+
+--		inv noSpecialCategoryDataUsed('PlatformAssociation '+ self.name + ' uses a Special Category of Data. Remove that usage to continue'): 
+--			 asError(not self.constituentObservables()->collect(name.toLowerCase())->includes('health')) 
 			   
 endpackage
