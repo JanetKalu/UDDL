@@ -12,7 +12,7 @@ This tooling is based on several Open Source tools.
 Your interview will consist of 
 1. Installing the relevant open source tools according to the directions in this file
 1. Reading some documentation about [XText document formatting](https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#formatting) and [XTend](https://www.eclipse.org/xtend/), the JVM based language being used.
-1. Pull this repo and review the existing content of a program file (UddlFormatter.xtend) and a data file ( )
+1. Pull this repo and review the existing content of a program file (UddlFormatter.xtend) and a data file (UDDL_SDM_Min.uddl )
 1. Modification of UddlFormatter.xtend so that the data file formats in a way that is visually appealing.
 1. Creation of a new branch on this repo named after you. That branch should contain the changes you want me to review.  The commit description should explain any decisions you made. At a minimum you will need to modify UddlFormatter.xtend. You may find it useful to create or modify other files.
 
@@ -97,7 +97,7 @@ It already contains a lot of work - but it is not yet complete. Nor is the sampl
 - [ ] Everything you see in the existing UDDL file; 
 - [ ] One or more larger UDDL files that contains at least 3 of each of the things described in the Uddl.xtext file.  
 
-Note that the exaxmple UDDL file you see is already partially formatted. That won't always be the case. You should create sample files that take worst 
+Note that the example UDDL file you see is already partially formatted. That won't always be the case. You should create sample files that take worst 
 case formatted files (there are at least 2 worst cases - at opposite ends of the spectrum) and make sure your formatting works on them as well. You 
 can create those worst case formatted files starting from the sample file if you want.
 
