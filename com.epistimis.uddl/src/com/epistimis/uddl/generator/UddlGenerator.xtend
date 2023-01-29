@@ -51,6 +51,9 @@ class UddlGenerator extends AbstractGenerator {
 		 */
 		RealizedComposableElement.linkTypes();
 
+		/**
+		 * Set up the generator map
+		 */
 		val gen1 = new CppDataStructureGenerator(RealizedComposableElement.allComposableElements);
 		gen1.doGenerate(resource, fsa, context);
 

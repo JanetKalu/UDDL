@@ -28,7 +28,7 @@ import com.epistimis.uddl.uddl.PlatformComposableElement
  * This is the common portion of a data structure generator. It will be the base class for every data structure
  * generator for each language.
  */
-class CppDataStructureGenerator extends CommonDataStructureGenerator {
+class ScalaDataStructureGenerator extends CommonDataStructureGenerator {
 
 	new(Map<PlatformComposableElement,RealizedComposableElement> ace) {
 		super(ace);
@@ -39,49 +39,48 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 		initialize();
 	}
 
-	override String getRootDirectory() { return "cpp/"; }
+	override String getRootDirectory() { return "scala/"; }
 
-	override String getFileExtension() { return ".hpp"; }
+	override String getFileExtension() { return ".scala"; }
 
 	/**
 	 * TODO: Structured FDTs aren't currently supported 
-	 * dispatch methods can't be abstract - so force override
 	 */
 	override dispatch String getTypeString(PlatformDataType pdt) {
 		switch (pdt) {
-			PlatformBoundedString: "string"
-			PlatformCharArray: "char[" + pdt.length + "]"
-			PlatformString: "string"
-			PlatformBoolean: "bool"
-			PlatformChar: "char"
-			PlatformFloat: "float"
-			PlatformDouble: "double"
-			PlatformLongDouble: "long double"
-			PlatformShort: "short"
-			PlatformLong: "long"
-			PlatformLongLong: "long long"
-			PlatformUShort: "unsigned short"
-			PlatformULong: "unsigned long"
-			PlatformULongLong: "unsigned long long"
+			PlatformBoundedString:  "String"
+			PlatformCharArray:  "["+pdt.length + "]Char"
+			PlatformString :  	"String"
+			PlatformBoolean :  	"Boolean"
+			PlatformChar:  		"Char"
+			PlatformFloat:  	"Float"
+			PlatformDouble:  	"Double"
+			//PlatformLongDouble: "complex128"
+			PlatformShort:  	"Short"
+			PlatformLong:  		"Int"
+			PlatformLongLong:  	"Long"
+			//PlatformUShort:  	"uint16"
+			//PlatformULong:  	"uint32"
+			//PlatformULongLong:  "uint64"
 			// These two last because they are base classes
-			PlatformUnsignedInteger: "unsigned int"
-			PlatformInteger: "int"
+			//PlatformUnsignedInteger:"uint" 
+			PlatformInteger:  	"Int"
 			// TODO: Others not yet supported
 			default: ""
 		}
 	}
+	
+	override String getImportPrefix() { return 'import "'; }
 
-	override String getImportPrefix() { return "#include '"; }
+	override String getImportSuffix() { return '"\n'; }
 
-	override String getImportSuffix() { return "'\n"; }
+	override String getTypeDefPrefix() { return "type"; }
 
-	override String getTypeDefPrefix() { return "typedef"; }
-
-	override String getNamespaceKwd() { return "namespace";}
+	override String getNamespaceKwd() { return "package";}
 
 	override String getClazzKwd() { return "class";}
 
-	override String getSpecializesKwd() { return ":" ;}
+	override String getSpecializesKwd() { return "extends" ;}
 
 	override String getCompositionVisibility() { return "private" ;}
 

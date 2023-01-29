@@ -212,7 +212,8 @@ package uddl
 --			->union(realizedSpecializes->collect(constituentObservables()))
 			->flatten()->asSet()
 		
-	  inv noReligiousAffiliationDataUsed('PlatformEntity '+ self.name + ' uses a Religious Affiliation Data. Remove that usage to continue'): not self.constituentObservables()->collect(name.toLowerCase())->includes('religion')
+	  inv noReligiousAffiliationDataUsed('PlatformEntity '+ self.name + ' uses Religious Affiliation Data. Remove that usage to continue'): not self.constituentObservables()->collect(name.toLowerCase())->includes('religion')
+	  inv noPoliticalAffiliationDataUsed('PlatformEntity '+ self.name + ' uses Political Affiliation Data. Remove that usage to continue'): not self.constituentObservables()->collect(name.toLowerCase())->includes('politics')
 
     context PlatformAssociation
  	    /*
