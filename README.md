@@ -21,7 +21,7 @@ See the [Getting Started Guide](GETTING_STARTED.md) for info on setting up an Ec
 Note that this repo depends on the [UDDL Query](https://github.com/Epistimis/com.epistimis.uddl.query.parent) repo. You'll need to include that in your workspace for the build to succeed.
 
 # Security and Bug Reports
-For most bugs, create a GitHub issue. If you believe you have found a security issue, see [Security[(SECURITY.md) for reporting instructions.
+For most bugs, create a GitHub issue. If you believe you have found a security issue, see [Security](SECURITY.md) for reporting instructions.
 
 # User Doc
 We need user Doc! A draft will be provided soon in Markdown and linked here. Stay tuned!
