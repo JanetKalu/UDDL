@@ -65,7 +65,11 @@ public class UddlValidator extends AbstractUddlValidator {
 		 * getInputURI replaces that example's URI creation
 		 */
 		URI oclURI = getInputURI(resourceAddress);
-		registrar.register(ePackage, new CompleteOCLEObjectValidator(ePackage, oclURI));
+		CompleteOCLEObjectValidator v = new CompleteOCLEObjectValidator(ePackage, oclURI);
+		for (EPackage pkg : getEPackages()) {
+			registrar.register(pkg, v);
+		}
+		//registrar.register(ePackage, v);
 	}
 	protected void loadAndRegister(EValidatorRegistrar registrar, String resourceAddress, EPackage ePackage, @NonNull String pluginId) {
 		/**
@@ -95,19 +99,22 @@ public class UddlValidator extends AbstractUddlValidator {
 		 * Registrations here are for OCL we ALWAYS want available.
 		 */
 		OCLstdlib.install();
-		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/realizedObservables.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
+//		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/logicalExtensions.ocl"	,UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
 //        loadAndRegister(registrar,"src/com/epistimis/uddl/constraints/specialCategoriesOfData.ocl");
 		/**
 		 * TODO: These don't appear to be having any effect. It could be because we have
 		 * no way to invoke the validators created here. Or that they are invoked and
-		 * fail silently
+		 * fail silently.
+		 * 
+		 * Commented out to eliminate potential performance problems. These should be loaded and run only 
+		 * on command - not here where they get triggered in the editor constantly.
 		 */
-		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/uddl.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
-		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/datamodel.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
-		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/conceptual.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
-		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/logical.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
-		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/platform.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
-		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/logicalExtensions.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
+//		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/uddl.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
+//		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/datamodel.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
+//		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/conceptual.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
+//		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/logical.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
+//		loadAndRegister(registrar, "src/com/epistimis/uddl/constraints/platform.ocl",UddlPackage.eINSTANCE,com.epistimis.uddl.UddlRuntimeModule.PLUGIN_ID);
+
 	}
 
 	/**
