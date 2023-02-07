@@ -93,10 +93,6 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 		cleanup();
 	}
 
-//	static protected String DIR_DELIMITER = '/';
-//	static protected String getFileExtension() = ".hpp";
-//	static protected String getRootDirectory() = "cpp/";
-
 	def getDirDelimiter() {
 		return System.getProperty("file.separator");
 	}
@@ -131,12 +127,15 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 	
 	def String getCompositionVisibility()
 	
+	/** This method gets around a problem with inheritance and dispatch methods */
+	def String getPDTTypeString(PlatformDataType pdt);
+	
 	/**
 	 * TODO: Structured FDTs aren't currently supported 
 	 * dispatch methods can't be abstract - so force override
 	 */
 	def dispatch String getTypeString(PlatformDataType pdt) {
-		throw new RuntimeException("You must override this method");
+		return pdt.PDTTypeString;
 	} 
 	def dispatch String getTypeString(PlatformEntity ent) {
 		return ent.name;

@@ -35,7 +35,7 @@ class GoDataStructureGenerator extends CommonDataStructureGenerator {
 	/**
 	 * TODO: Structured FDTs aren't currently supported 
 	 */
-	override dispatch String getTypeString(PlatformDataType pdt) {
+	override String getPDTTypeString(PlatformDataType pdt) {
 		switch (pdt) {
 			PlatformBoundedString:  "string"
 			PlatformCharArray:  "["+pdt.length + "]byte"

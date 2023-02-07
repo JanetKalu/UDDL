@@ -1,29 +1,23 @@
 package com.epistimis.uddl.generator
 
+import com.epistimis.uddl.uddl.PlatformAssociation
 import com.epistimis.uddl.uddl.PlatformBoolean
 import com.epistimis.uddl.uddl.PlatformBoundedString
-import com.epistimis.uddl.uddl.PlatformChar
 import com.epistimis.uddl.uddl.PlatformCharArray
+import com.epistimis.uddl.uddl.PlatformComposableElement
+import com.epistimis.uddl.uddl.PlatformDataModel
 import com.epistimis.uddl.uddl.PlatformDataType
 import com.epistimis.uddl.uddl.PlatformDouble
+import com.epistimis.uddl.uddl.PlatformEntity
+import com.epistimis.uddl.uddl.PlatformFixed
 import com.epistimis.uddl.uddl.PlatformFloat
 import com.epistimis.uddl.uddl.PlatformInteger
 import com.epistimis.uddl.uddl.PlatformLong
-import com.epistimis.uddl.uddl.PlatformLongDouble
-import com.epistimis.uddl.uddl.PlatformLongLong
-import com.epistimis.uddl.uddl.PlatformShort
 import com.epistimis.uddl.uddl.PlatformString
 import com.epistimis.uddl.uddl.PlatformULong
-import com.epistimis.uddl.uddl.PlatformULongLong
-import com.epistimis.uddl.uddl.PlatformUShort
 import com.epistimis.uddl.uddl.PlatformUnsignedInteger
-import com.epistimis.uddl.uddl.PlatformEntity
 import java.util.ArrayList
-import com.epistimis.uddl.uddl.PlatformDataModel
 import java.util.List
-import com.epistimis.uddl.uddl.PlatformAssociation
-import com.epistimis.uddl.uddl.PlatformFixed
-import com.epistimis.uddl.uddl.PlatformComposableElement
 import java.util.Map
 
 /**
@@ -54,7 +48,7 @@ class ProtobufDataStructureGenerator extends CommonDataStructureGenerator {
 	/**
 	 * TODO: Structured FDTs aren't currently supported 
 	 */
-	override dispatch String getTypeString(PlatformDataType pdt) {
+	override String getPDTTypeString(PlatformDataType pdt) {
 		switch (pdt) {
 			PlatformBoundedString:  "string"
 			PlatformCharArray:  "["+pdt.length + "]bytes"

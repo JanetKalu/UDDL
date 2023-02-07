@@ -47,7 +47,7 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 	 * TODO: Structured FDTs aren't currently supported 
 	 * dispatch methods can't be abstract - so force override
 	 */
-	override dispatch String getTypeString(PlatformDataType pdt) {
+	override String getPDTTypeString(PlatformDataType pdt) {
 		switch (pdt) {
 			PlatformBoundedString: "string"
 			PlatformCharArray: "char[" + pdt.length + "]"
@@ -85,4 +85,6 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String getCompositionVisibility() { return "private" ;}
 
+
+	
 }

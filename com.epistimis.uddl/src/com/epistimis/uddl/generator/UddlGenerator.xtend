@@ -52,10 +52,16 @@ class UddlGenerator extends AbstractGenerator {
 		RealizedComposableElement.linkTypes();
 
 		/**
-		 * Set up the generator map
+		 * 
+		 * For now we do IDL and Protobuf and SQL at the structure level because, at this level, there 
+		 * is no indication which language a software component will be generated in.
 		 */
-		val gen1 = new CppDataStructureGenerator(RealizedComposableElement.allComposableElements);
+		val gen1 = new IDLDataStructureGenerator(RealizedComposableElement.allComposableElements);
 		gen1.doGenerate(resource, fsa, context);
+		val gen2 = new ProtobufDataStructureGenerator(RealizedComposableElement.allComposableElements);
+		gen2.doGenerate(resource, fsa, context);
+		val gen3 = new RDBMSDataStructureGenerator(RealizedComposableElement.allComposableElements);
+		gen3.doGenerate(resource, fsa, context);
 
 	/**
 	 * Generating code from UDDL means generating data structures. To generate data structures we need to process both the UDDL and
