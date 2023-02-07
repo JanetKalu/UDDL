@@ -488,4 +488,56 @@
 			<newWizardShortcut id="com.epistimis.uddl.ui.wizard.UddlNewFileWizard"/>
 		</perspectiveExtension>
 	</extension>
+    <!-- Rename Refactoring -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="com.epistimis.uddl.ui.UddlExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
+			<activeWhen>
+				<reference
+					definitionId="com.epistimis.uddl.Uddl.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.edit">
+			<command commandId="org.eclipse.xtext.ui.refactoring.RenameElement"
+				style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="com.epistimis.uddl.Uddl.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="com.epistimis.uddl.Uddl"
+			class="com.epistimis.uddl.ui.UddlExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+			id="com.epistimis.uddl.Uddl.refactoring"
+			name="Refactoring">
+			<keywordReference id="com.epistimis.uddl.ui.keyword_Uddl"/>
+		</page>
+	</extension>
+	<!-- code mining -->
+	<extension point="org.eclipse.ui.workbench.texteditor.codeMiningProviders">
+		<codeMiningProvider
+			class="com.epistimis.uddl.ui.UddlExecutableExtensionFactory:org.eclipse.jface.text.codemining.ICodeMiningProvider"
+			id="com.epistimis.uddl.Uddl.CodeMiningProvider"
+			label="Uddl Codemining">
+			<enabledWhen>
+				<with variable="editorInput">
+					<adapt type="org.eclipse.core.resources.IFile">
+						<test
+							property="org.eclipse.core.resources.contentTypeId"
+							value="com.epistimis.uddl.Uddl.contenttype">
+						</test>
+					</adapt>
+				</with>
+			</enabledWhen>
+		</codeMiningProvider>
+	</extension>
 </plugin>
