@@ -35,12 +35,15 @@ QualifiedNameWithWildcard:
 
  // Metamodel concepts starts here
 
-UddlElement:
+UddlElement:  // This is datamodel.Element but it's too much hassle to fix after the fact.
 	DataModel |
 	ConceptualDataModel | LogicalDataModel | PlatformDataModel|
 	ConceptualElement|
 	LogicalElement |
-	PlatformElement
+	PlatformElement |
+	LogicalReferencePoint |
+	LogicalEnumerationLabel | 
+	LogicalConstraint
 ;
 
 ConceptualDataModel:
@@ -244,6 +247,7 @@ LogicalEnumeratedBase:
 	LogicalEnumerationLabel |
 	LogicalEnumerated
 ;
+
 LogicalEnumeratedSet:
 		'(' name=ID (description=STRING)? 
 		'['
@@ -361,7 +365,7 @@ LogicalFixedLengthStringConstraint:
 // actually constrain anything. It might be in dynamic cases that this list could end up being empty - but
 // for now we assume it has to have at least 1 value
 LogicalEnumerationConstraint :
-	{LogicalEnumerationConstraint} 'ec' '[' (allowedValue+=[LogicalEnumerationLabel|QN])? ']'
+	{LogicalEnumerationConstraint} 'ec' name=ID (description=STRING)? ('[' (allowedValue+=[LogicalEnumerationLabel|QN])+ ']')?
 ;
 
 LogicalMeasurementConstraint:
