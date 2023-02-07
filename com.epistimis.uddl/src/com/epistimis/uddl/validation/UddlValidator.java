@@ -164,7 +164,7 @@ public class UddlValidator extends AbstractUddlValidator {
 	 * Structures must have more than 1 member - but they can be inherited - so
 	 * check entire specialization hierarchy for: (C/L/P)Entity TODO: Actually,
 	 * since participants are for Associations, there must be at least 2
-	 * Participants also Also -must check both composition and participant lists -
+	 * Participants also. Also -must check both composition and participant lists -
 	 * The net across all of them must be at least 2
 	 */
 
