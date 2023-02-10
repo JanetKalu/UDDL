@@ -12,13 +12,11 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.ocl.pivot.model.OCLstdlib;
 import org.eclipse.ocl.xtext.completeocl.validation.CompleteOCLEObjectValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-import org.eclipse.ocl.pivot.model.OCLstdlib;
-import org.eclipse.ocl.pivot.utilities.ClassUtil;
-import org.eclipse.ocl.pivot.utilities.NameUtil;
 
 import com.epistimis.uddl.CLPExtractors;
 import com.epistimis.uddl.uddl.ConceptualCharacteristic;

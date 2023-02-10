@@ -2,7 +2,6 @@ package com.epistimis.uddl.generator;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -13,24 +12,16 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.IResourceFactory;
-import org.eclipse.xtext.resource.IResourceServiceProvider;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
 import com.epistimis.uddl.CLPExtractors;
-import com.epistimis.uddl.UddlQNP;
 import com.epistimis.uddl.query.query.QueryIdentifier;
 import com.epistimis.uddl.query.query.QuerySpecification;
 import com.epistimis.uddl.query.query.SelectedEntity;
-import com.epistimis.uddl.query.query.impl.QueryPackageImpl;
 import com.epistimis.uddl.scoping.IndexUtilities;
 import com.epistimis.uddl.uddl.PlatformCompositeQuery;
 import com.epistimis.uddl.uddl.PlatformEntity;
@@ -38,10 +29,8 @@ import com.epistimis.uddl.uddl.PlatformQuery;
 import com.epistimis.uddl.uddl.PlatformQueryComposition;
 import com.epistimis.uddl.uddl.PlatformView;
 import com.epistimis.uddl.uddl.UddlPackage;
-import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public class QueryProcessor {
 	// @Inject

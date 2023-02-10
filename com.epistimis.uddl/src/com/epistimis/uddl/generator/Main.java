@@ -3,22 +3,14 @@
  */
 package com.epistimis.uddl.generator;
 
-import com.epistimis.uddl.UddlStandaloneSetup;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Provider;
-
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
@@ -30,6 +22,11 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+
+import com.epistimis.uddl.UddlStandaloneSetup;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Provider;
 
 public class Main {
 
