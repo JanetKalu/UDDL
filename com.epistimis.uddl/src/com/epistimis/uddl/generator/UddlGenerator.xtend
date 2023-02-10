@@ -43,6 +43,8 @@ class UddlGenerator extends AbstractGenerator {
 				new RealizedDataType(elem);
 			} else if (elem instanceof PlatformEntity) {
 				new RealizedEntity(elem);
+			} else {
+				System.out.println("No processing available for type " + elem.class.toString);
 			}
 		}
 		/**
