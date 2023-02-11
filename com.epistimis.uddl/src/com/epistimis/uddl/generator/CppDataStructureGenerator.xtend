@@ -23,6 +23,8 @@ import com.epistimis.uddl.uddl.PlatformDataModel
 import com.epistimis.uddl.uddl.PlatformEntity
 import com.epistimis.uddl.uddl.PlatformComposition
 import com.epistimis.uddl.uddl.PlatformParticipant
+import com.google.common.base.CaseFormat
+import org.eclipse.emf.ecore.EObject
 
 /**
  * NOTE: Need to handle attribute cardinality in a general way - 2 parts of this: determining cardinality and then rendering.
@@ -45,7 +47,8 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String getRootDirectory() { return "cpp/"; }
 
-	override String getFileExtension() { return ".hpp"; }
+	override String getWriteFileExtension() { return ".hpp"; }
+	override String getReadFileExtension() { return ".hpp"; }
 
 	/**
 	 * TODO: Structured FDTs aren't currently supported 
@@ -55,7 +58,7 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 		switch (pdt) {
 			PlatformBoundedString: "string"
 			PlatformCharArray: "char[" + pdt.length + "]"
-			PlatformString: "string"
+			PlatformString: "std::string"
 			PlatformBoolean: "bool"
 			PlatformChar: "char"
 			PlatformFloat: "float"
@@ -75,12 +78,14 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 		}
 	}
 
-	override String getImportPrefix() { return "#include '"; }
+	override String getImportPrefix() { return "#include \""; }
 
-	override String getImportSuffix() { return "'\n"; }
+	override String getImportSuffix() { return "\"\n"; }
 
 	override String pdmHeader(PlatformDataModel pdm) {
 		'''
+		#pragma once
+		#include <string>
 		// Types from «qnp.getFullyQualifiedName(pdm)»
 		'''	
 	}
@@ -91,12 +96,12 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 		'''	
 	}
 
-	override String generateImportStatement(PlatformDataModel pdm) {
-			return getImportPrefix() + pdm.generateFileName + getImportSuffix();		
+	override String generateImportStatement(PlatformDataModel pdm, EObject ctx) {
+			return getImportPrefix() + pdm.generateWriteFileName + getImportSuffix();		
 	}
 		
-	override String generateImportStatement(PlatformEntity entType) {
-			return getImportPrefix() + entType.generateFileName + getImportSuffix();		
+	override String generateImportStatement(PlatformEntity entType, EObject ctx) {
+			return getImportPrefix() + entType.generateWriteFileName + getImportSuffix();		
 	}
 
 	override String getTypeDefPrefix() { return "typedef"; }
@@ -112,6 +117,8 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String getFileHeader(PlatformEntity entity) {
 		'''
+		#pragma once
+		#include <string>
 		«multiLineCmtStart» 
 		«entity.description» 
 		«multiLineCmtEnd»		
@@ -120,12 +127,12 @@ class CppDataStructureGenerator extends CommonDataStructureGenerator {
 	
 	override String compositionElement(PlatformComposition composition, int ndx) {
 		'''
-				«compositionVisibility» «composition.type.name» «composition.rolename»«IF composition.upperBound > 1»«arrStart»«composition.upperBound»«arrEnd»«ENDIF»«elemEnd» «singleLineCmtStart» «composition.description»
+		«nDent(1)»«compositionVisibility» «composition.type.name» «composition.rolename»«IF composition.upperBound > 1»«arrStart»«composition.upperBound»«arrEnd»«ENDIF»«elemEnd» «singleLineCmtStart» «composition.description»
 		'''
 	}
 	override String participantElement(PlatformParticipant participant, int ndx) {
 		'''
-				«compositionVisibility» «participant.type.name» «participant.rolename»«IF participant.upperBound > 1»«arrStart»«participant.upperBound»«arrEnd»«ENDIF»«elemEnd» «singleLineCmtStart» «participant.description»
+		«nDent(1)»«compositionVisibility» «participant.type.name» «participant.rolename»«IF participant.upperBound > 1»«arrStart»«participant.upperBound»«arrEnd»«ENDIF»«elemEnd» «singleLineCmtStart» «participant.description»
 		'''
 	}
 	

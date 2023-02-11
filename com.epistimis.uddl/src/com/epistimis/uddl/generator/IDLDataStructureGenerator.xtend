@@ -30,6 +30,7 @@ import com.epistimis.uddl.uddl.PlatformDataModel
 import com.epistimis.uddl.uddl.PlatformEntity
 import com.epistimis.uddl.uddl.PlatformComposition
 import com.epistimis.uddl.uddl.PlatformParticipant
+import org.eclipse.emf.ecore.EObject
 
 /**
  * NOTE: Need to handle attribute cardinality in a general way - 2 parts of this: determining cardinality and then rendering.
@@ -51,7 +52,8 @@ class IDLDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String getRootDirectory() { return "idl/"; }
 
-	override String getFileExtension() { return ".idl"; }
+	override String getWriteFileExtension() { return ".idl"; }
+	override String getReadFileExtension() { return ".idl"; }
 
 	/**
 	 * TODO: Structured FDTs aren't currently supported 
@@ -133,12 +135,12 @@ class IDLDataStructureGenerator extends CommonDataStructureGenerator {
 		type «pdt.getTypeString» «pdt.name» ;
 		'''	
 	}
-	override String generateImportStatement(PlatformDataModel pdm) {
-			return getImportPrefix() + pdm.generateFileName + getImportSuffix();		
+	override String generateImportStatement(PlatformDataModel pdm, EObject ctx) {
+			return getImportPrefix() + pdm.generateWriteFileName + getImportSuffix();		
 	}
 		
-	override String generateImportStatement(PlatformEntity entType) {
-			return getImportPrefix() + entType.generateFileName + getImportSuffix();		
+	override String generateImportStatement(PlatformEntity entType, EObject ctx) {
+			return getImportPrefix() + entType.generateWriteFileName + getImportSuffix();		
 	}
 
 	override String getTypeDefPrefix() { return "type"; }

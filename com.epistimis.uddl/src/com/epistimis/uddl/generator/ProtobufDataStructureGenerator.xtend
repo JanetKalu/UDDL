@@ -21,6 +21,7 @@ import java.util.List
 import java.util.Map
 import com.epistimis.uddl.uddl.PlatformComposition
 import com.epistimis.uddl.uddl.PlatformParticipant
+import org.eclipse.emf.ecore.EObject
 
 /**
  * NOTE: Need to handle attribute cardinality in a general way - 2 parts of this: determining cardinality and then rendering.
@@ -43,7 +44,8 @@ class ProtobufDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String getRootDirectory() { return "protobuf/"; }
 
-	override String getFileExtension() { return ".proto"; }
+	override String getWriteFileExtension() { return ".proto"; }
+	override String getReadFileExtension() { return ".proto"; }
 
 	/**
 	 * TODO: Structured FDTs aren't currently supported 
@@ -89,12 +91,12 @@ class ProtobufDataStructureGenerator extends CommonDataStructureGenerator {
 		'''
 	}
 
-	override String generateImportStatement(PlatformDataModel pdm) {
-		return getImportPrefix() + pdm.generateFileName + getImportSuffix();
+	override String generateImportStatement(PlatformDataModel pdm, EObject ctx) {
+		return getImportPrefix() + pdm.generateWriteFileName + getImportSuffix();
 	}
 
-	override String generateImportStatement(PlatformEntity entType) {
-		return getImportPrefix() + entType.generateFileName + getImportSuffix();
+	override String generateImportStatement(PlatformEntity entType, EObject ctx) {
+		return getImportPrefix() + entType.generateWriteFileName + getImportSuffix();
 	}
 
 	override String getTypeDefPrefix() { return "message"; }
@@ -138,10 +140,10 @@ class ProtobufDataStructureGenerator extends CommonDataStructureGenerator {
 			«var entityIncludes = new ArrayList<PlatformEntity>»
 			«var List<PlatformDataModel> pdmIncludes = new ArrayList<PlatformDataModel>»
 			«FOR composition : entity.composition»
-				«composition.type.generateInclude(pdmIncludes, entityIncludes)»
+				«composition.type.generateInclude(entity,pdmIncludes, entityIncludes)»
 			«ENDFOR»
 			«IF entity.specializes !== null »
-				«entity.specializes.generateInclude(pdmIncludes,entityIncludes)»
+				«entity.specializes.generateInclude(entity,pdmIncludes,entityIncludes)»
 			«ENDIF»
 			«var ndx = 0»
 			«clazzKwd» «entity.name» «IF entity.specializes !== null » «specializesKwd» «entity.specializes» «ENDIF» «structStart»
@@ -159,13 +161,13 @@ class ProtobufDataStructureGenerator extends CommonDataStructureGenerator {
 			«var entityIncludes = new ArrayList<PlatformEntity>»
 			«var List<PlatformDataModel> pdmIncludes = new ArrayList<PlatformDataModel>»
 			«FOR composition : entity.composition»
-				«composition.type.generateInclude(pdmIncludes, entityIncludes)»
+				«composition.type.generateInclude(entity,pdmIncludes, entityIncludes)»
 			«ENDFOR»
 			«FOR participant : entity.participant»
-				«participant.type.generateInclude(pdmIncludes, entityIncludes)»
+				«participant.type.generateInclude(entity,pdmIncludes, entityIncludes)»
 			«ENDFOR»
 			«IF entity.specializes !== null »
-				«entity.specializes.generateInclude(pdmIncludes,entityIncludes)»
+				«entity.specializes.generateInclude(entity,pdmIncludes,entityIncludes)»
 			«ENDIF»
 			«var ndx = 0»
 			«clazzKwd» «entity.name» «IF entity.specializes !== null» «specializesKwd» «entity.specializes» «ENDIF» «structStart»

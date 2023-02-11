@@ -13,6 +13,7 @@ import com.epistimis.uddl.uddl.PlatformDataModel
 import com.epistimis.uddl.uddl.PlatformEntity
 import com.epistimis.uddl.uddl.PlatformComposition
 import com.epistimis.uddl.uddl.PlatformParticipant
+import org.eclipse.emf.ecore.EObject
 
 /**
  * NOTE: Need to handle attribute cardinality in a general way - 2 parts of this: determining cardinality and then rendering.
@@ -35,7 +36,9 @@ class TypescriptDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String getRootDirectory() { return "typescript/"; }
 
-	override String getFileExtension() { return ".ts"; }
+	override String getWriteFileExtension() { return ".ts"; }
+
+	override String getReadFileExtension() { return ".js"; }
 
 	/**
 	 * TODO: Structured FDTs aren't currently supported 
@@ -65,27 +68,34 @@ class TypescriptDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override defNewType(PlatformDataType pdt) {
 		'''
-			<type> «pdt.getTypeString» «pdt.name» ;
+			export type «pdt.name» = «pdt.getTypeString» ;
 		'''
 	}
 
-	override String generateImportStatement(PlatformDataModel pdm) {
-		return getImportPrefix() + pdm.generateFileName + getImportSuffix();
+	override String generateImportStatement(PlatformDataModel pdm, EObject ctx) {
+		/**
+		 * Note that this imports everything even if it isn't all used. This is the simple approach for now.
+		 */
+		val pdts = pdm.eContents.filter(PlatformDataType);
+		'''
+			«FOR pdt : pdts BEFORE 'import { ' SEPARATOR ', ' AFTER ' }'»«pdt.genTypeName»«ENDFOR» from "«pdm.generateRelativeReadFileName(ctx)»";
+		'''
 	}
 
-	override String generateImportStatement(PlatformEntity entType) {
-		return getImportPrefix() + entType.generateFileName + getImportSuffix();
+	override String generateImportStatement(PlatformEntity entType, EObject ctx) {
+		'''import {«entType.genTypeName»} from "«entType.generateRelativeReadFileName(ctx)»"'''
+//		return getImportPrefix() + entType.generateRelativeReadFileName(ctx) + getImportSuffix();
 	}
 
 	override String getTypeDefPrefix() { return "type"; }
 
 	override String getNamespaceKwd() { return "namespace"; }
 
-	override String getClazzKwd() { return "class"; }
+	override String getClazzKwd() { return "interface"; }
 
 	override String getSpecializesKwd() { return "extends"; }
 
-	override String getCompositionVisibility() { return "private"; }
+	override String getCompositionVisibility() { return ""; }
 
 	override String getFileHeader(PlatformEntity entity) {
 		'''
@@ -97,13 +107,13 @@ class TypescriptDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String compositionElement(PlatformComposition composition, int ndx) {
 		'''
-			«compositionVisibility» «composition.type.name» «composition.rolename»«IF composition.upperBound > 1»«arrStart»«composition.upperBound»«arrEnd»«ENDIF»«elemEnd» «singleLineCmtStart» «composition.description»
+			«nDent(1)»«getCompositionVisibility» «composition.rolename»: «IF composition.upperBound > 1»«composition.type.genTypeName»[]«ELSE»«composition.type.genTypeName»«ENDIF»;   // «composition.description»
 		'''
 	}
 
 	override String participantElement(PlatformParticipant participant, int ndx) {
 		'''
-			«compositionVisibility» «participant.type.name» «participant.rolename»«IF participant.upperBound > 1»«arrStart»«participant.upperBound»«arrEnd»«ENDIF»«elemEnd» «singleLineCmtStart» «participant.description»
+			«nDent(1)»«getCompositionVisibility» «participant.rolename»: «IF participant.upperBound > 1»«participant.type.genTypeName»[]«ELSE»«participant.type.genTypeName»«ENDIF»;   // «participant.description»
 		'''
 	}
 

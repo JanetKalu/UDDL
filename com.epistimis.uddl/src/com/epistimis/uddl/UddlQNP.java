@@ -41,8 +41,12 @@ public class UddlQNP  extends DefaultDeclarativeQualifiedNameProvider {
 				break;
 			}
 		}
-		// Return only the name back to the common ancestor 
-		return oName.skipFirst(skipSegs);		
+		if (skipSegs > 0) {
+			// Return only the name back to the common ancestor 
+			return oName.skipFirst(skipSegs);
+		} else {
+			return oName;
+		}
 	}
 
 	/* Conceptual */

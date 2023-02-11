@@ -96,7 +96,15 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 
 	def String getRootDirectory() // You must override this method");
 
-	def String getFileExtension() // You must override this method");
+	/**
+	 * In most cases, the write and read extensions will be the same. However, in some cases, 
+	 * they won't. Examples include Typescript (starts as .ts and is converted to .js), and 
+	 * XTend (starts as .xtend and is converted to .java).
+	 * By having different extensions, we support the need to read from a different file extension
+	 * than was originally written.
+	 */
+	def String getWriteFileExtension() // extension to use when writing files
+	def String getReadFileExtension() // extension to use when reading files 
 
 	def String getFileHeader(PlatformEntity entity);
 
@@ -138,7 +146,7 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 	def String getClazzKwd()
 
 	def String getSpecializesKwd()
-
+	
 	def String getCompositionVisibility()
 
 	/** This method gets around a problem with inheritance and dispatch methods */
@@ -157,7 +165,7 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 	}
 
 	def dispatch String getTypeString(PlatformEntity ent) {
-		return ent.name;
+		return genTypeName(ent);
 	}
 
 	/**
@@ -170,8 +178,39 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 	def String generateDirectories(EObject obj, int skipCnt) {
 		return qnp.getFullyQualifiedName(obj).skipLast(skipCnt).toString(getDirDelimiter());
 	}
+	/**
+	 * Generate a relative path under the assumption that qualified names also describe the
+	 * directory hierarchy
+	 */
+	def String generateRelativePath(EObject obj, EObject ctx, int skipCnt) {
+		val UddlQNP uqnp = this.qnp as UddlQNP;
+		/**
+		 *  Here we want to find the path from the ctx to the obj. That means potentially going up
+		 * and down directories. Must insert dir up for each 		  
+		 */
+		val downRQN = uqnp.relativeQualifiedName(obj,ctx);
+		val upRQN = uqnp.relativeQualifiedName(ctx,obj);
+		var String result = "";
+		for (var i = 2; i < upRQN.segmentCount; i++) {
+			result += ".."+ getDirDelimiter();
+		}
+		// strip off extra delimiter at the end of the result
+		return result + downRQN.skipFirst(1).skipLast(skipCnt).toString(getDirDelimiter());
+	}
 
-	def String generateFileName(UddlElement obj) {
+	def String setTrailingDirDelimiter(String path) {
+		if ((path.length > 0 ) && (path.charAt(path.length-1) != getDirDelimiter().charAt(0))) {
+			return path + getDirDelimiter();
+		}
+		else {
+			return path;
+		}
+		
+	}
+	/**
+	 * Generate a read file name of obj relative to context.  
+	 */
+	def String generateRelativeReadFileName(UddlElement obj, EObject context) {
 		
 		var name = obj.name
 		if (obj instanceof PlatformComposableElement) {
@@ -179,7 +218,25 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 			// matches the format of the type defined within it
 			name =  obj.genTypeName;
 		}
-		return getRootDirectory() + generateDirectories(obj,1) + getDirDelimiter() + name + getFileExtension();
+		var relPath = generateRelativePath(obj,context,1).setTrailingDirDelimiter;
+
+		return  relPath  + name + getReadFileExtension();
+	}
+
+	/**
+	 * Generate the name of the file to write relative to the root directory 
+	 */
+	def String generateWriteFileName(UddlElement obj) {
+		
+		var name = obj.name
+		if (obj instanceof PlatformComposableElement) {
+			// For those cases where we are dealing with types, make sure the file name 
+			// matches the format of the type defined within it
+			name =  obj.genTypeName;
+		}
+		var path = getRootDirectory() + generateDirectories(obj,1).setTrailingDirDelimiter;
+
+		return  path  + name + getWriteFileExtension();
 	}
 
 	/** When you only want to process selected Entities (rather than all of them) call this.
@@ -205,7 +262,7 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 	def void processAnEntity(PlatformEntity entity, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		if (!processedEntities.contains(entity)) {
 			processedEntities.add(entity);
-			fsa.generateFile(generateFileName(entity), entity.compile)
+			fsa.generateFile(generateWriteFileName(entity), entity.compile)
 			for (PlatformComposition comp : entity.composition) {
 				val PlatformComposableElement pce = comp.type;
 				processCompositionElement(pce, fsa, context)
@@ -227,7 +284,7 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 			val PlatformDataModel pdtContainer = pce.eContainer as PlatformDataModel;
 			if (!processedPDMs.contains(pdtContainer)) {
 				processedPDMs.add(pdtContainer);
-				fsa.generateFile(generateFileName(pdtContainer), pdtContainer.compile)
+				fsa.generateFile(generateWriteFileName(pdtContainer), pdtContainer.compile)
 			}
 		} else if (pce instanceof PlatformEntity) {
 			val PlatformEntity pEnt = pce as PlatformEntity;
@@ -256,28 +313,28 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 
 	def String genTypeName(PlatformComposableElement pce);
 
-	def String generateImportStatement(PlatformDataModel pdm);
+	def String generateImportStatement(PlatformDataModel pdm, EObject ctx);
 
-	def String generateImportStatement(PlatformEntity entType) ;
+	def String generateImportStatement(PlatformEntity entType, EObject ctx) ;
 
 	/**
 	 * Generate the include reference to the appropriate header file if it hasn't already been included.
 	 * 
 	 * TODO: Everything that is included must also be generated in this language.
 	 */
-	def String generateInclude(PlatformComposableElement type, List<PlatformDataModel> pdmIncludes,
+	def String generateInclude(PlatformComposableElement type, EObject ctx, List<PlatformDataModel> pdmIncludes,
 		List<PlatformEntity> entityIncludes) {
 		if (type instanceof PlatformDataType) {
 			val pdm = type.eContainer as PlatformDataModel;
 			if (!pdmIncludes.contains(pdm)) {
 				pdmIncludes.add(pdm);
-				return generateImportStatement(pdm);
+				return generateImportStatement(pdm,ctx);
 			}
 		} else {
 			val PlatformEntity entType = type as PlatformEntity;
 			if (!entityIncludes.contains(entType)) {
 				entityIncludes.add(entType);
-				return generateImportStatement(entType);
+				return generateImportStatement(entType,ctx);
 			}
 		}
 		/** If we get here, then it was already included */
@@ -315,10 +372,10 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 		'''
 			«entity.fileHeader»
 			«FOR composition : entity.composition»
-				«composition.type.generateInclude(pdmIncludes, entityIncludes)»
+				«composition.type.generateInclude(entity,pdmIncludes, entityIncludes)»
 			«ENDFOR»
 			«IF entity.specializes !== null »
-				«entity.specializes.generateInclude(pdmIncludes,entityIncludes)»
+				«entity.specializes.generateInclude(entity,pdmIncludes,entityIncludes)»
 			«ENDIF»
 			«entity.clazzDecl» 
 			«FOR composition : entity.composition»
@@ -339,13 +396,13 @@ abstract class CommonDataStructureGenerator implements IGenerator2 {
 		'''
 			«entity.fileHeader»
 			«FOR composition : entity.composition»
-				«composition.type.generateInclude(pdmIncludes, entityIncludes)»
+				«composition.type.generateInclude(entity,pdmIncludes, entityIncludes)»
 			«ENDFOR»
 			«FOR participant : entity.participant»
-				«participant.type.generateInclude(pdmIncludes, entityIncludes)»
+				«participant.type.generateInclude(entity,pdmIncludes, entityIncludes)»
 			«ENDFOR»
 			«IF entity.specializes !== null »
-				«entity.specializes.generateInclude(pdmIncludes,entityIncludes)»
+				«entity.specializes.generateInclude(entity,pdmIncludes,entityIncludes)»
 			«ENDIF»
 			«entity.clazzDecl» 
 			«FOR composition : entity.composition»

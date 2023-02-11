@@ -16,6 +16,7 @@ import com.epistimis.uddl.uddl.PlatformInteger
 import com.epistimis.uddl.uddl.PlatformParticipant
 import com.epistimis.uddl.uddl.PlatformString
 import java.util.Map
+import org.eclipse.emf.ecore.EObject
 
 /**
  * NOTE: Need to handle attribute cardinality in a general way - 2 parts of this: determining cardinality and then rendering.
@@ -38,7 +39,8 @@ class PythonDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String getRootDirectory() { return "python/"; }
 
-	override String getFileExtension() { return ".py"; }
+	override String getWriteFileExtension() { return ".py"; }
+	override String getReadFileExtension() { return ".py"; }
 
 	override String getScopeStart() 	{ return ":";} 
 	override String getScopeEnd() 		{ return ""; }
@@ -88,11 +90,11 @@ class PythonDataStructureGenerator extends CommonDataStructureGenerator {
 	}
 
 	
-	override  String generateImportStatement(PlatformDataModel pdm) {
+	override  String generateImportStatement(PlatformDataModel pdm, EObject ctx) {
 		return "from " + pdm.name + " import *";
 	}
 	
-	override  String generateImportStatement(PlatformEntity entType) {
+	override  String generateImportStatement(PlatformEntity entType, EObject ctx) {
 		return "import " + entType.genTypeName;
 	}
 
