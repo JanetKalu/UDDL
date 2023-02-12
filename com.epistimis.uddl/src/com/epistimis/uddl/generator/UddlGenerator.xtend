@@ -58,12 +58,32 @@ class UddlGenerator extends AbstractGenerator {
 		 * For now we do IDL and Protobuf and SQL at the structure level because, at this level, there 
 		 * is no indication which language a software component will be generated in.
 		 */
-		val gen1 = new IDLDataStructureGenerator(RealizedComposableElement.allComposableElements);
-		gen1.doGenerate(resource, fsa, context);
-		val gen2 = new ProtobufDataStructureGenerator(RealizedComposableElement.allComposableElements);
-		gen2.doGenerate(resource, fsa, context);
-		val gen3 = new RDBMSDataStructureGenerator(RealizedComposableElement.allComposableElements);
-		gen3.doGenerate(resource, fsa, context);
+		try {
+			val gen2 = new ProtobufDataStructureGenerator(RealizedComposableElement.allComposableElements);
+			gen2.doGenerate(resource, fsa, context);
+		}
+		catch (Exception excp) {
+			System.out.println("Protobuf exception: " + excp.localizedMessage);
+			System.out.println(excp.stackTrace);
+		}
+		try {
+			val gen1 = new IDLDataStructureGenerator(RealizedComposableElement.allComposableElements);
+			gen1.doGenerate(resource, fsa, context);			
+		}
+		catch (Exception excp) {
+			System.out.println("IDL exception: " + excp.localizedMessage);
+			System.out.println(excp.stackTrace);
+		}
+		try {
+			val gen3 = new RDBMSDataStructureGenerator(RealizedComposableElement.allComposableElements);
+			gen3.doGenerate(resource, fsa, context);
+		}
+		catch (Exception excp) {
+			System.out.println("RDBMS exception: " + excp.localizedMessage);
+			System.out.println(excp.stackTrace);
+		}
+
+
 
 	/**
 	 * Generating code from UDDL means generating data structures. To generate data structures we need to process both the UDDL and

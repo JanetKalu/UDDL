@@ -45,6 +45,7 @@ class ProtobufDataStructureGenerator extends CommonDataStructureGenerator {
 	override String getRootDirectory() { return "protobuf/"; }
 
 	override String getWriteFileExtension() { return ".proto"; }
+
 	override String getReadFileExtension() { return ".proto"; }
 
 	/**
@@ -121,69 +122,65 @@ class ProtobufDataStructureGenerator extends CommonDataStructureGenerator {
 	override String compositionElement(PlatformComposition composition, int ndx) {
 		// ndx is zero based but protobuf needs 1 based 
 		'''
-			«IF composition.upperBound > 1»repeated «ENDIF»«compositionVisibility» «composition.type.name» «composition.rolename» = «ndx+1»«elemEnd» «singleLineCmtStart» «composition.description»
+			«nDent(1)»«IF composition.upperBound > 1»repeated «ENDIF»«compositionVisibility» «composition.type.name» «composition.rolename» = «ndx+1»«elemEnd» «singleLineCmtStart» «composition.description»
 		'''
 	}
 
 	override String participantElement(PlatformParticipant participant, int ndx) {
 		// ndx is zero based but protobuf needs 1 based 
 		'''
-			«IF participant.upperBound > 1»repeated «ENDIF»«compositionVisibility» «participant.type.name» «participant.rolename» = «ndx+1»«elemEnd» «singleLineCmtStart» «participant.description»
+			«nDent(1)»«IF participant.upperBound > 1»repeated «ENDIF»«compositionVisibility» «participant.type.name» «participant.rolename» = «ndx+1»«elemEnd» «singleLineCmtStart» «participant.description»
 		'''
 	}
 
 	override String getStructEnd() { return "}"; }
 
-	override compile(PlatformEntity entity) {
-		'''
-			«entity.fileHeader»
-			«var entityIncludes = new ArrayList<PlatformEntity>»
-			«var List<PlatformDataModel> pdmIncludes = new ArrayList<PlatformDataModel>»
-			«FOR composition : entity.composition»
-				«composition.type.generateInclude(entity,pdmIncludes, entityIncludes)»
-			«ENDFOR»
-			«IF entity.specializes !== null »
-				«entity.specializes.generateInclude(entity,pdmIncludes,entityIncludes)»
-			«ENDIF»
-			«var ndx = 0»
-			«clazzKwd» «entity.name» «IF entity.specializes !== null » «specializesKwd» «entity.specializes» «ENDIF» «structStart»
-				«FOR composition : entity.composition»
-					«composition.compositionElement(ndx)»
-					«ndx++»
-				«ENDFOR»
-			«structEnd»
-		'''
-	}
-
-	override compile(PlatformAssociation entity) {
-		'''
-			«entity.fileHeader»
-			«var entityIncludes = new ArrayList<PlatformEntity>»
-			«var List<PlatformDataModel> pdmIncludes = new ArrayList<PlatformDataModel>»
-			«FOR composition : entity.composition»
-				«composition.type.generateInclude(entity,pdmIncludes, entityIncludes)»
-			«ENDFOR»
-			«FOR participant : entity.participant»
-				«participant.type.generateInclude(entity,pdmIncludes, entityIncludes)»
-			«ENDFOR»
-			«IF entity.specializes !== null »
-				«entity.specializes.generateInclude(entity,pdmIncludes,entityIncludes)»
-			«ENDIF»
-			«var ndx = 0»
-			«clazzKwd» «entity.name» «IF entity.specializes !== null» «specializesKwd» «entity.specializes» «ENDIF» «structStart»
-				«FOR composition : entity.composition»
-					«composition.compositionElement(ndx)»
-					«ndx++»
-				«ENDFOR»
-				«FOR participant : entity.participant»
-					«participant.participantElement(ndx)»
-					«ndx++»
-				«ENDFOR»
-			
-			«structEnd»
-		'''
-	}
-
+//	override compile(PlatformEntity entity) {
+//		var entityIncludes = new ArrayList<PlatformEntity>»
+//		var List<PlatformDataModel> pdmIncludes = new ArrayList<PlatformDataModel>»
+//		'''
+//			«entity.fileHeader»
+//			«FOR composition : entity.composition»
+//				«composition.type.generateInclude(entity,pdmIncludes, entityIncludes)»
+//			«ENDFOR»
+//			«IF entity.specializes !== null »
+//				«entity.specializes.generateInclude(entity,pdmIncludes,entityIncludes)»
+//			«ENDIF»
+//			«var ndx = 0»
+//			«clazzKwd» «entity.name» «IF entity.specializes !== null » «specializesKwd» «entity.specializes» «ENDIF» «structStart»
+//				«FOR composition : entity.composition»
+//					«composition.compositionElement(ndx++)»
+//				«ENDFOR»
+//			«structEnd»
+//		'''
+//	}
+//
+//	override compile(PlatformAssociation entity) {
+//		'''
+//			«entity.fileHeader»
+//			«var entityIncludes = new ArrayList<PlatformEntity>»
+//			«var List<PlatformDataModel> pdmIncludes = new ArrayList<PlatformDataModel>»
+//			«FOR composition : entity.composition»
+//				«composition.type.generateInclude(entity,pdmIncludes, entityIncludes)»
+//			«ENDFOR»
+//			«FOR participant : entity.participant»
+//				«participant.type.generateInclude(entity,pdmIncludes, entityIncludes)»
+//			«ENDFOR»
+//			«IF entity.specializes !== null »
+//				«entity.specializes.generateInclude(entity,pdmIncludes,entityIncludes)»
+//			«ENDIF»
+//			«var ndx = 0»
+//			«clazzKwd» «entity.name» «IF entity.specializes !== null» «specializesKwd» «entity.specializes» «ENDIF» «structStart»
+//				«FOR composition : entity.composition»
+//					«composition.compositionElement(ndx++)»
+//				«ENDFOR»
+//				«FOR participant : entity.participant»
+//					«participant.participantElement(ndx++)»
+//				«ENDFOR»
+//			
+//			«structEnd»
+//		'''
+//	}
 	override clazzDecl(PlatformEntity entity) '''
 		«clazzKwd» «entity.name» «IF entity.specializes !== null» «specializesKwd» «entity.specializes» «ENDIF» «structStart»	
 	'''
