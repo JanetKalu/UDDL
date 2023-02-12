@@ -71,35 +71,41 @@ class ScalaDataStructureGenerator extends CommonDataStructureGenerator {
 		}
 	}
 
-	override String getImportPrefix() { return 'import "'; }
+	override String getImportPrefix() { return 'import '; }
 
-	override String getImportSuffix() { return '"\n'; }
+	override String getImportSuffix() { return '.* \n'; }
 
 	override String pdmHeader(PlatformDataModel pdm) {
 		'''
 			// Types from «qnp.getFullyQualifiedName(pdm)»
+			package «qnp.getFullyQualifiedName(pdm)»:
+			
 		'''
 	}
 
 	override defNewType(PlatformDataType pdt) {
 		'''
-			type «pdt.getTypeString» «pdt.name» ;
+		«nDent(1)»opaque type «pdt.name»  = «pdt.getTypeString»
+		«nDent(1)»object «pdt.name»:
+		«nDent(1)»	def apply(i: «pdt.getTypeString»): «pdt.name» = i
+		«nDent(1)»given Eql[«pdt.name», «pdt.name»] = Eql.derived
+		
 		'''
 	}
 
 	override String generateImportStatement(PlatformDataModel pdm, EObject ctx) {
-		return getImportPrefix() + pdm.generateWriteFileName + getImportSuffix();
+		return getImportPrefix() + qnp.getFullyQualifiedName(pdm) + getImportSuffix();
 	}
 
 	override String generateImportStatement(PlatformEntity entType, EObject ctx) {
-		return getImportPrefix() + entType.generateWriteFileName + getImportSuffix();
+		return getImportPrefix() + qnp.getFullyQualifiedName(entType);
 	}
 
 	override String getTypeDefPrefix() { return "type"; }
 
-	override String getNamespaceKwd() { return "package"; }
+	override String getNamespaceKwd() { return "object"; }
 
-	override String getClazzKwd() { return "class"; }
+	override String getClazzKwd() { return "trait"; }
 
 	override String getSpecializesKwd() { return "extends"; }
 
@@ -115,22 +121,22 @@ class ScalaDataStructureGenerator extends CommonDataStructureGenerator {
 
 	override String compositionElement(PlatformComposition composition, int ndx) {
 		'''
-			«compositionVisibility» «composition.type.name» «composition.rolename»«IF composition.upperBound > 1»«arrStart»«composition.upperBound»«arrEnd»«ENDIF»«elemEnd» «singleLineCmtStart» «composition.description»
+		«nDent(1)»«composition.rolename»: «IF composition.upperBound > 1»[«composition.type.genTypeName»]«ELSE»«composition.type.genTypeName»«ENDIF»   // «composition.description»
 		'''
 	}
 
 	override String participantElement(PlatformParticipant participant, int ndx) {
 		'''
-			«compositionVisibility» «participant.type.name» «participant.rolename»«IF participant.upperBound > 1»«arrStart»«participant.upperBound»«arrEnd»«ENDIF»«elemEnd» «singleLineCmtStart» «participant.description»
+		«nDent(1)»«participant.rolename»: «IF participant.upperBound > 1»[«participant.type.genTypeName»]«ELSE»«participant.type.genTypeName»«ENDIF»   // «participant.description»
 		'''
 	}
 
 	override clazzDecl(PlatformEntity entity) '''
-		«clazzKwd» «entity.name» «IF entity.specializes !== null» «specializesKwd» «entity.specializes» «ENDIF» «structStart»	
+		«clazzKwd» «entity.name» «IF entity.specializes !== null» «specializesKwd» «entity.specializes» «ENDIF» :	
 	'''
 
 	override clazzEndDecl(PlatformEntity entity) '''
-		};
+
 	'''
 
 	override String genTypeName(PlatformComposableElement pce) '''«pce.name»'''
