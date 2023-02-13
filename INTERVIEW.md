@@ -9,7 +9,7 @@ This tooling is based on several Open Source tools.
 Your interview will consist of 
 1. Installing the relevant open source tools according to the directions in this file
 1. Reading some documentation about [XText document formatting](https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#formatting) and [XTend](https://www.eclipse.org/xtend/), the JVM based language being used.
-1. Pull this repo and review the existing content of a program file (UddlFormatter.xtend) and a data file (UDDL_SDM_Min.uddl )
+1. Fork this repo and its dependency (com.epistimis.uddl.query) and review the existing content of a program file (UddlFormatter.xtend) and a data file (UDDL_SDM_Min.uddl )
 1. Modification of UddlFormatter.xtend so that the data file formats in a way that is visually appealing.
 1. Creation of a new branch on this repo named after you. That branch should contain the changes you want me to review.  The commit description should explain any decisions you made. At a minimum you will need to modify UddlFormatter.xtend. You may find it useful to create or modify other files.
 
