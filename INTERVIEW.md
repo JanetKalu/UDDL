@@ -9,9 +9,9 @@ This tooling is based on several Open Source tools.
 Your interview will consist of 
 1. Installing the relevant open source tools according to the directions in this file
 1. Reading some documentation about [XText document formatting](https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#formatting) and [XTend](https://www.eclipse.org/xtend/), the JVM based language being used.
-1. Forking this repo and its dependency (com.epistimis.uddl.query) and reviewing the existing content of a program file (UddlFormatter.xtend) and a data file (UDDL_SDM_Min.uddl )
+1. Building this repo and its dependency (com.epistimis.uddl.query) and reviewing the existing content of a program file (UddlFormatter.xtend) and a data file (UDDL_SDM_Min.uddl )
 1. Modification of UddlFormatter.xtend so that the data file formats in a way that is visually appealing.
-1. Creation of a new branch on this repo named after you. That branch should contain the changes you want me to review.  The commit description should explain any decisions you made. At a minimum you will need to modify UddlFormatter.xtend. You may find it useful to create or modify other files.
+1. Creation of a pull request that contains the changes you want me to review.  The commit description should explain any decisions you made. At a minimum you will need to modify UddlFormatter.xtend. You may find it useful to create or modify other files.
 
 ## Getting Started
 See [the Getting Started Guide](GETTING_STARTED.md) for info on setting up your development environment
@@ -31,7 +31,7 @@ can create those worst case formatted files starting from the sample file if you
 
 ## What you should submit
 Take as long as you want creating test files, and updating and testing your code changes. I don't expect you to completely finish though you're certainly 
-welcome to if you want. When you decide to stop, create a branch named after yourself and a pull request that includes your code changes and any additional 
+welcome to if you want. When you decide to stop, create a pull request that includes your code changes and any additional 
 test UDDL files you created. You should add a text/.md file describing what you did, why you did it, how long it took and anything else you want me to know.
 Feel free to include info on any additional research you needed to do.
 
