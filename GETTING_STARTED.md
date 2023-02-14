@@ -13,7 +13,7 @@ After selecting that, you should be presented witha dialog where you can select 
 
 ![EclipseInstallerDSLChoices](https://user-images.githubusercontent.com/120406738/212499344-fea20154-97c1-414c-ae49-0c2eceffe44d.png)
 
-1. Open Eclipse and select Help -> Eclipse Marketplace. This will bring up a dialog from which you can select additional tools to install. Install **Eclipse OCL 6.x**. Restart Eclipse after installing OCL.
+1. Open Eclipse and select Help -> Eclipse Marketplace. This will bring up a dialog from which you can select additional tools to install. Install **Eclipse OCL 6.x**. Also install **EMF Compare**. Restart Eclipse after the installs complete. 
 
 2. You also need to install **[XText2Langium](https://github.com/TypeFox/xtext2langium)**. In Eclipse, select Help -> Install New Software. 
 You should see something like this:
@@ -38,6 +38,12 @@ you can put it anywhere you want. ***I strongly recommend putting it in the Ecli
 do not do this, you will discover that when you edit files, they don't get stored where you think they should be (in the directory where the repo is). Instead, they
 can get stored in the workspace. This will cause all sorts of mysterious build problems because the code that is being built won't be the code you are looking at.
 
+You need 2 repos:
+`com.epistimis.uddl.query`
+`com.epistimis.uddl`
+
+They should be built in that order
+
 After you pull this repo, you need to build the existing code. In Eclipse:
 
 1. Select File -> Open Projects from File System and click on the **Directory** button to navigate to the root directory of the repo you just pulled 
@@ -50,11 +56,11 @@ Then click **Open**. This will then populate the dialog like this:
 
 You should see the parent project and 8 nested projects. They should all be selected. Then click **Finish**. 
 
-2. The repository does not store every file that the project uses. Some need to be generated. Before you do anything else, you must make sure the build environment is properly set up. Right click on the `com.epistimis.uddl` project in the project explorer and select **Properties** from the context menu:
+2. The repository does not store every file that the project uses. Some need to be generated. Before you do anything else, you must make sure the **Java Build Path** is properly set up for every project. Right click on the project in the project explorer and select **Properties** from the context menu:
 
 ![Screenshot 2023-01-15 at 8 15 32 AM](https://user-images.githubusercontent.com/120406738/212552934-e319f454-ee76-425e-ac69-535771c5e519.png)
 
-The select **Java Build Path** (you can type it in the text field at the upper left of the dialog to narrow the choices) and then select the **Libraries** tab. Under the **Classpath** choice you should see **Plug-in Dependencies**. 
+The select **Java Build Path** (you can type it in the text field at the upper left of the dialog to narrow the choices) and then select the **Libraries** tab. Under the **Classpath** choice you should see **Plug-in Dependencies**.
 
 ![Screenshot 2023-01-15 at 8 16 34 AM](https://user-images.githubusercontent.com/120406738/212552898-99a08014-8109-4ae1-9512-b3160c06f918.png)
 
