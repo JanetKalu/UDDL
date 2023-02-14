@@ -1,0 +1,6 @@
+# src-gen ignore
+# Need to make sure this directory remains so we can target it. We need a file in the directory to force the directory to 
+# exist - so we use the .gitignore file to force the existence of the directory.
+# Java files generated in this directory we want to keep - but everything else should be ignored
+*
+!*.java

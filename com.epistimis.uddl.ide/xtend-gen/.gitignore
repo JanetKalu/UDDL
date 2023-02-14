@@ -1,0 +1,5 @@
+# xtend-gen ignore
+# Need to make sure this directory remains so we can target it but we want to ignore everything 
+# in this directory because its generated. We need a file in the directory to force the directory to 
+# exist - so we use the .gitignore file to force the existence of the directory.
+*
