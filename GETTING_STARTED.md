@@ -101,4 +101,13 @@ In that second Eclipse,
 
 At this point, you've got enough working that you can begin modifying code. See the issues for what needs to be done.
 
+Before you do much coding, consider reading the [Notes on Tools](NOTES_ON_TOOLS.md) in addition to the tool doc itself.
+
+### Tool Doc to reference:
+* [XText](https://www.eclipse.org/Xtext/)
+* [XTend](http://xtend-lang.org)
+* [Sirius](https://www.eclipse.org/sirius/)
+* [EMF](https://www.eclipse.org/modeling/emf/)
+
 And Thanks for your interest and help!
+
